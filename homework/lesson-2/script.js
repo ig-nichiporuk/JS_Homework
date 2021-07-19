@@ -48,41 +48,32 @@ if(login == null) {
 	alert('Вход отменён');
 }
 else {
-	while (login !== 'Админ' && login !==null) {
-		if(login == null) {
-			alert('Вход отменён');
-			login = null;
-		}
-		else {
-			alert('Я Вас не знаю');
-			login = prompt('Введите логин');
-		}
+	while (login !== 'Админ' && login !== null) {
+		alert('Я Вас не знаю');
+		login = prompt('Введите логин');
 	}
-	if (login == 'Админ') {
+	if(login == null) {
+		alert('Вход отменен');
+	}
+	else {
 		password = prompt('Введите пароль');
 		if(password == null) {
 			alert('Вход отменен');
 		}
 		else {
 			while (password !== 'Чёрный Властелин' && password !==null) {
-				if(password == null) {
-					alert('Вход отменён');
-					password = null;
-				}
-				else {
-					alert('Пароль неверен');
-					password = prompt('Введите пароль');
-				}
+				alert('Пароль неверен');
+				password = prompt('Введите пароль');
 			}
-			if(password == 'Чёрный Властелин') {
+			if(password == null) {
+				alert('Вход отменён');
+			}
+			else {
 				alert('Добро пожаловать!');
 			}
 		}
 	}
 }
-
-
-
 
 
 //Task-4
