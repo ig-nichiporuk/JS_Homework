@@ -5,45 +5,54 @@ var value,
 	multiply,
 	divide,
 	total;
+
 value = prompt('Введите любое число?');
+
 while (isNaN(value)) {
 	alert('Данные введены неверно!')
 	value = prompt('Введите любое число?');
 }
 
-plus = prompt('Введите значение, которое хотите прибавить к текущему?');
-while (isNaN(plus)) {
-	alert('Данные введены неверно!')
+if(value !== null) {
 	plus = prompt('Введите значение, которое хотите прибавить к текущему?');
+	while (isNaN(plus)) {
+		alert('Данные введены неверно!')
+		plus = prompt('Введите значение, которое хотите прибавить к текущему?');
+	}
+	if(plus !== null) {
+		minus = prompt('Введите значение, которое хотите отнять от к текущего?');
+		while (isNaN(minus)) {
+			alert('Данные введены неверно!')
+			minus = prompt('Введите значение, которое хотите отнять от к текущего?');
+		}
+		if(minus !== null) {
+			multiply = prompt('Введите значение, на которое хотите умножить текущее?');
+			while (isNaN(multiply)) {
+				alert('Данные введены неверно!')
+				multiply = prompt('Введите значение, на которое хотите умножить текущее?');
+			}
+			if(multiply !== null) {
+				divide = prompt('Введите значение, на которое хотите поделить текущее?');
+				while (isNaN(divide) || divide == 0) {
+					alert('Данные введены неверно или на 0 делить нельзя')
+					divide = prompt('Введите значение, на которое хотите поделить текущее?');
+				}
+				if(divide !== null) {
+					total = ((+value) + (+plus) - minus) * multiply / divide;
+					alert('Формула: (' + value + ' + ' + plus + ' - ' + minus + ') * ' + multiply + ' / ' + divide + '\n' + 'Результат: ' + total);
+				}
+			}
+		}
+	}
 }
-
-minus = prompt('Введите значение, которое хотите отнять от к текущего?');
-while (isNaN(minus)) {
-	alert('Данные введены неверно!')
-	minus = prompt('Введите значение, которое хотите отнять от к текущего?');
-}
-
-multiply = prompt('Введите значение, на которое хотите умножить текущее?');
-while (isNaN(multiply)) {
-	alert('Данные введены неверно!')
-	multiply = prompt('Введите значение, на которое хотите умножить текущее?');
-}
-
-divide = prompt('Введите значение, на которое хотите поделить текущее?');
-while (isNaN(divide) || divide == 0) {
-	alert('Данные введены неверно или на 0 делить нельзя')
-	divide = prompt('Введите значение, на которое хотите поделить текущее?');
-}
-
-total = ((+value) + (+plus) - minus) * multiply / divide;
-
-alert('Формула: (' + value + ' + ' + plus + ' - ' + minus + ') * ' + multiply + ' / ' + divide + '\n' + 'Результат: ' + total);
 
 
 //Task-2
 var login,
 	password;
+
 login = prompt('Введите логин');
+
 if(login == null) {
 	alert('Вход отменён');
 }
@@ -76,6 +85,18 @@ else {
 }
 
 
+//Task-3
+var login, message;
+
+login = prompt('Введите логин');
+
+while (login !==null) {
+	(login === 'Вася') ? message = 'Привет' : (login === 'Директор') ? message = 'Здравствуйте' : (login === '') ? message = 'Нет логина' : message = '';
+	alert(message);
+	login = prompt('Введите логин');
+}
+
+
 //Task-4
 var firstName,
 	surname,
@@ -87,26 +108,29 @@ var firstName,
 	OLD_AGE_PENSION_MAN = 69,
 	OLD_AGE_PENSION_WOMAN = 63;
 
-
 surname = prompt('Введите вашу фамилию');
+
 while (surname == '' || surname == null || !isNaN(surname)) {
 	alert('Данные введены неверно!')
 	surname = prompt('Введите вашу фамилию');
 }
 
 firstName = prompt('Введите ваше имя');
+
 while (firstName == '' || firstName == null || !isNaN(firstName)) {
 	alert('Данные введены неверно!')
 	firstName = prompt('Введите ваше имя');
 }
 
 secondName = prompt('Введите ваше отчество');
+
 while (secondName == '' || secondName == null || !isNaN(secondName)) {
 	alert('Данные введены неверно!')
 	secondName = prompt('Введите ваше отчество');
 }
 
 age = prompt('Сколько вам лет?');
+
 while (age > 120 || age == 0 || isNaN(age) || age == null) {
 	alert('Данные введены неверно!')
 	age = prompt('Сколько вам лет?');
