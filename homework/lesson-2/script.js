@@ -91,7 +91,7 @@ var login, message;
 login = prompt('Введите логин');
 
 while (login !==null) {
-	(login === 'Вася') ? message = 'Привет' : (login === 'Директор') ? message = 'Здравствуйте' : (login === '') ? message = 'Нет логина' : message = '';
+	message = (login === 'Вася') ? 'Привет' : (login === 'Директор') ? 'Здравствуйте' : (login === '') ? 'Нет логина' : '';
 	alert(message);
 	login = prompt('Введите логин');
 }
