@@ -115,21 +115,21 @@ var firstName,
 
 surname = prompt('Введите вашу фамилию');
 
-while (surname == '' || surname == null || !isNaN(surname)) {
+while (surname == '' || surname == null || +surname) {
 	alert('Данные введены неверно!');
 	surname = prompt('Введите вашу фамилию');
 }
 
 firstName = prompt('Введите ваше имя');
 
-while (firstName == '' || firstName == null || !isNaN(firstName)) {
+while (firstName == '' || firstName == null || +firstName) {
 	alert('Данные введены неверно!');
 	firstName = prompt('Введите ваше имя');
 }
 
 secondName = prompt('Введите ваше отчество');
 
-while (secondName == '' || secondName == null || !isNaN(secondName)) {
+while (secondName == '' || secondName == null || +secondName) {
 	alert('Данные введены неверно!');
 	secondName = prompt('Введите ваше отчество');
 }
