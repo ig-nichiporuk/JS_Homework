@@ -14,31 +14,36 @@ while (isNaN(value)) {
 }
 
 if(value !== null) {
+	value = +value;
 	plus = prompt('Введите значение, которое хотите прибавить к текущему?');
-	while (isNaN(plus)) {
+	while (isNaN(plus) ) {
 		alert('Данные введены неверно!')
 		plus = prompt('Введите значение, которое хотите прибавить к текущему?');
 	}
 	if(plus !== null) {
+		plus = +plus;
 		minus = prompt('Введите значение, которое хотите отнять от к текущего?');
 		while (isNaN(minus)) {
 			alert('Данные введены неверно!')
 			minus = prompt('Введите значение, которое хотите отнять от к текущего?');
 		}
 		if(minus !== null) {
+			minus = +minus;
 			multiply = prompt('Введите значение, на которое хотите умножить текущее?');
 			while (isNaN(multiply)) {
 				alert('Данные введены неверно!')
 				multiply = prompt('Введите значение, на которое хотите умножить текущее?');
 			}
 			if(multiply !== null) {
+				multiply = +multiply;
 				divide = prompt('Введите значение, на которое хотите поделить текущее?');
 				while (isNaN(divide) || divide == 0) {
 					alert('Данные введены неверно или на 0 делить нельзя')
 					divide = prompt('Введите значение, на которое хотите поделить текущее?');
 				}
 				if(divide !== null) {
-					total = ((+value) + (+plus) - minus) * multiply / divide;
+					multiply = +multiply;
+					total = (value + plus - minus) * multiply / divide;
 					alert('Формула: (' + value + ' + ' + plus + ' - ' + minus + ') * ' + multiply + ' / ' + divide + '\n' + 'Результат: ' + total);
 				}
 			}
@@ -111,42 +116,42 @@ var firstName,
 surname = prompt('Введите вашу фамилию');
 
 while (surname == '' || surname == null || !isNaN(surname)) {
-	alert('Данные введены неверно!')
+	alert('Данные введены неверно!');
 	surname = prompt('Введите вашу фамилию');
 }
 
 firstName = prompt('Введите ваше имя');
 
 while (firstName == '' || firstName == null || !isNaN(firstName)) {
-	alert('Данные введены неверно!')
+	alert('Данные введены неверно!');
 	firstName = prompt('Введите ваше имя');
 }
 
 secondName = prompt('Введите ваше отчество');
 
 while (secondName == '' || secondName == null || !isNaN(secondName)) {
-	alert('Данные введены неверно!')
+	alert('Данные введены неверно!');
 	secondName = prompt('Введите ваше отчество');
 }
 
 age = prompt('Сколько вам лет?');
 
 while (age > 120 || age == 0 || isNaN(age) || age == null) {
-	alert('Данные введены неверно!')
+	alert('Данные введены неверно!');
 	age = prompt('Сколько вам лет?');
 }
 
-ageInDays = age * 365;
+ageInDays = +age * 365;
 
 sex = confirm('Ваш пол мужской?');
 
 if(sex) {
 	sex = 'мужской';
-	(age >= OLD_AGE_PENSION_MAN) ? oldAgePensionStatus = 'да' : oldAgePensionStatus = 'нет';
+	oldAgePensionStatus = (age >= OLD_AGE_PENSION_MAN) ? 'да' : 'нет';
 }
 else {
 	sex = 'женский';
-	(age >= OLD_AGE_PENSION_WOMAN) ? oldAgePensionStatus = 'да' : oldAgePensionStatus = 'нет';
+	oldAgePensionStatus = (age >= OLD_AGE_PENSION_WOMAN) ? 'да' : 'нет';
 }
 
-alert('Ваше ФИО: ' + surname + ' ' + firstName + ' ' + secondName +  '\n' + 'Ваш возраст в годах: ' + age + '\n' + 'Ваш возраст в днях: ' + ageInDays + '\n' + 'Через 5 лет вам будет: ' + (age + 5) + '\n' + 'Ваш пол: ' + sex + '\n' + 'Вы на пенсии: ' + oldAgePensionStatus);
+alert('Ваше ФИО: ' + surname + ' ' + firstName + ' ' + secondName +  '\n' + 'Ваш возраст в годах: ' + age + '\n' + 'Ваш возраст в днях: ' + ageInDays + '\n' + 'Через 5 лет вам будет: ' + (+age + 5) + '\n' + 'Ваш пол: ' + sex + '\n' + 'Вы на пенсии: ' + oldAgePensionStatus);
