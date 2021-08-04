@@ -1,5 +1,5 @@
 //Task-1
-var obj = {};
+var obj = {name : 25};
 function isEmpty(obj) {
 	for(var key in obj) {
 		return false;
@@ -64,24 +64,6 @@ sumTo(3);
 
 
 //Task-4
-function treeSum(arr) {
-	var sum = 0;
-	for(var key in arr) {
-		if(typeof(arr[key] !== null && arr[key]) === 'object' && arr[key].length) {
-			sum += treeSum(arr[key]);
-		}
-		if(typeof arr[key] !== 'number') continue;
-		else{
-			sum += arr[key];
-		}
-	}
-	return sum;
-}
-console.log(treeSum([5, 7, [4, null, undefined,'dsfasdf', '', '423423sdfdf', [2], 8, [1, null, undefined,'dsfasdf', '', '423423sdfdf', 3], 2], [9, []], 1, 8, null, {}, {name : 'Igor'}, undefined,'dsfasdf', '', '423423sdfdf']));
-
-
-
-
 function treeSum(arr, sum) {
 	for(var key in arr) {
 		if(typeof(arr[key] !== null && arr[key]) === 'object' && arr[key].length) {
