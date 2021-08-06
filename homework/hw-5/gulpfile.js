@@ -16,10 +16,6 @@ var gulp = require('gulp'),
 	fileinclude = require('gulp-file-include');
 
 
-
-
-
-
 //----------------------Синхронизация браузера, отслеживание изменений в SCSS и в HTML файлах-------------------------
 //----------------------Синхронизация браузера, отслеживание изменений в SCSS и в HTML файлах-------------------------
 gulp.task('serve', function(done) {  // task sass выполняется первым (перед  task serve) так как записан в квадратных скобках
@@ -32,6 +28,8 @@ gulp.task('serve', function(done) {  // task sass выполняется пер�
 	gulp.watch(["src/html/*.html", "src/components/*.html"], gulp.series('html-src')).on('change', browserSync.reload); // при изменении html в папке site перезагружается браузер
 	done();
 });
+
+
 gulp.task('sass',  function(done){ //Создаём таск "sass"
 	gulp.src(['src/sass/**/*.sass','src/sass/**/*.scss']) //Берём источник
 		.pipe(sourcemaps.init())
@@ -46,9 +44,6 @@ gulp.task('sass',  function(done){ //Создаём таск "sass"
 		.pipe(browserSync.stream()); //все изменения впиливаются в браузер без перезагрузки
 	done();
 });
-
-
-
 
 
 //---------------------Минимизация монохромных SVG-картинок и создание спрайта---------------------------------------
@@ -75,7 +70,6 @@ gulp.task('svgSpriteBuild', function (done) {
 		.pipe(gulp.dest('src/svg'));
 	done();
 });
-
 
 
 //---------------------Минимизация цветных SVG-картинок---------------------------------------------------------------
@@ -121,7 +115,6 @@ gulp.task('img-src', function (done) {
 });
 
 
-
 gulp.task('clear-css', function (done) {
 	done();
 	del(['./src/css/*.*', './src/css/global/*.*']);
@@ -133,33 +126,4 @@ gulp.task('clear-img', function (done) {
 });
 
 
-
-
-
-
-
 gulp.task('default', gulp.series('html-src', 'css-src', 'img-src', 'svgSpriteBuild', 'sass', 'serve'));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
