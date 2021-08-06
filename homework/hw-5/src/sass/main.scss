@@ -1,0 +1,113 @@
+@import "global-style";
+@import "header";
+@import "navbar";
+@import "reviews";
+@import "sidebar";
+@import "footer";
+
+.main {
+	&__wrap {
+		display: flex;
+		background-color: #fff;
+		@include box-shadow;
+	}
+	&__content {
+		max-width: calc(1300px - 240px);
+		position: relative;
+		padding-bottom: 123px;
+	}
+	&__title {
+		display: flex;
+		align-items: baseline;
+		padding: 48px 32px 40px;
+		font-size: 48px;
+		line-height: 53px;
+		color: $black-color;
+		font-weight: 500;
+		letter-spacing: -.7px;
+		span:not(.city) {
+			margin-right: 16px;
+		}
+		span.city {
+			cursor: pointer;
+			position: relative;
+			margin: 0 48px 0 0;
+			border-bottom: 1px dashed;
+			white-space: nowrap;
+			svg {
+				position: absolute;
+				top: 50%;
+				margin-top: -16px;
+				right: -48px;
+				width: 32px;
+				height: 32px;
+				fill: $black-color;
+				transform: rotate(0);
+				@include transition(transform, 0.3s);
+			}
+			&:hover {
+				svg {
+					transform: rotate(-180deg);
+					@include transition(transform, 0.3s);
+				}
+			}
+		}
+	}
+}
+
+@media (max-width: 1339px) {
+	.main {
+		&__content {
+			max-width: calc(1160px - 240px);
+		}
+	}
+}
+
+@media (max-width: 1199px) {
+	.main {
+		&__content {
+			max-width: 100%;
+			padding-bottom: 0;
+		}
+	}
+}
+
+@media (max-width: 959px) {
+	.main {
+		&__title {
+			padding: 32px 24px;
+			font-size: 38px;
+			line-height: 45px;
+			letter-spacing: -.2px;
+			span.city {
+				margin: 0 32px 0 0;
+				svg {
+					margin-top: -11px;
+					right: -32px;
+					width: 22px;
+					height: 22px;
+				}
+			}
+		}
+	}
+}
+
+@media (max-width: 639px) {
+	.main {
+		&__title {
+			flex-wrap: wrap;
+			padding: 24px;
+			font-size: 32px;
+			line-height: 40px;
+			span.city {
+				margin: 0 28px 0 0;
+				svg {
+					margin-top: -9px;
+					right: -28px;
+					width: 18px;
+					height: 18px;
+				}
+			}
+		}
+	}
+}

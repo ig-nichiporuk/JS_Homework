@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="format-detection" content="telephone=no">
+	<title>QULIX</title>
+	<link href="fonts/stylesheet.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/main.css?v.1">
+	<script src="js/jquery-3.6.0.js"></script>
+	<script src="js/global_svg_localstorage.js"></script>
+	<script src="js/main.js?v.1"></script>
+</head>
+<body>
+<div class="overlay overlayJs"></div>
+@@include('../components/header.html')
+@@include('../components/navbar.html')
+<main class="main">
+	<div class="container">
+		<div class="main__wrap">
+			<div class="main__sidebar">
+				@@include('../components/sidebar.html', {})
+			</div>
+			<div class="main__content">
+				<h1 class="main__title">
+					<span>Page title in</span>
+					<span class="city">
+						New York
+						<svg>
+						    <use xlink:href="#down-arrow"></use>
+						</svg>
+					</span>
+				</h1>
+				@@include('../components/reviews.html')
+				@@include('../components/footer.html')
+			</div>
+		</div>
+	</div>
+</main>
+</body>
+</html>
+
+
+

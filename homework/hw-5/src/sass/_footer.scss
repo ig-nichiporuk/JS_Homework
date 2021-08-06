@@ -1,0 +1,55 @@
+@import "variables";
+.footer {
+	position: fixed;
+	z-index: 2;
+	width: 100%;
+	bottom: 0;
+	max-width: inherit;
+	background-color: $footer-bgc;
+	&__links,
+	&__copyright {
+		padding: 16px 24px;
+	}
+	&__links {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		a {
+			display: block;
+			font-family: 'PT Root UI';
+			font-size: 16px;
+			line-height: 24px;
+			color: $gray-light-color;
+			transition: color .2s ease-in-out;
+			&:hover {
+				font-weight: 500;
+				color: $hover-gray-light-color;
+				transition: color .2s ease-in-out;
+			}
+		}
+		li {
+			margin-right: 16px;
+		}
+	}
+	&__copyright {
+		display: flex;
+		align-items: center;
+		box-shadow: inset 0 1px 0 0 #fff;
+		svg {
+			width: 70px;
+			height: 40px;
+			fill: $gray-light-color;
+		}
+		p {
+			margin-left: 16px;
+			font-size: 14px;
+			line-height: 17px;
+			color: $gray-light-color;
+		}
+	}
+}
+@media (max-width: 1199px) {
+	.footer {
+		position: relative;
+	}
+}

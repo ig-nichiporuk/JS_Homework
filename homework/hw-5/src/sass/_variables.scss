@@ -1,0 +1,25 @@
+$gray-color : #ccc;
+$hover-gray-color : #fff;
+
+$gray-light-color : #99a1b3;
+$hover-gray-light-color : #6a7ba0;
+
+$black-color : #303030;
+
+$dropdown-index : 10;
+$menu-index : 25;
+$sidebar-index : 20;
+
+$header-bgc : #2d313d;
+$footer-bgc : #f2f4f8;
+
+@mixin transition($property, $time){
+	transition: $property $time ease-in-out;
+}
+
+@mixin box-shadow{
+	box-shadow: 0 4px 34px rgba(0, 0, 0, 0.08),
+				0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+

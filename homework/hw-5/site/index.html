@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no">
+    <title>QULIX</title>
+    <link href="fonts/stylesheet.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css?v.1">
+    <script src="js/jquery-3.6.0.js"></script>
+    <script src="js/global_svg_localstorage.js"></script>
+    <script src="js/main.js?v.1"></script>
+</head>
+
+<body>
+    <div class="overlay overlayJs"></div>
+    <header class="header">
+        <div class="container">
+            <div class="header__wrap">
+                <a href="#" class="header__logo">
+                    <svg>
+                        <use xlink:href="#logo"></use>
+                    </svg>
+                </a>
+                <div class="header__items">
+                    <div class="header__select">
+                        <span class="header__select-btn">
+                            <span>New York</span>
+                            <svg>
+                                <use xlink:href="#down-arrow"></use>
+                            </svg>
+                        </span>
+                        <div class="header__select-dropdown">
+                            <ul>
+                                <li><a href="#">Lorem ipsum.</a></li>
+                                <li><a href="#">Lorem ipsum.</a></li>
+                                <li><a href="#">Lorem ipsum.</a></li>
+                                <li><a href="#">Lorem ipsum.</a></li>
+                                <li><a href="#">Lorem ipsum.</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <a href="#" class="header__notifications">
+                        <svg>
+                            <use xlink:href="#bell"></use>
+                        </svg>
+                    </a>
+                    <a href="#" class="header__massanges">
+                        <svg>
+                            <use xlink:href="#envelope"></use>
+                        </svg>
+                    </a>
+                    <a href="#" class="header__cabinet">
+                        <span class="header__cabinet-user">Will Smith</span>
+                        <img src="img/will-smith.jpg" alt="user-photo" class="header__cabinet-photo">
+                    </a>
+                    <a href="#" class="header__search">
+                        <svg>
+                            <use xlink:href="#magnifying-glass"></use>
+                        </svg>
+                    </a>
+                    <span class="header__menu openMenuJs" data-info="menu">
+                        <span class="header__menu-wrap">
+                            <span class="top"></span>
+                            <span class="middle"></span>
+                            <span class="bottom"></span>
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav navJS">
+        <div class="container">
+            <div class="nav__wrap">
+                <a href="#" class="nav__link">Menu item</a>
+                <a href="#" class="nav__link">Menu item</a>
+                <a href="#" class="nav__link">Menu item</a>
+                <a href="#" class="nav__link">Menu item</a>
+                <a href="#" class="nav__link">Menu item</a>
+                <a href="#" class="nav__link">Menu item</a>
+                <a href="#" class="nav__link nav__link_mob">
+                    <svg>
+                        <use xlink:href="#bell"></use>
+                    </svg>
+                    Notifications
+                </a>
+                <a href="#" class="nav__link nav__link_mob">
+                    <svg>
+                        <use xlink:href="#envelope"></use>
+                    </svg>
+                    Massanges
+                </a>
+                <a href="#" class="nav__link nav__link_mob">
+                    <img src="img/will-smith.jpg" alt="user-photo">
+                    Cabinet
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main">
+        <div class="container">
+            <div class="main__wrap">
+                <div class="main__sidebar">
+                    <div class="sidebar sidebarJS">
+                        <div class="sidebar__wrap">
+                            <ul class="sidebar__list">
+                                <li class="sidebar__item"><a href="#">Submenu item</a></li>
+                                <li class="sidebar__item"><a href="#">Submenu item</a></li>
+                            </ul>
+                            <span class="sidebar__title">Submenu1</span>
+                            <ul class="sidebar__list">
+                                <li class="sidebar__item"><a href="#">Submenu item</a></li>
+                                <li class="sidebar__item"><a href="#">Submenu item</a></li>
+                                <li class="sidebar__item"><a href="#">Submenu item</a></li>
+                                <li class="sidebar__item"><a href="#">Submenu item</a></li>
+                            </ul>
+                            <span class="sidebar__title">Submenu2</span>
+                            <ul class="sidebar__list">
+                                <li class="sidebar__item"><a href="#">Submenu item</a></li>
+                                <li class="sidebar__item"><a href="#">Submenu item</a></li>
+                            </ul>
+                            <span class="sidebar__title">Submenu3</span>
+                            <ul class="sidebar__list">
+                                <li class="sidebar__item"><a href="#">Submenu item</a></li>
+                                <li class="sidebar__item"><a href="#">Submenu item</a></li>
+                                <li class="sidebar__item"><a href="#">Submenu item item</a></li>
+                                <li class="sidebar__item"><a href="#">Submenu item</a></li>
+                                <li class="sidebar__item"><a href="#">Submenu item</a></li>
+                                <li class="sidebar__item"><a href="#">Submenu item ubmenu</a></li>
+                            </ul>
+                            <span class="sidebar__title">Submenu4</span>
+                            <ul class="sidebar__list">
+                                <li class="sidebar__item"><a href="#">Submenu item</a></li>
+                                <li class="sidebar__item"><a href="#">Submenu item</a></li>
+                                <li class="sidebar__item"><a href="#">Submenu item item</a></li>
+                                <li class="sidebar__item"><a href="#">Submenu itemitem </a></li>
+                            </ul>
+                        </div>
+                        <div class="sidebar__btn sidebarBtnJS" data-info="sidebar">
+                            <svg>
+                                <use xlink:href="#chevron"></use>
+                            </svg>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="main__content">
+                    <h1 class="main__title">
+                        <span>Page title in</span>
+                        <span class="city">
+                            New York
+                            <svg>
+                                <use xlink:href="#down-arrow"></use>
+                            </svg>
+                        </span>
+                    </h1>
+                    <div class="reviews">
+                        <div class="reviews__controls">
+                            <div class="reviews__search">
+                                <input type="text" placeholder="Search...">
+                            </div>
+                            <div class="reviews__btns">
+                                <div class="reviews__btn">
+                                    <svg>
+                                        <use xlink:href="#add"></use>
+                                    </svg>
+                                    <span>Add item</span>
+                                </div>
+                                <div class="reviews__btn">
+                                    <svg>
+                                        <use xlink:href="#filter"></use>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="reviews__wrap">
+                            <div class="review">
+                                <div class="review__photo">
+                                    <img src="img/webp/matthew.webp" alt="user-photo" class="review__photo">
+                                    <div class="review__info">
+                                        <div class="review__user">
+                                            <span class="review__user-name">User name</span>
+                                            <span class="review__user-status">Pro</span>
+                                        </div>
+                                        <div class="review__statistics">
+                                            <a href="#">
+                                                <svg>
+                                                    <use xlink:href="#speech-bubbles-comment-option"></use>
+                                                </svg>
+                                                2
+                                            </a>
+                                            <a href="#">
+                                                <svg>
+                                                    <use xlink:href="#time"></use>
+                                                </svg>
+                                                20m
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="review__content">
+                                    <div class="review__info">
+                                        <div class="review__user">
+                                            <span class="review__user-name">User name</span>
+                                            <span class="review__user-status">Pro</span>
+                                        </div>
+                                        <div class="review__statistics">
+                                            <a href="#">
+                                                <svg>
+                                                    <use xlink:href="#speech-bubbles-comment-option"></use>
+                                                </svg>
+                                                2
+                                            </a>
+                                            <a href="#">
+                                                <svg>
+                                                    <use xlink:href="#time"></use>
+                                                </svg>
+                                                20m
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <span class="review__title">
+                                        Item title 1
+                                    </span>
+                                    <p class="review__text">
+                                        Suspendisse potenti. Duis imperdiet ex non leo condimentum efficitur. Sed rhoncus eleifend lacus sit amet faucibus. Nunc semper nisl a dolor pretium dapibus quis quis lacus. Nulla faucibus viverra laoreet. Fusce in scelerisque magna. Duis porta erat vitae lectus lacinia tempus.
+                                    </p>
+                                    <div class="review__tags">
+                                        <svg>
+                                            <use xlink:href="#tag-black-shape"></use>
+                                        </svg>
+                                        <p>tag1, tag2, tag3</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="review">
+                                <div class="review__photo">
+                                    <img src="img/webp/brad.webp" alt="user-photo" class="review__photo">
+                                    <div class="review__info">
+                                        <div class="review__user">
+                                            <span class="review__user-name">User name</span>
+                                            <span class="review__user-status">Member</span>
+                                        </div>
+                                        <div class="review__statistics">
+                                            <a href="#">
+                                                <svg>
+                                                    <use xlink:href="#speech-bubbles-comment-option"></use>
+                                                </svg>
+                                                13
+                                            </a>
+                                            <a href="#">
+                                                <svg>
+                                                    <use xlink:href="#time"></use>
+                                                </svg>
+                                                50m
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="review__content">
+                                    <div class="review__info">
+                                        <div class="review__user">
+                                            <span class="review__user-name">User name</span>
+                                            <span class="review__user-status">Pro</span>
+                                        </div>
+                                        <div class="review__statistics">
+                                            <a href="#">
+                                                <svg>
+                                                    <use xlink:href="#speech-bubbles-comment-option"></use>
+                                                </svg>
+                                                13
+                                            </a>
+                                            <a href="#">
+                                                <svg>
+                                                    <use xlink:href="#time"></use>
+                                                </svg>
+                                                50m
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <span class="review__title">
+                                        Item title 2
+                                    </span>
+                                    <p class="review__text">
+                                        Suspendisse potenti. Duis imperdiet ex non leo condimentum efficitur. Sed rhoncus eleifend lacus sit amet faucibus. Nunc semper nisl a dolor pretium dapibus quis quis lacus. Nulla faucibus viverra laoreet. Fusce in scelerisque magna. Duis porta erat vitae lectus lacinia tempus.
+                                    </p>
+                                    <div class="review__tags">
+                                        <svg>
+                                            <use xlink:href="#tag-black-shape"></use>
+                                        </svg>
+                                        <p>tag1, tag2, tag3</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="review">
+                                <div class="review__photo">
+                                    <img src="img/webp/scarlet.webp" alt="user-photo" class="review__photo">
+                                    <div class="review__info">
+                                        <div class="review__user">
+                                            <span class="review__user-name">User name</span>
+                                            <span class="review__user-status">Member</span>
+                                        </div>
+                                        <div class="review__statistics">
+                                            <a href="#">
+                                                <svg>
+                                                    <use xlink:href="#speech-bubbles-comment-option"></use>
+                                                </svg>
+                                                5
+                                            </a>
+                                            <a href="#">
+                                                <svg>
+                                                    <use xlink:href="#time"></use>
+                                                </svg>
+                                                10m
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="review__content">
+                                    <div class="review__info">
+                                        <div class="review__user">
+                                            <span class="review__user-name">User name</span>
+                                            <span class="review__user-status">Pro</span>
+                                        </div>
+                                        <div class="review__statistics">
+                                            <a href="#">
+                                                <svg>
+                                                    <use xlink:href="#speech-bubbles-comment-option"></use>
+                                                </svg>
+                                                5
+                                            </a>
+                                            <a href="#">
+                                                <svg>
+                                                    <use xlink:href="#time"></use>
+                                                </svg>
+                                                10m
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <span class="review__title">
+                                        Item title 3
+                                    </span>
+                                    <p class="review__text">
+                                        Suspendisse potenti. Duis imperdiet ex non leo condimentum efficitur. Sed rhoncus eleifend lacus sit amet faucibus. Nunc semper nisl a dolor pretium dapibus quis quis lacus. Nulla faucibus viverra laoreet. Fusce in scelerisque magna. Duis porta erat vitae lectus lacinia tempus.
+                                    </p>
+                                    <div class="review__tags">
+                                        <svg>
+                                            <use xlink:href="#tag-black-shape"></use>
+                                        </svg>
+                                        <p>tag1, tag2, tag3</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="review">
+                                <div class="review__photo">
+                                    <img src="img/webp/robert.webp" alt="user-photo" class="review__photo">
+                                    <div class="review__info">
+                                        <div class="review__user">
+                                            <span class="review__user-name">User name</span>
+                                            <span class="review__user-status">Pro</span>
+                                        </div>
+                                        <div class="review__statistics">
+                                            <a href="#">
+                                                <svg>
+                                                    <use xlink:href="#speech-bubbles-comment-option"></use>
+                                                </svg>
+                                                23
+                                            </a>
+                                            <a href="#">
+                                                <svg>
+                                                    <use xlink:href="#time"></use>
+                                                </svg>
+                                                36m
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="review__content">
+                                    <div class="review__info">
+                                        <div class="review__user">
+                                            <span class="review__user-name">User name</span>
+                                            <span class="review__user-status">Pro</span>
+                                        </div>
+                                        <div class="review__statistics">
+                                            <a href="#">
+                                                <svg>
+                                                    <use xlink:href="#speech-bubbles-comment-option"></use>
+                                                </svg>
+                                                23
+                                            </a>
+                                            <a href="#">
+                                                <svg>
+                                                    <use xlink:href="#time"></use>
+                                                </svg>
+                                                36m
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <span class="review__title">
+                                        Item title 4
+                                    </span>
+                                    <p class="review__text">
+                                        Suspendisse potenti. Duis imperdiet ex non leo condimentum efficitur. Sed rhoncus eleifend lacus sit amet faucibus. Nunc semper nisl a dolor pretium dapibus quis quis lacus. Nulla faucibus viverra laoreet. Fusce in scelerisque magna. Duis porta erat vitae lectus lacinia tempus.
+                                    </p>
+                                    <div class="review__tags">
+                                        <svg>
+                                            <use xlink:href="#tag-black-shape"></use>
+                                        </svg>
+                                        <p>tag1, tag2, tag3</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="review">
+                                <div class="review__photo">
+                                    <img src="img/webp/will-smith.webp" alt="user-photo" class="review__photo">
+                                    <div class="review__info">
+                                        <div class="review__user">
+                                            <span class="review__user-name">User name</span>
+                                            <span class="review__user-status">Pro</span>
+                                        </div>
+                                        <div class="review__statistics">
+                                            <a href="#">
+                                                <svg>
+                                                    <use xlink:href="#speech-bubbles-comment-option"></use>
+                                                </svg>
+                                                9
+                                            </a>
+                                            <a href="#">
+                                                <svg>
+                                                    <use xlink:href="#time"></use>
+                                                </svg>
+                                                11m
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="review__content">
+                                    <div class="review__info">
+                                        <div class="review__user">
+                                            <span class="review__user-name">User name</span>
+                                            <span class="review__user-status">Pro</span>
+                                        </div>
+                                        <div class="review__statistics">
+                                            <a href="#">
+                                                <svg>
+                                                    <use xlink:href="#speech-bubbles-comment-option"></use>
+                                                </svg>
+                                                9
+                                            </a>
+                                            <a href="#">
+                                                <svg>
+                                                    <use xlink:href="#time"></use>
+                                                </svg>
+                                                11m
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <span class="review__title">
+                                        Item title 5
+                                    </span>
+                                    <p class="review__text">
+                                        Suspendisse potenti. Duis imperdiet ex non leo condimentum efficitur. Sed rhoncus eleifend lacus sit amet faucibus. Nunc semper nisl a dolor pretium dapibus quis quis lacus. Nulla faucibus viverra laoreet. Fusce in scelerisque magna. Duis porta erat vitae lectus lacinia tempus.
+                                    </p>
+                                    <div class="review__tags">
+                                        <svg>
+                                            <use xlink:href="#tag-black-shape"></use>
+                                        </svg>
+                                        <p>tag1, tag2, tag3</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="reviews__pagination">
+                            <a href="#" class="reviews__pagination-item reviews__pagination-item_prev">
+                                <span>
+                                    <svg>
+                                        <use xlink:href="#down-arrow"></use>
+                                    </svg>
+                                    Previous
+                                </span>
+                            </a>
+                            <a href="#" class="reviews__pagination-item reviews__pagination-item_next">
+                                <span>
+                                    Next
+                                    <svg>
+                                        <use xlink:href="#down-arrow"></use>
+                                    </svg>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <footer class="footer">
+                        <ul class="footer__links">
+                            <li><a href="#">About</a></li>
+                            <li><a href="#">Policies</a></li>
+                            <li><a href="#">Site map</a></li>
+                            <li><a href="#">Help</a></li>
+                            <li><a href="#">Contact us</a></li>
+                        </ul>
+                        <div class="footer__copyright">
+                            <svg>
+                                <use xlink:href="#logo"></use>
+                            </svg>
+                            <p>© 2015. Qulix Systems. All rights reserved.</p>
+                        </div>
+                    </footer>
+
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

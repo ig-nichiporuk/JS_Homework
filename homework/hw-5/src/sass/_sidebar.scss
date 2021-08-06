@@ -1,0 +1,104 @@
+@import "variables";
+.sidebar {
+	position: relative;
+	height: 100%;
+	&__wrap {
+		padding: 40px 0;
+		width: 240px;
+		border-right: 1px solid $gray-color;
+		height: 100%;
+	}
+	&__title,
+	&__item a {
+		padding-left: 32px;
+		padding-right: 32px;
+	}
+	&__item {
+		a {
+			display: block;
+			font-family: 'PT Root UI';
+			font-size: 18px;
+			line-height: 20px;
+			letter-spacing: -0.15px;
+			padding-top: 4px;
+			padding-bottom: 4px;
+			color: $gray-light-color;
+			transition: color .2s ease-in-out;
+			&:hover {
+				color: $hover-gray-light-color;
+				font-weight: 500;
+				transition: color .2s ease-in-out;
+			}
+		}
+	}
+	&__title {
+		display: block;
+		font-size: 20px;
+		line-height: 23px;
+		color: $black-color;
+	}
+	&__list + &__title {
+		margin-top: 32px;
+	}
+	&__title + &__list {
+		margin-top: 4px;
+	}
+	&__btn {
+		position: absolute;
+		display: none;
+		left: 100%;
+		top: calc(50% - 60px);
+		transform: translate3d(0, -50%, 0);
+		width: 20px;
+		height: 72px;
+		background-color: rgba(45, 49, 61, .7);
+		border-top-right-radius: 6px;
+		border-bottom-right-radius: 6px;
+		svg {
+			margin: auto;
+			width: 14px;
+			height: 14px;
+			fill: #fff;
+		}
+	}
+}
+
+@media (max-width: 959px) {
+	.sidebar {
+		&__wrap {
+			width: 220px;
+		}
+		&__title,
+		&__item a {
+			padding-left: 32px;
+			padding-right: 32px;
+		}
+	}
+}
+
+@media (max-width: 767px) {
+	.sidebar {
+		position: fixed;
+		z-index: $sidebar-index;
+		top: 60px;
+		left: -240px;
+		&__wrap {
+			background-color: #fff;
+			height: calc(100% - 60px);
+			max-height: 100%;
+			overflow-y: auto;
+			width: 240px;
+		}
+		&__btn {
+			display: flex;
+		}
+		.sidebar-open & {
+			left: 0;
+			transition: all .4s ease-in-out;
+		}
+		.close-all-main & {
+			left: -240px;
+			transition: all .4s ease-in-out;
+		}
+	}
+}
