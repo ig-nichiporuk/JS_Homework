@@ -1,6 +1,6 @@
 function Cat(name) {
 	this.name = name;
-	var foodAmount = 50;
+	var foodAmount = 60;
 
 	function formatFoodAmount() {
 		return foodAmount + ' гр.';
