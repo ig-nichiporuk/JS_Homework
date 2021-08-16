@@ -30,9 +30,7 @@
 		"gulp-uncss": "^1.0.6",
 		"gulp-watch": "^5.0.1",
 		"run-sequence": "^2.2.1",
+		"gulp-html-beautify": "^1.0.1",
 		"vinyl-ftp": "^0.6.1"
-	},
-	"dependencies": {
-		"gulp-html-beautify": "^1.0.1"
 	}
 }
