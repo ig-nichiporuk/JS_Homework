@@ -101,7 +101,11 @@ gulp.task('sprite', function (done) {
 
 
 gulp.task('html-src', function (done) {
-	gulp.src('./src/html/*.html').pipe(fileinclude()).pipe(htmlbeautify({indentSize: 2, "preserve_newlines": false})).pipe(gulp.dest('./src'));
+	var options = {
+		indentSize: 2,
+		"preserve_newlines": false
+	};
+	gulp.src('./src/html/*.html').pipe(fileinclude()).pipe(htmlbeautify(options)).pipe(gulp.dest('./src'));
 	done();
 });
 gulp.task('css-src', function (done) {
