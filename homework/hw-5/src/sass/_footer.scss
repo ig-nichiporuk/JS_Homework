@@ -1,10 +1,6 @@
 @import "variables";
 .footer {
-	position: fixed;
-	z-index: 2;
-	width: 100%;
-	bottom: 0;
-	max-width: inherit;
+	margin-top: auto;
 	background-color: $footer-bgc;
 	&__links,
 	&__copyright {
