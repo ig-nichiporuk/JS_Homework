@@ -23,10 +23,10 @@ Animal.prototype.feed = function () {
 
 function Cat(name) {
 	this.name = name;
+	Animal.apply(this, arguments);
 }
 
 Cat.prototype = Object.create(Animal.prototype);
-Cat.prototype.constructor = Cat;
 
 Cat.prototype.feed = function () {
 	Animal.prototype.feed.apply(this, arguments);
