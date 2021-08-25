@@ -69,16 +69,24 @@ var initialObj = {
 };
 
 function deepClone(obj) {
-	var clone = {};
-	for (var key in obj) {
-		if(typeof obj[key] === 'object' && obj[key] !== null) {
-			clone[key] = deepClone(obj[key]);
+	if (Array.isArray(obj)) {
+		var clone = [];
+		for (var i = 0; i < obj.length; i++) {
+			clone[i] = deepClone(obj[i]);
 		}
-		clone[key] = obj[key]
+		return clone;
 	}
-	return clone;
+	if (typeof obj === 'object' && obj !== null) {
+		var clone = {};
+		for (var key in obj) {
+			if (obj.hasOwnProperty(key)) {
+				clone[key] = deepClone(obj[key]);
+			}
+		}
+		return clone;
+	}
+	return obj;
 }
-
 var clonedObj = deepClone(initialObj);
 
 clonedObj.object.object2.array2[1].name = 'Vasya';
