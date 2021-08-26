@@ -23,7 +23,6 @@ Animal.prototype.feed = function () {
 
 function Cat(name) {
 	Animal.apply(this, arguments);
-	this.name = name;
 }
 
 Cat.prototype = Object.create(Animal.prototype);
