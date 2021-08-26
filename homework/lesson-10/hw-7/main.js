@@ -27,6 +27,7 @@ function Cat(name) {
 }
 
 Cat.prototype = Object.create(Animal.prototype);
+Cat.prototype.constructor = Cat;
 
 Cat.prototype.feed = function () {
 	Animal.prototype.feed.apply(this, arguments);
