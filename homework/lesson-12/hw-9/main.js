@@ -34,7 +34,7 @@ vowelCount('Текущее время', 0);
 function separatePhrases(text) {
 	var phrasesArr = text.toLowerCase().split(/[\.!\?]\s/g);
 	return phrasesArr.map(function (item) {
-		return "'"+ item +"' : Letters quantity is: " + item.replace(/[!-,.-/:-@[-`{-~\n\s\–\.{3,}\«\»]/g, '').length;
+		return "'"+ item +"' : Letters quantity is: " + item.replace(/[!-,.-/:-@[-`{-~\n\s\–\.\«\»]/g, '').length;
 	});
 }
 separatePhrases('Немногие, очень «друзья»! Я выскажусь: дружба. Человека – этим, немногие «друзья»? Разделить радость.');
@@ -42,7 +42,7 @@ separatePhrases('Немногие, очень «друзья»! Я выскаж�
 
 //Task-5
 function findRepetition(text) {
-	var textWords = text.toLowerCase().replace(/[!-,.-/:-@[-`{-~\n\s\–\.{3,}\«\»]/g, ' ').split(/\s{1,}/g),
+	var textWords = text.toLowerCase().replace(/[!-,.-/:-@[-`{-~\n\s\–\«\»]/g, ' ').split(/\s{1,}/g),
 		mostRepetitive = {};
 	for (var key in textWords) {
 		var compareWord = textWords[key],
