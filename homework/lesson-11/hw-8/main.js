@@ -32,19 +32,7 @@ isPalindrome('шАЛАш');
 //Task-4
 function areAnagrams(original, anagram) {
 	if(original.length === anagram.length) {
-		var originalChars = original.split(''),
-			anagramChars = anagram.split('');
-		for (var key in originalChars) {
-			if(anagram.indexOf(originalChars[key]) !== -1) {
-				var originalSingleCharArr = originalChars.filter(function(item) {
-					return item === originalChars[key];
-				});
-				var anagramSingleCharArr = anagramChars.filter(function(item) {
-					return item === originalChars[key];
-				});
-				if(originalSingleCharArr.length !== anagramSingleCharArr.length) return false;
-			}
-		} return true;
+		return original.split('').sort().join('') === anagram.split('').sort().join('') ? true : false;
 	} return false;
 }
 areAnagrams('мошкара', 'ромашка');
