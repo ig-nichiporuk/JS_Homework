@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mouse Events</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="page-content">
+        <div class="page-content__column">
+            <p class="explanation">
+                <strong>MouseOver установлен только на родительском блоке:</strong><br>
+                - При наведении на родительский блок извне или с дочернего блока - событие срабатывает<br>
+                - При наведении на дочерний блок - событие также срабатывает
+            </p>
+            <div class="container mouseover">
+                <div class="container__child"></div>
+            </div>
+
+            <p class="explanation">
+                <strong>MouseOut установлен только на родительском блоке:</strong><br>
+                - При уведении с родительского блока наружу или на дочерний блок - событие срабатывает<br>
+                - При уведении с дочернего блока - событие также срабатывает
+            </p>
+            <div class="container mouseout">
+                <div class="container__child"></div>
+            </div>
+
+            <p class="explanation">
+                <strong>MouseEnter установлен только на родительском блоке:</strong><br>
+                - При наведении на родительский блок ТОЛЬКО извне - событие срабатывает
+            </p>
+            <div class="container mouseenter">
+                <div class="container__child"></div>
+            </div>
+
+            <p class="explanation">
+                <strong>MouseLeave установлен только на родительском блоке:</strong><br>
+                - При уведении с родительского блока ТОЛЬКО наружу - событие срабатывает<br>
+            </p>
+            <div class="container mouseleave">
+                <div class="container__child"></div>
+            </div>
+        </div>
+
+        <div class="page-content__column">
+            <p class="explanation">
+                <strong>MouseOver установлен на оба блока:</strong><br>
+                - При наведении на родительский блок извне или с дочернего блока - срабатывает родительское событие<br>
+                - При наведении на дочерний блок - срабатывает дочернее событие, затем родительское (всплытие)
+            </p>
+            <div class="container mouseover">
+                <div class="container__child mouseover__child"></div>
+            </div>
+
+            <p class="explanation">
+                <strong>MouseOut установлен на оба блока:</strong><br>
+                - При уведении с родительского блока наружу или на дочерний блок - срабатывает родительское событие<br>
+                - При уведении с дочернего блока - срабатывает дочернее событие, затем родительское (всплытие)
+            </p>
+            <div class="container mouseout">
+                <div class="container__child mouseout__child"></div>
+            </div>
+
+            <p class="explanation">
+                <strong>MouseEnter установлен на оба блока:</strong><br>
+                - При наведении на родительский блок ТОЛЬКО извне - срабатывает родительское событие<br>
+                - При наведении на дочерний блок - срабатывает дочернее событие
+            </p>
+            <div class="container mouseenter">
+                <div class="container__child mouseenter__child"></div>
+            </div>
+
+            <p class="explanation">
+                <strong>MouseLeave установлен на оба блока:</strong><br>
+                - При уведении с родительского блока ТОЛЬКО наружу - срабатывает родительское событие<br>
+                - При уведении с дочернего блока - срабатывает дочернее событие
+            </p>
+            <div class="container mouseleave">
+                <div class="container__child mouseleave__child"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
