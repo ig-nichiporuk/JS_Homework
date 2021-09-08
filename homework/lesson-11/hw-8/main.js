@@ -17,8 +17,7 @@ positiveNumber([-1, 0, 2, 34, -2]);
 
 //Task-3
 function isPalindrome(string) {
-	var stringLowerCase = string.toLowerCase();
-	console.log(stringLowerCase.split('').reverse().join('') === stringLowerCase ? true : false);
+	console.log(string.toLowerCase().split('').reverse().join('') === string.toLowerCase());
 }
 isPalindrome('игра');
 isPalindrome('скРипт');
@@ -31,9 +30,7 @@ isPalindrome('шАЛАш');
 
 //Task-4
 function areAnagrams(original, anagram) {
-	if(original.length === anagram.length) {
-		return original.split('').sort().join('') === anagram.split('').sort().join('') ? true : false;
-	} return false;
+	console.log(original.split('').sort().join('') === anagram.split('').sort().join(''));
 }
 areAnagrams('мошкара', 'ромашка');
 
