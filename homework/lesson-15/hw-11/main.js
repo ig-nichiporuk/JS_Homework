@@ -34,7 +34,7 @@ button.onclick = function (e) {
 
 	for (var i = 0; i < inputs.length; i++) {
 		var val = inputs[i].value;
-		if(+val && val >= 1 && val <= 10 && (val % parseInt(val) ==0) ) {
+		if(+val && val >= 1 && val <= 10 && (val % parseInt(val) == 0) ) {
 			chessSize[inputs[i].dataset.id] = val;
 		} else {
 			inputs[i].classList.add('error');
