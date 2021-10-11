@@ -353,7 +353,7 @@ input::placeholder {
 	transition-duration: .3s;
 	transition-timing-function: ease-in-out;
 	overflow: hidden;
-	&__btn.open + & {
+	&.open {
 		display: block;
 	}
 	&__wrap {
