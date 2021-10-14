@@ -1,0 +1,63 @@
+body {
+    font-family: sans-serif;
+    background: black;
+}
+
+.page-content {
+    width: 70%;
+    margin: 25px auto;
+}
+
+button {
+    float: right;
+    font-weight: bold;
+    background: #00ff5c;
+    outline: none;
+    cursor: pointer;
+    padding: 6px 12px;
+    border: solid white 1px;
+}
+
+.users-tabs {
+    display: flex;
+}
+
+.user-tab {
+    color: white;
+    padding: 10px 30px;
+    background: #00ff5c;
+    border-radius: 7px 7px 0 0;
+    margin-right: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.user-tab.active {
+    background: white;
+    color: black;
+}
+
+.info-block {
+    border-radius: 0 7px 7px;
+    background: white;
+    display: flex;
+    align-items: center;
+}
+
+.info-block img {
+    width: 128px;
+    height: 128px;
+    margin: 25px;
+}
+
+.info-block p {
+    line-height: 24px;
+    font-style: italic;
+}
+
+.error {
+    color: red;
+    position: relative;
+    top: 6px;
+    max-width: 260px;
+}

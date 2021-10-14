@@ -1,0 +1,40 @@
+* {
+    box-sizing: border-box;
+}
+
+.form-group {
+    margin: 10px;
+}
+
+label {
+    width: 25px;
+    display: inline-block;
+    font: bold 16px sans-serif;
+    vertical-align: middle;
+}
+
+button {
+    margin-left: 29px;
+}
+
+table, tr, td {
+    border: solid black 1px;
+}
+
+table {
+    margin-left: 39px;
+    background: white;
+}
+
+td {
+    width: 30px;
+    height: 30px;
+}
+
+.black {
+    background: black;
+}
+
+.white {
+    background: white;
+}
