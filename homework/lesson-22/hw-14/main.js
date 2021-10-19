@@ -4,7 +4,7 @@ var timer = document.getElementById('timer'),
 	timerReset,
 	timerSave,
 	timerInterval,
-	deadline = 1; //минуты
+	deadline = 6000; // 1 минута
 
 if(localStorage.getItem('timerInfo')) {
 	var t = stateTimer();
@@ -89,11 +89,10 @@ function getTimer() {
 }
 
 function updateTimer(endtime) {
-	localStorage.setItem('timerMilliseconds', +localStorage.getItem('timerMilliseconds') + 1);
+	var total = +localStorage.getItem('timerMilliseconds');
+	getTimer();
 
-	var t = getTimer();
-
-	if(t.min == endtime) {
+	if(total == endtime) {
 		clearInterval(timerInterval);
 		localStorage.setItem('timerInfo', JSON.stringify({
 			status : 'end',
@@ -101,6 +100,8 @@ function updateTimer(endtime) {
 		timerSave = timer.getElementsByClassName('timerSaveJs')[0];
 		timerSave.remove();
 		timerControl.remove();
+	} else {
+		localStorage.setItem('timerMilliseconds', +localStorage.getItem('timerMilliseconds') + 1);
 	}
 }
 
