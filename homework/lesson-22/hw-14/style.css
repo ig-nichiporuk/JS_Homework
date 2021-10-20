@@ -1,0 +1,95 @@
+body {
+	display: flex;
+	margin: 0;
+	padding: 0;
+	font-family: 'Roboto', sans-serif;
+	-ms-text-size-adjust: 100%;
+	-moz-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+	min-width: 640px;
+	height: 100%;
+	min-height: 100vh;
+}
+
+.timer, .timer__btns, .timer__wrap {
+	display: flex;
+}
+
+.timer {
+	flex-direction: column;
+	align-items: center;
+	margin: auto;
+	min-width: 400px;
+	min-height: 500px;
+	padding-top: 50px;
+	position: relative;
+}
+
+.timer > .timer__control {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.timer__control {
+	font: inherit;
+	background-color: #303030;
+	color: #f5f5f5;
+	outline: 0;
+	border: none;
+	width: 100%;
+	border-radius: 10px;
+	font-size: 20px;
+	line-height: 48px;
+	font-weight: 500;
+	text-transform: uppercase;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	cursor: pointer;
+}
+
+
+.timer__btns {
+	justify-content: space-between;
+	width: 100%;
+	margin-bottom: 24px;
+}
+
+.timer__btns > * {
+	width: 48%;
+}
+
+.timer__btns > *:only-child {
+	width: 100%;
+}
+
+.timer__wrap {
+	align-items: baseline;
+	font-family: 'Black Ops One', sans-serif;
+	font-size: 56px;
+	line-height: 72px;
+	margin: 16px 0;
+}
+.timer__item {
+	width: 85px;
+	text-align: center;
+}
+
+.timer__list {
+	margin: 0;
+	padding: 0;
+	font-size: 32px;
+	line-height: 40px;
+	letter-spacing: 0.03px;
+}
+
+.timer__list li {
+	padding-left: 8px;
+}
+
+.timer__list li::marker {
+	font-size: 18px;
+	line-height: 40px;
+	margin-right: 8px;
+}
+

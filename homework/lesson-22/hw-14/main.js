@@ -4,7 +4,7 @@ var timer = document.getElementById('timer'),
 	timerReset,
 	timerSave,
 	timerInterval,
-	deadline = 6000; // 1 минута
+	deadline = 1000; // 1 час
 
 if(localStorage.getItem('timerInfo')) {
 	var t = stateTimer();
@@ -48,8 +48,10 @@ timer.onclick = function (e) {
 };
 
 function showTimerBtns() {
-	timerList.insertAdjacentHTML('beforebegin', '<button class="timer__control timerResetJs">Reset</button>'
-		+'<button class="timer__control timerSaveJs">Save</button>');
+	timerList.insertAdjacentHTML('beforebegin', '<div class="timer__btns timerBtnsJs">'
+		+'<button class="timer__control timerResetJs">Reset</button>'
+		+'<button class="timer__control timerSaveJs">Save</button>'
+	+'</div>');
 }
 
 function showTimerList() {
@@ -90,6 +92,7 @@ function getTimer() {
 
 function updateTimer(endtime) {
 	var total = +localStorage.getItem('timerMilliseconds');
+
 	getTimer();
 
 	if(total == endtime) {
@@ -106,20 +109,17 @@ function updateTimer(endtime) {
 }
 
 function resetTimer() {
-	var timerWrap = timer.getElementsByClassName('timerWrapJs')[0];
+	var timerWrap = timer.getElementsByClassName('timerWrapJs')[0],
+		timerBtns = timer.getElementsByClassName('timerBtnsJs')[0];
 	timer.insertBefore(timerControl, timerWrap);
 	timerReset = timer.getElementsByClassName('timerResetJs')[0];
 	timerSave = timer.getElementsByClassName('timerSaveJs')[0];
-	if(timerReset) {
-		timerReset.remove();
-	}
-	if(timerSave) {
-		timerSave.remove();
+	if(timerReset || timerSave) {
+		timerBtns.remove();
 	}
 	timerList.innerHTML = '';
 	clearInterval(timerInterval);
-	localStorage.removeItem('timerMilliseconds');
-	localStorage.removeItem('timerPointsList');
+	localStorage.clear();
 	localStorage.setItem('timerInfo', JSON.stringify({
 		status : 'init',
 		text : 'Start'
