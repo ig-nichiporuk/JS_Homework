@@ -4,7 +4,7 @@ var timer = document.getElementById('timer'),
 	timerReset,
 	timerSave,
 	timerInterval,
-	deadline = 1000; // 1 час
+	deadline = 360000; // 1 час
 
 if(localStorage.getItem('timerInfo')) {
 	var t = stateTimer();
