@@ -78,14 +78,16 @@ f(['Вася', 'Петя']);
 
 
 // Task 9
-function f(arr) {
-	return arr.reduce((currentEl, nextEl) => Object.assign(currentEl, nextEl));
-}
-f([
+const arr = [
 	{name: 'Vasya'},
 	{name: 'Piotr', age: 25},
 	{salary: '2000$'}
-]);
+]
+function f(arr) {
+	console.log(arr.reduce((currentEl, nextEl) => Object.assign(currentEl, nextEl),{}));
+}
+f(arr);
+console.log(arr);
 
 
 //Task 10
