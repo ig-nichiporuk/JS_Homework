@@ -22,21 +22,17 @@ result({a: 2, b: 3}, 2);
 
 
 // Task 4
-const arr = ['Igor', 30];
 function user(name, age) {
 	return `Hello, I'm ${name} and I'm ${age} years old.`
 }
-user(...arr);
+user(...['Igor', 30]);
 
 
 // Task 5
-const arr = [1, 22, 6, 9];
 function numbers(...nums) {
-	for (const num of nums) {
-		console.log(num);
-	}
+	for (const num of nums) console.log(num);
 }
-numbers(...arr);
+numbers(...[1, 22, 6, 9]);
 
 
 // Task 6
@@ -90,4 +86,28 @@ f([
 	{name: 'Piotr', age: 25},
 	{salary: '2000$'}
 ]);
+
+
+//Task 11
+function showRange(a, b) {
+	if (a > b) [a, b] = [b, a];
+	return new Promise((resolve, reject) => {
+		let interval = setInterval(() => {
+			if(a == b){
+				clearInterval(interval);
+				resolve(a);
+			}
+			if(Number.isInteger(a) && Number.isInteger(b)){
+				console.log(a++);
+			} else {
+				reject('введено не целое число');
+			}
+		}, 1000);
+	});
+}
+
+showRange(5,2)
+	.then(b => console.log(`Последнее число диапазона: ${b}`))
+	.catch(error => console.log(`Возникла ошибка: ${error}`))
+	.finally(() => console.log('Работа промиса завершена'));
 
