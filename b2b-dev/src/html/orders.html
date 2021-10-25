@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ru">
+<head>
+	@@include('../components/head.html', {
+		"title" : "Orders Main",
+	})
+</head>
+<body>
+@@include('../components/header.html', {
+	"headerInside" : "header_inside",
+	"headerOnMain" : "",
+	"dropdownAdmin" : "hidden",
+	"dropdownUser" : "",
+})
+<main>
+	@@include('../components/user-info.html', {
+		"title" : "Заказ-наряд № АС000002",
+		"visibleInfoData" : "hidden",
+		"isAdmin" : "hidden"
+	})
+	<div class="content">
+		<div class="container">
+			@@include('../components/orders-control.html', {
+				"isAdmin" : "hidden"
+			})
+
+			@@include('../components/orders-table.html', {
+				"isAdmin" : "hidden"
+			})
+
+			@@include('../components/pagination.html')
+		</div>
+	</div>
+</main>
+@@include('../components/footer.html')
+
+</body>
+</html>

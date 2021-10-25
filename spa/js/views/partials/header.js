@@ -1,0 +1,114 @@
+import {getTokenFromCookies} from '../../helpers/utils.js';
+
+import Component from '../../views/component.js';
+
+class Header extends Component {
+	render() {
+
+		let isAuthorized = getTokenFromCookies();
+
+		return new Promise(resolve => {
+			resolve(`
+				<div class="header__main headerMainJs">
+					<div class="container">
+						<div class="header__main-wrapper">
+							<div class="header__main-logo">
+								<a href="#">
+									<svg>
+										<use xlink:href="#autoset-small"></use>
+									</svg>
+								</a>
+							</div>
+							<ul class="header__links">
+								<li class="phone">
+									<svg class="phone">
+										<use xlink:href="#phone"></use>
+									</svg>
+									<a href="tel:+375295020151">+375 (29) 502-01-51</a>
+								</li>
+								<li class="email">
+									<svg class="email">
+										<use xlink:href="#email"></use>
+									</svg>
+									<a href="mailto:partners@autoset.by">partners@autoset.by</a>
+								</li>
+							</ul>
+							<div class="header__cabinet dropdown dropdownWrapJs ${!isAuthorized ? 'hidden' : ''}">
+								<div class="header__cabinet-btn dropdown__btn dropdownBtnJs">
+									<svg class="char">
+										<use xlink:href="#icon-user"></use>
+									</svg>
+									<span>Кабинет</span>
+									<svg class="arrow">
+										<use xlink:href="#arrow"></use>
+									</svg>
+								</div>
+								<div class="dropdown__body" >
+									<div class="dropdown__wrap">
+										<div class="user">
+											${isAuthorized == 'user' ? '<span>Организация:</span><p>ИП Толокнников В. А.</p>' : '<span>Пользователь:</span><p>Мадорский Кирилл</p>'}
+										</div>
+										${isAuthorized == 'manager' ? '<div class="status"><span>Статус:</span><p>Администратор</p></div>' : ''}
+										${isAuthorized == 'user' ? '<a href="#" class="helper"><svg><use xlink:href="#help"></use></svg>Помощь</a>' : ''}
+										<a href="#" class="btn-style btn-style_red">Выход</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="header__links-mob">
+					<div class="container">
+						<ul class="header__links">
+							<li class="phone">
+								<svg class="phone">
+									<use xlink:href="#phone"></use>
+								</svg>
+								<a href="tel:+375295020151">+375 (29) 502-01-51</a>
+							</li>
+							<li class="email">
+								<svg class="email">
+									<use xlink:href="#email"></use>
+								</svg>
+								<a href="mailto:partners@autoset.by">partners@autoset.by</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="header__full ${!isAuthorized ? 'hidden' : ''}">
+					<div class="container">
+						<div class="header__full-wrapper">
+							<a href="#" class="header__full-logo">
+								<svg>
+									<use xlink:href="#autoset-big"></use>
+								</svg>
+							</a>
+							<nav class="header__nav">
+								<a href="#">
+									<svg>
+										<use xlink:href="#orders"></use>
+									</svg>
+									Заказы
+								</a>
+								<a href="#">
+									<svg>
+										<use xlink:href="#acts"></use>
+									</svg>
+									Акты
+								</a>
+								<a href="#">
+									<svg>
+										<use xlink:href="#help"></use>
+									</svg>
+									Помощь
+								</a>
+							</nav>
+						</div>
+					</div>
+				</div>
+            `);
+		});
+	}
+}
+
+export default Header;

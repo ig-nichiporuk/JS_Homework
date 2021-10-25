@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ru">
+<head>
+	@@include('../components/head.html', {
+		"title" : "Acts",
+	})
+</head>
+<body>
+@@include('../components/header.html', {
+"headerInside" : "header_inside",
+"headerOnMain" : "",
+"dropdownAdmin" : "hidden",
+"dropdownUser" : "",
+})
+<main>
+	@@include('../components/user-info.html', {
+		"title" : "Акты выполненных работ",
+		"visibleInfoData" : "hidden",
+		"isAdmin" : "hidden"
+	})
+	<div class="content">
+		<div class="container">
+
+			@@include('../components/acts-control.html')
+
+			@@include('../components/acts-table.html', {
+				"isAdmin" : "hidden",
+				"isEdit" : "<!--edited-->",
+			})
+
+			@@include('../components/pagination.html')
+		</div>
+	</div>
+</main>
+@@include('../components/footer.html')
+
+</body>
+</html>

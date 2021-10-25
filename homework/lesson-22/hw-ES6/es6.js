@@ -11,7 +11,7 @@ const obj = {
 		return `Hi, ${this.name}!`
 	}
 }
-console.log(obj.sayHi());
+obj.sayHi();
 
 
 // Task 3
@@ -22,17 +22,18 @@ result({a: 2, b: 3}, 2);
 
 
 // Task 4
+const arr = ['Igor', 30];
 function user(name, age) {
 	return `Hello, I'm ${name} and I'm ${age} years old.`
 }
-user(...['Igor', 30]);
+user(...arr);
 
 
 // Task 5
 function numbers(...nums) {
 	for (const num of nums) console.log(num);
 }
-numbers(...[1, 22, 6, 9]);
+numbers(...[1, 22, 6, 9, 52, 98]);
 
 
 // Task 6
@@ -70,24 +71,26 @@ f([
 
 // Task 8
 function f(arr) {
-	const obj = {};
-	arr.forEach((el, i) => obj[`Пользователь ${++i}`] = el);
-	return obj;
+	const newArr = [];
+	arr.forEach((el, i) => {
+		const obj = {};
+		obj[`Пользователь ${++i}`] = el;
+		newArr.push(obj);
+	});
+	return newArr;
 }
 f(['Вася', 'Петя']);
 
 
 // Task 9
-const arr = [
-	{name: 'Vasya'},
-	{name: 'Piotr', age: 25},
-	{salary: '2000$'}
-]
 function f(arr) {
 	console.log(arr.reduce((currentEl, nextEl) => Object.assign(currentEl, nextEl),{}));
 }
-f(arr);
-console.log(arr);
+f([
+	{name: 'Vasya'},
+	{name: 'Piotr', age: 25},
+	{salary: '2000$'}
+]);
 
 
 //Task 10
@@ -147,7 +150,7 @@ function showRange(a, b) {
 				}
 				console.log(a++);
 			} else {
-				reject('введено не целое число');
+				reject('введено не целое число!');
 			}
 		}, 1000);
 	});
