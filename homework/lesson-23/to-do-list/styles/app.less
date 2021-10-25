@@ -98,19 +98,30 @@ body {
 }
 
 .task-add {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  &__title {
+  &__title,
+  &__description {
     width: 300px;
-    height: 30px;
-    margin-right: 6px;
     padding: 0 8px;
     border: solid black 1px;
     border-radius: 4px;
     outline: none;
   }
+  &__title {
+    height: 30px;
+  }
+  &__description {
+    margin: 10px 0 0;
+    padding: 8px;
+    min-height: 100px;
+    resize: vertical;
+  }
 
   &__btn-add {
+    margin: 20px 0 0;
     padding: 8px 16px;
     font-size: 14px;
   }
@@ -129,8 +140,12 @@ body {
     border-radius: 4px;
     cursor: pointer;
     transition: all .3s;
+    &.done {
+      background: green;
+      color: white;
+    }
 
-    &:hover {
+    &:not(.done):hover {
       background: black;
       border-color: white;
 
@@ -154,7 +169,6 @@ body {
     }
 
     &__buttons {
-      width: 175px;
       display: flex;
       justify-content: flex-end;
 
@@ -164,6 +178,27 @@ body {
         margin: 0 2px;
       }
     }
+  }
+
+  &__control {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 0 20px 0;
+  }
+  &__counter {
+    font-weight: bold;
+    .green {
+      color: green;
+    }
+    .red {
+      color: red;
+    }
+  }
+
+  &__cleaner {
+    padding: 8px 16px;
+    font-size: 14px;
   }
 }
 
@@ -182,16 +217,23 @@ body {
 }
 
 .task-edit {
+  & > p {
+    display: flex;
+    & + p {
+      margin: 20px 0 0;
+    }
+  }
   b {
-    vertical-align: top;
+    min-width: 140px;
   }
-
-  &__title {
+  &__title,
+  &__description {
     border: solid black 1px;
-    padding: 1px 3px;
-  }
-
-  &__title {
+    margin: 0 0 0 10px;
+    padding: 4px 8px;
     width: 230px;
+  }
+  &__description {
+    min-height: 80px;
   }
 }

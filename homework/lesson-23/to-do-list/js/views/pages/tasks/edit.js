@@ -15,9 +15,8 @@ class Edit extends Component {
         return new Promise(resolve => {
             let html;
 
-            if (this.task) {
-                const {id, title} = this.task;
-
+            if (this.task && this.task.status != 'Done') {
+                const {id, title, description} = this.task;
 				html = `
 					<h1 class="page-title">Task Edit</h1>
 					
@@ -25,6 +24,10 @@ class Edit extends Component {
 						<p>
 							<b>Task Title:</b>
 							<input class="task-edit__title" type="text" value="${title}">
+						</p>
+						<p>
+							<b>Task Description:</b>
+							<textarea class="task-edit__description" placeholder="Task description">${description != 'No Description' ? description : ''}</textarea>
 						</p>
 				
 						<div class="task-edit__buttons">
@@ -47,14 +50,16 @@ class Edit extends Component {
 
     setActions() {
         const editTaskTitle = document.getElementsByClassName('task-edit__title')[0],
+            editTaskDescription = document.getElementsByClassName('task-edit__description')[0],
 			saveTaskBtn = document.getElementsByClassName('task-edit__btn-save')[0];
 
 		editTaskTitle.addEventListener('keyup', () => saveTaskBtn.disabled = !editTaskTitle.value.trim());
-        saveTaskBtn.addEventListener('click', () => this.editTask(editTaskTitle));
+        saveTaskBtn.addEventListener('click', () => this.editTask(editTaskTitle, editTaskDescription));
     }
 
-    editTask(editTaskTitle) {
+    editTask(editTaskTitle, editTaskDescription) {
         this.task.title = editTaskTitle.value.trim();
+        this.task.description = editTaskDescription.value.trim() ? editTaskDescription.value.trim() : 'No Description';
         Tasks.setTasksToLS(this.tasks);
 
         this.redirectToTaskInfo();
