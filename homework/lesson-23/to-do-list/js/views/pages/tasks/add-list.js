@@ -104,7 +104,7 @@ class AddAndList extends Component {
 	}
 
 	showCounterTasks(counterContainer) {
-		counterContainer.innerHTML = this.editCounterMessange();
+		counterContainer.innerHTML = this.editCounterMessage();
 	}
 
     getTaskHTML(task) {
@@ -174,7 +174,7 @@ class AddAndList extends Component {
 		return [...this.tasks.filter(task => task.status == 'Done')].length;
 	}
 
-	editCounterMessange() {
+	editCounterMessage() {
 		return `There ${this.counterFormat()} <span class="green">${this.countDoneTasks()}</span> tasks of <span class="red">${this.tasks.length}</span> ${this.counterFormat()} done`
 	}
 

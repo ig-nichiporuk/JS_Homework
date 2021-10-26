@@ -6,31 +6,31 @@ class Tasks {
             {
                 id: generateID(),
                 title: 'Task 1',
-	            description: 'No description',
+	            description: 'No Description',
                 status: 'In Progress'
             },
             {
                 id: generateID(),
                 title: 'Task 2',
-	            description: 'No description',
+	            description: 'No Description',
                 status: 'In Progress'
             },
             {
                 id: generateID(),
                 title: 'Task 3',
-	            description: 'No description',
+	            description: 'No Description',
                 status: 'In Progress'
             },
             {
                 id: generateID(),
                 title: 'Task 4',
-	            description: 'No description',
+	            description: 'No Description',
                 status: 'In Progress'
             },
             {
                 id: generateID(),
                 title: 'Task 5',
-	            description: 'No description',
+	            description: 'No Description',
                 status: 'In Progress'
             }
         ];
