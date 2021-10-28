@@ -14,7 +14,10 @@ export const generateID = () => {
 
 
 
-export const openDropdown = (elem, duration) => {
+
+
+
+const openDropdown = (elem, duration) => {
 	let dropdownBody = elem.nextElementSibling;
 
 	elem.classList.add('open');
@@ -27,8 +30,7 @@ export const openDropdown = (elem, duration) => {
 	setTimeout( () => dropdownBody.style.height = originHeight, 0);
 };
 
-
-export const closeDropdown = (elem, duration) => {
+const closeDropdown = (elem, duration) => {
 	elem.forEach(function (activeDropdownBtn) {
 		activeDropdownBtn.classList.remove('open');
 		activeDropdownBtn.nextElementSibling.style.height = '0';
@@ -36,8 +38,7 @@ export const closeDropdown = (elem, duration) => {
 	});
 };
 
-
-export function openModal(id) {
+const openModal = (id) => {
 	let modal = document.getElementById(id),
 		body = document.body,
 		winScrollTop = window.scrollY,
@@ -61,12 +62,47 @@ export function openModal(id) {
 	modal.style.cssText = `top : ${modalTop}px`;
 }
 
-
-export function closeModal() {
+const closeModal = () => {
 	let modal = document.querySelectorAll('.modalJs.open'),
 		body = document.body;
 	modal.forEach((activeModal) => activeModal.classList.remove('open'))
 	body.classList.remove('modal-open',  'overlay-open',  'js-scroll-lock');
+}
+
+export function addListnerForDropdown(parentElem) {
+	parentElem.addEventListener('click', () => {
+		let target = event.target,
+			dropdownBtn = target.closest('.dropdownBtnJs'),
+			activeDropdownBtns = document.querySelectorAll('.dropdownBtnJs.open');
+		if(dropdownBtn) {
+			if (!dropdownBtn.classList.contains('open')) {
+				closeDropdown(activeDropdownBtns, 300);
+				openDropdown(dropdownBtn, 300);
+			}
+			else {
+				closeDropdown(activeDropdownBtns, 300);
+			}
+		} else if (activeDropdownBtns.length && !target.closest('.dropdownWrapJs')) {
+			closeDropdown(activeDropdownBtns, 300);
+		}
+	});
+}
+
+export function addListnerForModal(parentElem) {
+	parentElem.addEventListener('click', () => {
+		let target = event.target;
+		if(target.closest('.modalOpenJs')) {
+			event.preventDefault();
+
+			let href = target.closest('.modalOpenJs').getAttribute('href');
+
+			closeModal();
+			openModal(href);
+		}
+		if(target.classList.contains('modalCloseJs') || target.classList.contains('overlayJs')) {
+			closeModal();
+		}
+	});
 }
 
 

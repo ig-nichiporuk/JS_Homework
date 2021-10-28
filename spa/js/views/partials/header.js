@@ -1,11 +1,11 @@
-import {getTokenFromCookies} from '../../helpers/utils.js';
+import {addListnerForDropdown, getTokenFromCookies} from '../../helpers/utils.js';
 
 import Component from '../../views/component.js';
 
 class Header extends Component {
 	render() {
 
-		let isAuthorized = getTokenFromCookies();
+		const userToken = getTokenFromCookies();
 
 		return new Promise(resolve => {
 			resolve(`
@@ -13,7 +13,7 @@ class Header extends Component {
 					<div class="container">
 						<div class="header__main-wrapper">
 							<div class="header__main-logo">
-								<a href="#">
+								<a href="#/">
 									<svg>
 										<use xlink:href="#autoset-small"></use>
 									</svg>
@@ -33,7 +33,7 @@ class Header extends Component {
 									<a href="mailto:partners@autoset.by">partners@autoset.by</a>
 								</li>
 							</ul>
-							<div class="header__cabinet dropdown dropdownWrapJs ${!isAuthorized ? 'hidden' : ''}">
+							<div class="header__cabinet dropdown dropdownWrapJs ${!userToken ? 'hidden' : ''}">
 								<div class="header__cabinet-btn dropdown__btn dropdownBtnJs">
 									<svg class="char">
 										<use xlink:href="#icon-user"></use>
@@ -46,10 +46,10 @@ class Header extends Component {
 								<div class="dropdown__body" >
 									<div class="dropdown__wrap">
 										<div class="user">
-											${isAuthorized == 'user' ? '<span>Организация:</span><p>ИП Толокнников В. А.</p>' : '<span>Пользователь:</span><p>Мадорский Кирилл</p>'}
+											${userToken == 'user' ? '<span>Организация:</span><p>ИП Толокнников В. А.</p>' : '<span>Пользователь:</span><p>Мадорский Кирилл</p>'}
 										</div>
-										${isAuthorized == 'manager' ? '<div class="status"><span>Статус:</span><p>Администратор</p></div>' : ''}
-										${isAuthorized == 'user' ? '<a href="#" class="helper"><svg><use xlink:href="#help"></use></svg>Помощь</a>' : ''}
+										${userToken == 'manager' ? '<div class="status"><span>Статус:</span><p>Администратор</p></div>' : ''}
+										${userToken == 'user' ? '<a href="#" class="helper"><svg><use xlink:href="#help"></use></svg>Помощь</a>' : ''}
 										<a href="#" class="btn-style btn-style_red">Выход</a>
 									</div>
 								</div>
@@ -75,28 +75,28 @@ class Header extends Component {
 						</ul>
 					</div>
 				</div>
-				<div class="header__full ${!isAuthorized ? 'hidden' : ''}">
+				<div class="header__full ${!userToken ? 'hidden' : ''}">
 					<div class="container">
 						<div class="header__full-wrapper">
-							<a href="#" class="header__full-logo">
+							<a href="#/" class="header__full-logo">
 								<svg>
 									<use xlink:href="#autoset-big"></use>
 								</svg>
 							</a>
 							<nav class="header__nav">
-								<a href="#">
+								<a href="#/orders/">
 									<svg>
 										<use xlink:href="#orders"></use>
 									</svg>
 									Заказы
 								</a>
-								<a href="#">
+								<a href="#/acts/">
 									<svg>
 										<use xlink:href="#acts"></use>
 									</svg>
 									Акты
 								</a>
-								<a href="#">
+								<a href="#/help/">
 									<svg>
 										<use xlink:href="#help"></use>
 									</svg>
@@ -108,6 +108,13 @@ class Header extends Component {
 				</div>
             `);
 		});
+	}
+
+	afterRender() {
+		const header = document.getElementsByTagName('header')[0];
+
+		addListnerForDropdown(header);
+
 	}
 }
 

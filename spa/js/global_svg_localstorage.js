@@ -3,7 +3,7 @@
 
     /* ну да прямой урл а по другому js не хотел делать GET и получить этот файл - можно толькое если в шаблоны бросить */
     var file = 'img/global-sprite.html',
-    revision = 2;
+    revision = 4;
 
     if (!document.createElementNS || !document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect)
         return true;
