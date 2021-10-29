@@ -36,6 +36,30 @@ class Tasks {
 		});
 	}
 
+	removeTask(id) {
+		return new Promise(resolve => {
+			const xhr = new XMLHttpRequest();
+
+			xhr.open('DELETE', `http://localhost:3000/api/task/${id}`);
+
+			xhr.onload = () => resolve();
+
+			xhr.send();
+		});
+	}
+
+	changeTaskStatus(id) {
+		return new Promise(resolve => {
+			const xhr = new XMLHttpRequest();
+
+			xhr.open('put', `http://localhost:3000/api/task/${id}`);
+
+			xhr.onload = () => resolve();
+
+			xhr.send();
+		});
+	}
+
 	editTask(updatedTask) {
 		return new Promise(resolve => {
 			const xhr = new XMLHttpRequest();
@@ -46,6 +70,18 @@ class Tasks {
 			xhr.onload = () => resolve();
 
 			xhr.send(JSON.stringify(updatedTask));
+		});
+	}
+
+	clearTasks() {
+		return new Promise(resolve => {
+			const xhr = new XMLHttpRequest();
+
+			xhr.open('DELETE', 'http://localhost:3000/api/tasks');
+
+			xhr.onload = () => resolve();
+
+			xhr.send();
 		});
 	}
 }

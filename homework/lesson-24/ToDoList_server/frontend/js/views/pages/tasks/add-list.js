@@ -137,10 +137,12 @@ class AddAndList extends Component {
 	
     clearTasksList(tasksList, clearTasksListBtn) {
     	if (confirm('Are you sure?')) {
-			clearTasksListBtn.disabled = true;
-			tasksList.innerHTML = '';
-		
-			this.countTasksAmount();
+			this.model.clearTasks().then(() => {
+				clearTasksListBtn.disabled = true;
+				tasksList.innerHTML = '';
+
+				this.countTasksAmount();
+			});
 		}
 	}
 	
@@ -149,20 +151,25 @@ class AddAndList extends Component {
     }
 
     changeTaskStatus(taskContainer, editTaskBtn, doneTaskBtn) {
-    	taskContainer.classList.add('task_done');
-		editTaskBtn.remove();
-		doneTaskBtn.remove();
-		
-		this.countTasksAmount();
+	    this.model.changeTaskStatus(taskContainer.dataset.id).then(() => {
+		    taskContainer.classList.add('task_done');
+			editTaskBtn.remove();
+			doneTaskBtn.remove();
+
+			this.countTasksAmount();
+	    });
+
 	}
 	
     removeTask(tasksList, taskContainer, clearTasksListBtn) {
-        if (confirm('Are you sure?')) {
-            taskContainer.remove();
-            !tasksList.children.length && (clearTasksListBtn.disabled = true);
-	
-			this.countTasksAmount();
-        }
+	    if (confirm('Are you sure?')) {
+		    this.model.removeTask(taskContainer.dataset.id).then(() => {
+			    taskContainer.remove();
+			    !tasksList.children.length && (clearTasksListBtn.disabled = true);
+
+			    this.countTasksAmount();
+		    });
+		}
     }
 }
 

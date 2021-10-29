@@ -18,6 +18,12 @@ app.use((req, res, next) => {
 
 app.get('/api/tasks', (req, res) => res.send(getTasksFromDB()));
 
+app.delete('/api/tasks', (req, res) => {
+	setTasksToDB([]);
+
+	res.sendStatus(204);
+});
+
 app.post('/api/task', (req, res) => {
 	const tasksData = getTasksFromDB(),
 		task = req.body;
@@ -39,14 +45,26 @@ app.get('/api/task/:id', (req, res) => {
     task ? res.send(task) : res.send({});
 });
 
+app.delete('/api/task/:id', (req, res) => {
+	const tasksData = getTasksFromDB(),
+		tasks = tasksData.filter(task => task.id !== req.params.id);
+
+	setTasksToDB(tasks);
+
+	res.sendStatus(204);
+});
+
 app.put('/api/task/:id', (req, res) => {
 	const tasksData = getTasksFromDB(),
 		task = tasksData.find(task => task.id === req.params.id),
 		updatedTask = req.body;
 
-	task.title = updatedTask.title;
-	task.description = updatedTask.description || 'No Description';
-
+	if(!!Object.keys(updatedTask).length) {
+		task.title = updatedTask.title;
+		task.description = updatedTask.description || 'No Description';
+	} else {
+		task.status = 'Done';
+	}
     setTasksToDB(tasksData);
 
 	res.sendStatus(204);
