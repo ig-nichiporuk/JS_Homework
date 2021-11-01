@@ -31,7 +31,7 @@ user(...arr);
 
 // Task 5
 function numbers(...nums) {
-	for (const num of nums) console.log(num);
+	for (let num of nums) console.log(num);
 }
 numbers(...[1, 22, 6, 9, 52, 98]);
 
@@ -50,17 +50,10 @@ countVowelLetters('Шла Саша по шоссе И сосала сУшку');
 
 // Task 7
 function f(arr) {
-	const obj = {};
-	obj['Пользователи младше 40:'] = [];
-	arr.forEach(el => {
-		if(el.age < 40) {
-			obj['Пользователи младше 40:'].push(el);
-		}
-		if(el.name.startsWith('Fedor')) {
-			obj['Пользователь с именем Федор'] = el;
-		}
-	});
-	return obj;
+	return {
+		['Пользователи младше 40:'] : arr.filter(el => el.age < 40),
+		['Пользователь с именем Федор'] : arr.find(el => el.name.startsWith('Fedor'))
+	};
 }
 f([
 	{name: 'Vasya Pupkin', age: 25},
@@ -69,15 +62,10 @@ f([
 ]);
 
 
+
 // Task 8
 function f(arr) {
-	const newArr = [];
-	arr.forEach((el, i) => {
-		const obj = {};
-		obj[`Пользователь ${++i}`] = el;
-		newArr.push(obj);
-	});
-	return newArr;
+	return arr.map((el, i) => ({[`Пользователь ${++i}`] : el}));
 }
 f(['Вася', 'Петя']);
 
@@ -101,7 +89,7 @@ class Animal {
 	}
 
 	_formatFoodAmount() {
-		return this._foodAmount + ' гр.';
+		return `${this._foodAmount} гр.`;
 	}
 	dailyNorm(amount) {
 		if (!arguments.length) return this._formatFoodAmount();
@@ -113,7 +101,7 @@ class Animal {
 		this._foodAmount = amount;
 	}
 	feed() {
-		console.log('Насыпаем в миску ' + this.dailyNorm() + ' корма.');
+		console.log(`Насыпаем в миску ${this.dailyNorm()} корма.`);
 	}
 }
 
