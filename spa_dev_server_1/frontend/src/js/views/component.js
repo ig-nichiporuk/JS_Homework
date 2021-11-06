@@ -1,4 +1,4 @@
-import {parseRequestURL} from '../helpers/utils';
+import {parseRequestURL} from '../helpers/utils.js';
 
 class Component {
     constructor() {

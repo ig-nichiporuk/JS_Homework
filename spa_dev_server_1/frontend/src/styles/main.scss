@@ -1,0 +1,30 @@
+/*@import "global-style";
+@import "header";
+@import "authorization";
+@import "user-info";
+@import "pagination";
+@import "controls";
+@import "table";
+@import "footer";
+@import "modal";*/
+.main {
+	display: flex;
+	min-height: 640px;
+	height: calc(100vh - 274px);
+	//background: linear-gradient(180deg, rgba(123, 123, 123, 0.2) 0%, rgba(11, 27, 66, 0.8) 100%), url("../img/webp/main.webp") 50% 65% / cover no-repeat;
+}
+.content {
+	padding-bottom: 120px;
+}
+
+@media (max-width: 767px) {
+	.main {
+		height: 520px;
+	}
+}
+
+@media (max-width: 639px) {
+	.main {
+		height: 440px;
+	}
+}

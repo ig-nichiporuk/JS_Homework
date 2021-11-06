@@ -2,8 +2,8 @@ import Component from '../../../views/component';
 
 import Tasks from '../../../models/tasks';
 
-import EditTemplate from '../../../../templates/pages/tasks/edit';
-import Error404Template from '../../../../templates/pages/error404';
+import EditTemplate from '../../../../templates/pages/tasks/edit.hbs';
+import Error404Template from '../../../../templates/pages/error404.hbs';
 
 class Edit extends Component {
     constructor() {

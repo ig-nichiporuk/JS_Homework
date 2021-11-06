@@ -1,6 +1,6 @@
 import Component from '../../views/component';
 
-import Error404Template from '../../../templates/pages/error404';
+import Error404Template from '../../../templates/pages/error404.hbs';
 
 class Error404 extends Component {
     render() {

@@ -1,6 +1,6 @@
 import Component from '../../views/component';
 
-import HeaderTemplate from '../../../templates/partials/header';
+import HeaderTemplate from '../../../templates/partials/header.hbs';
 
 class Header extends Component {
     render() {

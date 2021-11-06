@@ -2,8 +2,8 @@ import Component from '../../../views/component';
 
 import Tasks from '../../../models/tasks';
 
-import AddAndListTemplate from '../../../../templates/pages/tasks/add-list';
-import TaskTemplate from '../../../../templates/pages/tasks/task';
+import AddAndListTemplate from '../../../../templates/pages/tasks/add-list.hbs';
+import TaskTemplate from '../../../../templates/pages/tasks/task.hbs';
 
 class AddAndList extends Component {
     constructor() {

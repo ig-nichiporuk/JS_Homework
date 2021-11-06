@@ -1,6 +1,6 @@
-import Component from '../../views/component';
+import Component from '../../views/component.js';
 
-import AboutTemplate from '../../../templates/pages/about';
+import AboutTemplate from '../../../templates/pages/about.hbs';
 
 class About extends Component {
     render() {
