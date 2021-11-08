@@ -1,28 +1,32 @@
-import '../styles/app';
+import '../styles/main';
 
 import {parseRequestURL} from './helpers/utils';
 
 import Header from './views/partials/header';
 import Footer from './views/partials/footer';
 
-import About from './views/pages/about';
+// import About from './views/pages/about';
 import Error404 from './views/pages/error404';
 
 import AddAndList from './views/pages/tasks/add-list';
 import Info from './views/pages/tasks/info';
 import Edit from './views/pages/tasks/edit';
 
+
+import Authorization from './views/pages/authorization';
+
 const Routes = {
-    '/': About,
+    // '/': About,
+    '/': Authorization,
     '/tasks': AddAndList,
     '/task/:id': Info,
     '/task/:id/edit': Edit
 };
 
 function router() {
-    const headerContainer = document.getElementsByClassName('header-container')[0],
-        contentContainer = document.getElementsByClassName('content-container')[0],
-        footerContainer = document.getElementsByClassName('footer-container')[0],
+	const headerContainer = document.getElementsByTagName('header')[0],
+		contentContainer = document.getElementsByTagName('main')[0],
+		footerContainer = document.getElementsByTagName('footer')[0],
         header = new Header(),
         footer = new Footer();
 

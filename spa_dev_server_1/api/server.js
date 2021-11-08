@@ -4,6 +4,8 @@ const express = require('express'),
     config = require('config'),
     app = express();
 
+app.use(express.json())
+
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(morgan('common'));
@@ -16,7 +18,8 @@ app.use((req, res, next) => {
 
 app.use(
     require(config.get('routes.tasks')),
-    require(config.get('routes.task'))
+    require(config.get('routes.task')),
+    require(config.get('routes.authorization'))
 );
 
 app.listen(3000, () => console.log('Server has been started...'));

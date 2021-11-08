@@ -1,10 +1,15 @@
 {
   "database": {
-    "tasks": "./database/tasks.json"
+    "tasks": "./database/tasks.json",
+    "users": "./database/users.json",
+    "orders": "./database/orders.json",
+    "acts": "./database/acts.json",
+    "order_tasks": "./database/order_tasks.json"
   },
 
   "routes": {
     "tasks": "./routes/tasks.js",
-    "task": "./routes/task.js"
+    "task": "./routes/task.js",
+    "authorization": "./routes/authorization.js"
   }
 }

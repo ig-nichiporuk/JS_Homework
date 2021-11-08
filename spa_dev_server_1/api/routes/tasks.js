@@ -10,5 +10,4 @@ router.delete('/api/tasks', (req, res) => {
 
     res.sendStatus(204);
 });
-
 module.exports = router;

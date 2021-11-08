@@ -50,8 +50,8 @@ module.exports = {
                                 '@babel/preset-env'
                             ]
                         }
-                    },
-                    'eslint-loader'
+                    }
+                    // 'eslint-loader'
                 ]
             },
 			{
@@ -98,9 +98,13 @@ module.exports = {
 			{
 				test: /\.(png|jpg|jpeg|gif|svg|webp)$/,
 				loader: 'file-loader',
-				options: {
-					name: '[name].[ext]'
-				}
+					options: {
+						name: '[name].[ext]',
+						outputPath: 'img/',
+						publicPath: '../img',
+						useRelativePath: true,
+						esModule: false
+					}
 			},
             {
                 test: /\.hbs$/,
@@ -159,7 +163,7 @@ module.exports = {
 		}),
 		new CopyPlugin({
 			patterns: [
-				{ from: `${PATHS.frontend}/img`, to: `${PATHS.dist}/img` }
+				{from: `${PATHS.frontend}/img/`, to: `${PATHS.dist}/img/`}
 			]
 		}),
         new MiniCssExtractPlugin({
