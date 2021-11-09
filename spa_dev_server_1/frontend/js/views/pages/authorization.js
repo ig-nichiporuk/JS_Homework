@@ -1,6 +1,6 @@
 import Component from '../../views/component';
 
-import Tasks from '../../models/tasks';
+import Auth from '../../models/auth';
 
 import AuthorizationTemplate from '../../../templates/pages/authorization';
 
@@ -8,7 +8,7 @@ class Authorization extends Component {
 	constructor() {
 		super();
 
-		this.model = new Tasks();
+		this.model = new Auth();
 	}
 
 	render() {
@@ -17,8 +17,6 @@ class Authorization extends Component {
 
 	afterRender() {
 		this.setActions();
-
-		// this.countTasksAmount();
 	}
 
 	setActions() {
@@ -36,15 +34,17 @@ class Authorization extends Component {
 
 	}
 
-	testUsers() {
-		this.model.testUsers().then(() => {});
-	}
-
 	ddd(email, password) {
 		this.model.test(email, password).then((data) => {
 			console.log(data);
 		});
 	}
+
+	testUsers() {
+		this.model.testUsers().then(() => {});
+	}
+
+
 }
 
 export default Authorization;

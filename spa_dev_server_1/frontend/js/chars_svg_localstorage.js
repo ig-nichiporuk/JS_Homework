@@ -1,8 +1,5 @@
-;(function(window, document) {
-	'use strict';
-
-	/* ну да прямой урл а по другому js не хотел делать GET и получить этот файл - можно толькое если в шаблоны бросить */
-	var file = 'img/chars-sprite.html',
+(function(window, document) {
+	var file = '../img/chars-sprite.html',
 	revision = 2;
 
 	if (!document.createElementNS || !document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect)

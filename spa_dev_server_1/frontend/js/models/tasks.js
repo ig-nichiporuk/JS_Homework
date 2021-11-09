@@ -84,34 +84,6 @@ class Tasks {
             xhr.send();
         });
     }
-	/* --------------- */
-	test(email, password) {
-		return new Promise(resolve => {
-			const xhr = new XMLHttpRequest();
-
-			xhr.open('POST', 'http://localhost:3000/api/auth');
-			xhr.setRequestHeader('Content-Type', 'application/json');
-
-			xhr.onload = () => resolve(JSON.parse(xhr.response));
-
-			xhr.send(JSON.stringify({
-				email,
-				password
-			}));
-		});
-	}
-
-	testUsers() {
-		return new Promise(resolve => {
-			const xhr = new XMLHttpRequest();
-
-			xhr.open('GET', 'http://localhost:3000/api/users');
-
-			xhr.onload = () => resolve();
-
-			xhr.send();
-		});
-	}
 }
 
 export default Tasks;

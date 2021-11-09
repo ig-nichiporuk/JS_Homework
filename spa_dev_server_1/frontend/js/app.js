@@ -14,10 +14,15 @@ import Edit from './views/pages/tasks/edit';
 
 
 import Authorization from './views/pages/authorization';
+import Orders from './views/pages/orders';
+
+/*require('./global_svg_localstorage');
+require('./chars_svg_localstorage');*/
 
 const Routes = {
     // '/': About,
     '/': Authorization,
+    '/orders': Orders,
     '/tasks': AddAndList,
     '/task/:id': Info,
     '/task/:id/edit': Edit

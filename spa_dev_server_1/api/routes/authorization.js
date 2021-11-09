@@ -2,79 +2,57 @@ const express = require('express'),
 	router = express.Router(),
 	config = require('config'),
 	fs = require('file-system'),
-	jwt = require('jsonwebtoken');
+	session = require('express-session'),
+	FileStore = require('session-file-store')(session),
+	passport = require('passport');
 
-const tokenKey = '1a2b-3c4d-5e6f-7g8h';
+require('../config/config-passport');
+router.use(passport.initialize());
+router.use(passport.session());
 
-let refreshTokens = [];
+router.use(express.json());
 
-
-
-router.use(express.json())
-router.use((req, res, next) => {
-	if (req.headers.authorization) {
-		jwt.verify(
-			req.headers.authorization.split(' ')[1],
-			tokenKey,
-			(err, payload) => {
-				if (err) next()
-				else if (payload) {
-					for (let user of users) {
-						if (user.id === payload.id) {
-							req.user = user
-							next()
-						}
-					}
-
-					if (!req.user) next()
-				}
-			}
-		)
-	}
-
-	next()
-})
-
-router.post('/api/auth', (req, res) => {
-	const usersData = getUsersFromDB();
-
-	usersData.find(user => {
-		if (
-			req.body.email === user.email &&
-			req.body.password === user.password
-		) {
-			const accessToken = generateAccessToken(user),
-				refreshToken = jwt.sign(user, tokenKey);
-			router.use((req, res, next) => {
-				next();
-			});
-			refreshTokens.push(refreshToken);
-			return res.status(200).json({
-				id: user.id,
-				login: user.password,
-				accessToken: accessToken,
-				refreshToken: refreshToken
-			});
-		}
+router.use(
+	session({
+		secret: 'MY_SECRET_KEY_BUBALECH',
+		store: new FileStore(),
+		cookie: {
+			path: '/',
+			httpOnly: true,
+			maxAge: 3600000,
+		},
+		resave: false,
+		saveUninitialized: false,
 	})
+);
+const auth = (req, res, next) => {
+	console.log(req);
+	if (req.isAuthenticated()) {
+		next();
+	} else {
+		return res.redirect('/');
+	}
+};
+router.post('/api/login', (req, res, next) => {
+	passport.authenticate('local', function(err, user) {
+		if (err) {
+			return next(err);
+		}
+		if (!user) {
+			return res.send({message : 'Укажите правильный email или пароль!'});
+		}
+		req.logIn(user, function(err) {
+			if (err) {
+				return next(err);
+			}
+			return res.send(user);
+		});
+	})(req, res, next);
 });
 
-router.get('/api/users', (req, res) => {
-	const usersData = getUsersFromDB();
-	console.log(usersData);
-	// res.json(usersData.filter(user => user.id === req.user.id))
-})
-
-
-
-
-
-function generateAccessToken(user) {
-	return jwt.sign(user, tokenKey, /*{ expiresIn: '15s' }*/)
-}
-
-function getUsersFromDB() {
-	return JSON.parse(fs.readFileSync(config.get('database.users'), 'utf8'));
-}
+router.get('/api/logout', (req, res) => {
+	req.logOut();
+	res.redirect('/');
+});
 
 module.exports = router;
