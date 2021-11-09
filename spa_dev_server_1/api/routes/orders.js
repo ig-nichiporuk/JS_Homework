@@ -5,5 +5,40 @@ const express = require('express'),
 
 router.get('/api/orders',(req, res) => res.send(fs.readFileSync(config.get('database.orders'), 'utf8')));
 
+router.post('/api/orders',(req, res) => {
+	const ordersData = getOrdersFromDB(),
+		{sort} = req.body;
+
+	res.send(setSort(sort, ordersData));
+});
+
+function setSort(value, data) {
+	switch (value) {
+		case ('up-date') :
+			return sortByDate(data, true);
+		case ('down-date') :
+			return sortByDate(data, false);
+		case ('done') :
+			return sortByStatus(data, 3);
+		case ('new') :
+			return sortByStatus(data, 1);
+	}
+}
+
+function sortByDate(orders, flag) {
+	return orders.sort((current, next) => {
+		if (current.created_at.split(' ')[0] < next.created_at.split(' ')[0]) return flag ? 1 : -1;
+		if (current.created_at.split(' ')[0] > next.created_at.split(' ')[0]) return flag ? -1 : 1;
+	});
+}
+
+function sortByStatus(orders, status) {
+	return orders.filter(order => order.status_id == status);
+}
+
+function getOrdersFromDB() {
+	return JSON.parse(fs.readFileSync(config.get('database.orders'), 'utf8'));
+}
+
 
 module.exports = router;

@@ -39,8 +39,8 @@ class OrdersList extends Component {
 			tableOrders = document.getElementsByClassName('tableOrdersBodyJs')[0];
 
 		sortSelect.addEventListener('change', () => {
-			this.getData().then(data => {
-				this.renderOrdersTable(this.setSort(sortSelect.value, data)).then(html => {
+			this.model.getSortOrdersList(sortSelect.value).then(orders => {
+				this.renderOrdersTable(orders).then(html => {
 					tableOrders.innerHTML = html;
 					this.afterRender();
 				});
@@ -62,7 +62,7 @@ class OrdersList extends Component {
 		});
 	}
 
-	setSort(value, data) {
+	/* setSort(value, data) {
 		switch (value) {
 			case ('up-date') :
 				return this.sortByDate(data, true);
@@ -84,7 +84,7 @@ class OrdersList extends Component {
 
 	sortByStatus(orders, status) {
 		return orders.filter(order => order.status_id == status);
-	}
+	}*/
 }
 
 export default OrdersList;

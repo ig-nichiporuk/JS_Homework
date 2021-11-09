@@ -1,6 +1,6 @@
 {{#each editOrders}}
 	<tr class="table__row
-				{{#ifCond this.status_id '===' 'Новый'}}new{{/ifCond}}
+		{{#ifCond this.status_id '===' 'Новый'}}new{{/ifCond}}
 		{{#ifCond this.status_id '===' 'Отменен'}}cancel{{/ifCond}}
 		{{#ifCond this.status_id '===' 'Выполнен'}}done{{/ifCond}}
 			">
