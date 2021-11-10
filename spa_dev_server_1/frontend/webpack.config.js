@@ -5,7 +5,8 @@ const path = require('path'),
     HtmlWebpackPlugin = require('html-webpack-plugin'),
     MiniCssExtractPlugin = require('mini-css-extract-plugin'),
     OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin'),
-    UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+    UglifyJsPlugin = require('uglifyjs-webpack-plugin'),
+	SvgSpriteHtmlWebpackPlugin = require('svg-sprite-html-webpack');
 
 const PATHS = {
 	frontend: path.join(__dirname),
@@ -34,7 +35,7 @@ module.exports = {
     devtool: 'source-map',
 
     resolve: {
-        extensions: ['.less', '.hbs', '.js', '.sass', '.scss']
+        extensions: ['.less', '.hbs', '.js', '.sass', '.scss', '.svg']
     },
 
     module: {
@@ -56,6 +57,7 @@ module.exports = {
             },
 			{
 				test: /\.s[ac]ss$/i,
+				exclude: /node_modules/,
 				use: [
 					MiniCssExtractPlugin.loader,
 					{
@@ -97,6 +99,7 @@ module.exports = {
 			},
 			{
 				test: /\.(png|jpg|jpeg|gif|svg|webp)$/,
+				exclude: /node_modules/,
 				loader: 'file-loader',
 					options: {
 						name: '[name].[ext]',
@@ -105,6 +108,25 @@ module.exports = {
 						useRelativePath: true,
 						esModule: false
 					}
+			},
+			{
+				test: /\.(ttf|eot|woff|svg|woff2)$/,
+				exclude: /node_modules/,
+				use: {
+					loader: 'file-loader',
+						options: {
+							name: '[name].[ext]',
+							outputPath: 'fonts/',
+							publicPath: '../fonts',
+							useRelativePath: true,
+							esModule: false
+						}
+				}
+			},
+			{
+				test: /\.svg$/,
+				exclude: /node_modules/,
+				use: SvgSpriteHtmlWebpackPlugin.getLoader()
 			},
             {
                 test: /\.hbs$/,
@@ -145,31 +167,20 @@ module.exports = {
                 removeRedundantAttributes: true
             }
         }),
-		new HtmlWebpackPlugin({
-			template: `${PATHS.frontend}/img/global-sprite.html`,
-			filename: 'img/global-sprite.html',
-			path: PATHS.dist,
-			minify: {
-				collapseWhitespace: true
-			}
-		}),
-		new HtmlWebpackPlugin({
-			template: `${PATHS.frontend}/img/chars-sprite.html`,
-			filename: 'img/chars-sprite.html',
-			path: PATHS.dist,
-			minify: {
-				collapseWhitespace: true
-			}
-		}),
 		new CopyPlugin({
 			patterns: [
-				{from: `${PATHS.frontend}/img/`, to: `${PATHS.dist}/img/`}
+				{from: `${PATHS.frontend}/fonts/`, to: `${PATHS.dist}/fonts/`}
 			]
 		}),
         new MiniCssExtractPlugin({
             filename: 'styles/[name].[contenthash].css',
 			path: PATHS.dist
         }),
+		new SvgSpriteHtmlWebpackPlugin({
+			includeFiles: [
+				'svg/*.svg'
+			]
+		}),
         new Webpack.HotModuleReplacementPlugin()
     ]
 };

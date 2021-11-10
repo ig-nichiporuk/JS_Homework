@@ -9,22 +9,21 @@ import Footer from './views/partials/footer';
 import Error404 from './views/pages/error404';
 
 import AddAndList from './views/pages/tasks/add-list';
-import Info from './views/pages/tasks/info';
+// import Info from './views/pages/tasks/info';
 import Edit from './views/pages/tasks/edit';
 
 
 import Authorization from './views/pages/authorization';
 import Orders from './views/pages/orders';
-
-/*require('./global_svg_localstorage');
-require('./chars_svg_localstorage');*/
+import Order from './views/pages/order';
 
 const Routes = {
     // '/': About,
     '/': Authorization,
     '/orders': Orders,
+    '/order/:id': Order,
     '/tasks': AddAndList,
-    '/task/:id': Info,
+    // '/task/:id': Info,
     '/task/:id/edit': Edit
 };
 

@@ -4,12 +4,15 @@
 		"users": "./database/users.json",
 		"orders": "./database/orders.json",
 		"acts": "./database/acts.json",
-		"order_tasks": "./database/order_tasks.json"
+		"order_tasks": "./database/order_tasks.json",
+		"services": "./database/services.json"
 	},
 	"routes": {
 		"tasks": "./routes/tasks.js",
 		"task": "./routes/task.js",
 		"orders": "./routes/orders.js",
+		"order": "./routes/order.js",
+		"services": "./routes/services.js",
 		"authorization": "./routes/authorization.js"
 	}
 }

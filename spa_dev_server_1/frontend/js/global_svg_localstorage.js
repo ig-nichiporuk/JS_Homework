@@ -1,6 +1,6 @@
 (function(window, document) {
 
-    var file = '../img/global-sprite.html',
+    var file = '../img/sprite.svg',
     revision = 3;
 
     if (!document.createElementNS || !document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect)

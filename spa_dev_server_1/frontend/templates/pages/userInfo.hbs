@@ -1,0 +1,41 @@
+<div class="info">
+	<div class="container">
+		<div class="info__title">
+			<span class="info__order">
+				{{#ifCond request.resource '===' 'orders'}}Заказы{{/ifCond}}
+				{{#ifCond request.resource '===' 'acts'}}Акты выполненных работ{{/ifCond}}
+				{{#if request.id}}Заказ-наряд № {{orderInfo.code_1c}}{{/if}}
+			</span>
+			<span class="info__user">ИП Толоконников А. А.</span>
+		</div>
+		{{#if request.id}}
+			<div class="info__data">
+				<ul>
+					<li>
+						<span class="text">Дата:</span>
+						<span class="value">{{orderInfo.created_at}}</span>
+					</li>
+					<li>
+						<span class="text">ФИО:</span>
+						<span class="value">{{orderInfo.fio}}</span>
+					</li>
+					<li>
+						<span class="text">Автомобиль:</span>
+						<span class="value">{{orderInfo.car}}</span>
+					</li>
+					<li>
+						<span class="text">Рег. номер:</span>
+						<span class="value">{{orderInfo.reg_number}}</span>
+					</li>
+				</ul>
+				<a href="edit-data" class="info__data-change modalOpenJs" data-status-scroll="0">
+					<svg>
+						<use xlink:href="#pencil"></use>
+					</svg>
+					изменить
+				</a>
+			</div>
+		{{/if}}
+
+	</div>
+</div>

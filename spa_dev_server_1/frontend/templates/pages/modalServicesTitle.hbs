@@ -1,0 +1,21 @@
+<div class="modal__header">
+	Выберите услугу
+	<span class="modal__close modalCloseJs"></span>
+</div>
+<div class="modal__main">
+	<ul class="services-list" data-scroll-lock-scrollable>
+	{{#each services}}
+			<li>
+				<label class="checkbox checkbox_blue">
+					<input type="checkbox" class="checkbox__check">
+					<p class="checkbox__text">
+						{{this.title}}
+					</p>
+				</label>
+			</li>
+	{{/each}}
+	</ul>
+	<div class="services-list__btn">
+		<span class="btn-style btn-style_blue modalCloseJs">Добавить</span>
+	</div>
+</div>

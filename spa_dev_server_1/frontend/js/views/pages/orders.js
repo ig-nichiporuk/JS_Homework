@@ -4,6 +4,7 @@ import OrdersTemplate from '../../../templates/pages/orders.hbs';
 
 import OrdersTableTemplate from '../../../templates/pages/ordersTable.hbs';
 
+
 import Orders from '../../models/orders';
 
 
@@ -21,8 +22,13 @@ class OrdersList extends Component {
 	}
 
 	render(orders) {
-		const editOrders = this.formatOrders(orders);
-		return new Promise(resolve => resolve(OrdersTemplate({editOrders})));
+		const editOrders = this.formatOrders(orders),
+			request = this.request;
+		return new Promise(resolve => {
+			this.getServices().then(services => {
+				resolve(OrdersTemplate({editOrders, services, request}));
+			});
+		});
 	}
 
 	renderOrdersTable(orders) {
@@ -31,12 +37,18 @@ class OrdersList extends Component {
 	}
 
 	afterRender() {
+		super.afterRender();
 		this.setActions();
 	}
 
 	setActions() {
 		const sortSelect = document.getElementById('sort-orders'),
-			tableOrders = document.getElementsByClassName('tableOrdersBodyJs')[0];
+			tableOrders = document.getElementsByClassName('tableOrdersBodyJs')[0],
+			searchUnpNumForm = document.getElementById('search-unp-num'),
+			inputUnpNum = searchUnpNumForm.getElementsByClassName('inputUnpNumJs')[0],
+			searchOrderNumForm = document.getElementById('search-order-num'),
+			inputOrderNum = searchOrderNumForm.getElementsByClassName('searchOrderNumJs')[0],
+			resetOrderNum = searchOrderNumForm.getElementsByClassName('resetOrderNumJs')[0];
 
 		sortSelect.addEventListener('change', () => {
 			this.model.getSortOrdersList(sortSelect.value).then(orders => {
@@ -44,6 +56,58 @@ class OrdersList extends Component {
 					tableOrders.innerHTML = html;
 					this.afterRender();
 				});
+			});
+		});
+
+		searchOrderNumForm.addEventListener('submit', () => {
+			event.preventDefault();
+
+			inputUnpNum.value = '',
+
+			sortSelect.disabled = !!inputOrderNum.value.trim();
+
+			this.getOrderNum(inputOrderNum.value.trim(), null, resetOrderNum, tableOrders);
+		});
+
+		searchOrderNumForm.addEventListener('reset', () => {
+			event.preventDefault();
+
+			inputOrderNum.value = '';
+			sortSelect.disabled = false;
+			resetOrderNum.disabled = true;
+
+			this.getData().then(orders => {
+				this.renderOrdersTable(orders).then(html => {
+					tableOrders.innerHTML = html;
+					this.afterRender();
+				});
+			});
+		});
+
+		searchUnpNumForm.addEventListener('submit', () => {
+			event.preventDefault();
+
+			sortSelect.disabled = !!inputUnpNum.value.trim();
+
+			if (inputUnpNum.value.trim()) {
+				this.getOrderNum(null, inputUnpNum.value.trim(), resetOrderNum, tableOrders);
+			} else {
+				this.getData().then(orders => {
+					this.renderOrdersTable(orders).then(html => {
+						tableOrders.innerHTML = html;
+						this.afterRender();
+					});
+				});
+			}
+		});
+	}
+
+	getOrderNum(num, unp, resetBtn, table) {
+		this.model.getOrderNum(num, unp).then(order => {
+			this.renderOrdersTable([order]).then(html => {
+				resetBtn.disabled = false;
+				table.innerHTML = html;
+				this.afterRender();
 			});
 		});
 	}
@@ -61,30 +125,6 @@ class OrdersList extends Component {
 			return order;
 		});
 	}
-
-	/* setSort(value, data) {
-		switch (value) {
-			case ('up-date') :
-				return this.sortByDate(data, true);
-			case ('down-date') :
-				return this.sortByDate(data, false);
-			case ('done') :
-				return this.sortByStatus(data, 3);
-			case ('new') :
-				return this.sortByStatus(data, 1);
-		}
-	}
-
-	sortByDate(orders, flag) {
-		return orders.sort((current, next) => {
-			if (current.created_at.split(' ')[0] < next.created_at.split(' ')[0]) return flag ? 1 : -1;
-			if (current.created_at.split(' ')[0] > next.created_at.split(' ')[0]) return flag ? -1 : 1;
-		});
-	}
-
-	sortByStatus(orders, status) {
-		return orders.filter(order => order.status_id == status);
-	}*/
 }
 
 export default OrdersList;

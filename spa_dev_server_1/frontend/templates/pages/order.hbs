@@ -1,0 +1,98 @@
+{{> userInfo }}
+<div class="content">
+	<div class="container">
+		<div class="controls">
+			<div class="controls__item">
+				<label>Статус</label>
+				<select class="select-style orderStatusJs in-process">
+					<option value="in-process">Не выполнен</option>
+					<option value="done">Выполнен</option>
+				</select>
+			</div>
+			<div class="controls__item">
+				<button class="btn-style btn-style_ghost btn-style_svg printOrderJS" disabled>
+			<span>
+				<svg>
+				    <use xlink:href="#print"></use>
+				</svg>
+				Печать
+			</span>
+				</button>
+			</div>
+		</div>
+
+		{{> orderServicesTable}}
+
+		<div class="table__add">
+			<a href="services-list" class="table__add-btn btn-style btn-style_green modalOpenJs">
+				<svg>
+					<use xlink:href="#plus"></use>
+				</svg>
+			</a>
+		</div>
+
+		<div class="table__btns">
+			<div class="table__btns-item">
+				<span class="btn-style btn-style_green">Сохранить</span>
+			</div>
+			<div class="table__btns-item">
+				<span class="btn-style btn-style_red">Закрыть</span>
+			</div>
+		</div>
+
+
+		<div class="modal-container">
+			<div class="modal modalJs" id="services-list">
+				{{> modalServicestitle}}
+			</div>
+		</div>
+		<div class="modal-container">
+			<div class="modal modal_info modalJs" id="delete-service">
+				<div class="modal__header">
+					Удаление услуги
+				</div>
+				<div class="modal__main">
+					<p>
+						Выдействительно хотите <span class="br"></span>
+						удалить услугу?
+					</p>
+				</div>
+				<div class="modal__footer">
+					<span class="btn-style btn-style_gray modalCloseJs">Закрыть</span>
+					<span class="btn-style btn-style_red">Удалить</span>
+				</div>
+			</div>
+		</div>
+		<div class="modal-container">
+			<div class="modal modal_info modal_editor modalJs" id="edit-data">
+				<div class="modal__header">
+					Внесите изменения
+					<span class="modal__close modalCloseJs"></span>
+				</div>
+				<div class="modal__main">
+					<form action="" class="edit-data-form">
+						<div class="edit-data-form__item">
+							<label>Дата</label>
+							<input type="date" class="input-style" min="2021-01-01" max="2021-12-31">
+						</div>
+						<div class="edit-data-form__item">
+							<label>ФИО</label>
+							<input type="text" class="input-style">
+						</div>
+						<div class="edit-data-form__item">
+							<label>Автомобиль</label>
+							<input type="text" class="input-style">
+						</div>
+						<div class="edit-data-form__item">
+							<label>Регистрационный номер</label>
+							<input type="text" class="input-style">
+						</div>
+						<div class="edit-data-form__item">
+							<button class="btn-style btn-style_green">Подтвердить</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

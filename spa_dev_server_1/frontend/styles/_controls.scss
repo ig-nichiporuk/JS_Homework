@@ -58,11 +58,6 @@
 
 				}
 			}
-			&__input:focus + .search__find {
-				svg {
-					fill: #001751;
-				}
-			}
 			&__reset, &__find {
 				line-height: 20px;
 				svg {
@@ -75,12 +70,15 @@
 					width: 24px;
 					height: 24px;
 				}
-				&:hover {
+				&:not(:disabled):hover {
 					cursor: pointer;
 					svg {
 						fill: #001751;
 					}
 				}
+                &:disabled{
+                    cursor: default;
+                }
 			}
 			&__find {
 				position: absolute;
@@ -92,6 +90,12 @@
 					width: 32px;
 					height: 32px;
 				}
+                &:hover {
+                    cursor: pointer;
+                    svg {
+                        fill: #001751;
+                    }
+                }
 			}
 		}
 		.unp-wrap {

@@ -7,9 +7,19 @@ router.get('/api/orders',(req, res) => res.send(fs.readFileSync(config.get('data
 
 router.post('/api/orders',(req, res) => {
 	const ordersData = getOrdersFromDB(),
-		{sort} = req.body;
+		{sort, num, unp} = req.body;
 
-	res.send(setSort(sort, ordersData));
+	if(num && num.length) {
+		res.send(ordersData.find(order => order.code_1c == num));
+	}
+
+	if(sort) {
+		res.send(setSort(sort, ordersData));
+	}
+
+	if(unp && unp.length) {
+		res.send(ordersData.find(order => order.unp == unp));
+	}
 });
 
 function setSort(value, data) {
@@ -20,6 +30,8 @@ function setSort(value, data) {
 			return sortByDate(data, false);
 		case ('done') :
 			return sortByStatus(data, 3);
+		case ('cancel') :
+			return sortByStatus(data, 2);
 		case ('new') :
 			return sortByStatus(data, 1);
 	}
