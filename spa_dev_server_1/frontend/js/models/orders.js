@@ -48,6 +48,31 @@ class Orders {
 			xhr.send();
 		});
 	}
+
+	getServicesList() {
+		return new Promise(resolve => {
+			const xhr = new XMLHttpRequest();
+
+			xhr.open('GET', 'http://localhost:3000/api/services');
+
+			xhr.onload = () => resolve(JSON.parse(xhr.response));
+
+			xhr.send();
+		});
+	}
+
+	addServicesToOrder(newServices, orderId) {
+		return new Promise(resolve => {
+			const xhr = new XMLHttpRequest();
+
+			xhr.open('PUT', 'http://localhost:3000/api/order/add');
+			xhr.setRequestHeader('Content-Type', 'application/json');
+
+			xhr.onload = () => resolve();
+
+			xhr.send(JSON.stringify({newServices, orderId}));
+		});
+	}
 }
 
 export default Orders;

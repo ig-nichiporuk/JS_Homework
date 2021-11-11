@@ -58,11 +58,21 @@ export const openModal = (id) => {
 };
 
 export const closeModal = () => {
-	const modal = document.querySelectorAll('.modalJs.open'),
-		overlay = document.getElementsByClassName('overlayJs')[0];
+	const modal = body.querySelectorAll('.modalJs.open'),
+		overlay = body.getElementsByClassName('overlayJs')[0];
 
 	if (overlay) overlay.remove();
 
 	modal.forEach((activeModal) => activeModal.classList.remove('open'));
 	body.classList.remove('modal-open',  'overlay-open',  'js-scroll-lock');
+
+	resetAllInput();
+};
+
+const resetAllInput = () => {
+	const inputsChecked = body.querySelectorAll('input:checked');
+
+	for (let input of inputsChecked) {
+		input.checked = false;
+	}
 };

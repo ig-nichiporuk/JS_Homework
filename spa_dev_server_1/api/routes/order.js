@@ -8,75 +8,51 @@ const express = require('express'),
 router.get('/api/order/:id', (req, res) => {
 	const ordersData = getOrdersFromDB(),
 		orderTasksData = getOrdersTasksFromDB(),
+		sevicesList = getServicesListFromDB(),
 		order = ordersData.find(order => order.id === req.params.id),
 		orderTasks = orderTasksData.filter(order => order.order_id === req.params.id);
 
-	order ? res.send([order, orderTasks]) : res.send({});
+	order ? res.send([order, formatOrderTasksData(orderTasks, sevicesList)]) : res.send({});
 });
 
+router.put('/api/order/add', (req, res) => {
+	const orderTasksData = getOrdersTasksFromDB(),
+		{newServices, orderId} = req.body,
+		newTaskInOrder ={};
 
+	orderTasks = orderTasksData.filter(task => task.order_id == orderId);
+	for (let serviceId of newServices) {
+		const taskInOrder = orderTasks.find(task => task.task_id == serviceId);
 
-
-
-
-
-
-
-
-
-
-router.post('/api/task', (req, res) => {
-	const tasksData = getTasksFromDB(),
-		task = req.body;
-
-	task.id = shortId.generate();
-	task.description = task.description.trim() || 'No Description';
-	task.status = 'In Progress';
-
-	tasksData.push(task);
-	setTasksToDB(tasksData);
-
-	res.send(task);
-});
-
-router.get('/api/task/:id', (req, res) => {
-	const tasksData = getTasksFromDB(),
-		task = tasksData.find(task => task.id === req.params.id);
-
-	task ? res.send(task) : res.send({});
-});
-
-router.put('/api/task/:id', (req, res) => {
-	const tasksData = getTasksFromDB(),
-		task = tasksData.find(task => task.id === req.params.id),
-		updatedTask = req.body;
-
-	task.title = updatedTask.title;
-	task.description = updatedTask.description || 'No Description';
-
-	setTasksToDB(tasksData);
-
+		if(taskInOrder) {
+			taskInOrder.amount = `${++taskInOrder.amount}`;
+			setOrdersTasksToDB(orderTasksData);
+		} else {
+			newTaskInOrder.id = shortId.generate();
+			newTaskInOrder.order_id = orderId;
+			newTaskInOrder.task_id = serviceId;
+			newTaskInOrder.amount = '1';
+			orderTasksData.push(newTaskInOrder);
+			setOrdersTasksToDB(orderTasksData);
+		}
+	}
 	res.sendStatus(204);
 });
 
-router.put('/api/task/:id/done', (req, res) => {
-	const tasksData = getTasksFromDB();
 
-	tasksData.find(task => task.id === req.params.id).status = 'Done';
 
-	setTasksToDB(tasksData);
+function formatOrderTasksData(orderTasks, sevicesList) {
+	return orderTasks.map(orderTask => {
+		const serviceTitle = sevicesList.find(service => service.id == orderTask.task_id).title,
+			servicePrice = sevicesList.find(service => service.id == orderTask.task_id).price;
+		orderTask.task_id = serviceTitle;
+		orderTask.task_price = servicePrice;
+		orderTask.task_total = Math.ceil(servicePrice * orderTask.amount * 100) / 100;
 
-	res.sendStatus(204);
-});
+		return orderTask;
+	});
+}
 
-router.delete('/api/task/:id', (req, res) => {
-	const tasksData = getTasksFromDB(),
-		updatedData = tasksData.filter(task => task.id !== req.params.id);
-
-	setTasksToDB(updatedData);
-
-	res.sendStatus(204);
-});
 
 function getOrdersFromDB() {
 	return JSON.parse(fs.readFileSync(config.get('database.orders'), 'utf8'));
@@ -84,6 +60,14 @@ function getOrdersFromDB() {
 
 function getOrdersTasksFromDB() {
 	return JSON.parse(fs.readFileSync(config.get('database.order_tasks'), 'utf8'));
+}
+
+function getServicesListFromDB() {
+	return JSON.parse(fs.readFileSync(config.get('database.services'), 'utf8'));
+}
+
+function setOrdersTasksToDB(ordersTasksData) {
+	fs.writeFileSync(config.get('database.order_tasks'), JSON.stringify(ordersTasksData));
 }
 
 module.exports = router;

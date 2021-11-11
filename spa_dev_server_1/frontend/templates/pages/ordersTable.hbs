@@ -1,4 +1,4 @@
-{{#each editOrders}}
+{{#each orders}}
 	<tr class="table__row {{#ifCond this.status_id '===' 'Новый'}}new{{/ifCond}}{{#ifCond this.status_id '===' 'Отменен'}}cancel{{/ifCond}}{{#ifCond this.status_id '===' 'Выполнен'}}done{{/ifCond}}">
 		<td class="cell__order-num">
 			<a href="#/order/{{this.id}}" class="link link_blue">{{this.code_1c}}</a>

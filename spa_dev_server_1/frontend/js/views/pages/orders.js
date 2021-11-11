@@ -21,19 +21,33 @@ class OrdersList extends Component {
 		}));
 	}
 
+	getServices() {
+		return new Promise(resolve => this.model.getServicesList().then(orders => {
+			resolve(orders);
+		}));
+	}
+
+	getOrderNum(num, unp, resetBtn, table) {
+		this.model.getOrderNum(num, unp).then(order => {
+			this.renderOrdersTable(order).then(html => {
+				resetBtn.disabled = false;
+				table.innerHTML = html;
+				this.afterRender();
+			});
+		});
+	}
+
 	render(orders) {
-		const editOrders = this.formatOrders(orders),
-			request = this.request;
+		const request = this.request;
 		return new Promise(resolve => {
 			this.getServices().then(services => {
-				resolve(OrdersTemplate({editOrders, services, request}));
+				resolve(OrdersTemplate({orders, services, request}));
 			});
 		});
 	}
 
 	renderOrdersTable(orders) {
-		const editOrders = this.formatOrders(orders);
-		return new Promise(resolve => resolve(OrdersTableTemplate({editOrders})));
+		return new Promise(resolve => resolve(OrdersTableTemplate({orders})));
 	}
 
 	afterRender() {
@@ -66,7 +80,7 @@ class OrdersList extends Component {
 
 			sortSelect.disabled = !!inputOrderNum.value.trim();
 
-			this.getOrderNum(inputOrderNum.value.trim(), null, resetOrderNum, tableOrders);
+			this.getOrderNum(inputOrderNum.value.trim().toUpperCase(), null, resetOrderNum, tableOrders);
 		});
 
 		searchOrderNumForm.addEventListener('reset', () => {
@@ -90,7 +104,7 @@ class OrdersList extends Component {
 			sortSelect.disabled = !!inputUnpNum.value.trim();
 
 			if (inputUnpNum.value.trim()) {
-				this.getOrderNum(null, inputUnpNum.value.trim(), resetOrderNum, tableOrders);
+				this.getOrderNum(null, inputUnpNum.value.trim().toUpperCase(), resetOrderNum, tableOrders);
 			} else {
 				this.getData().then(orders => {
 					this.renderOrdersTable(orders).then(html => {
@@ -99,30 +113,6 @@ class OrdersList extends Component {
 					});
 				});
 			}
-		});
-	}
-
-	getOrderNum(num, unp, resetBtn, table) {
-		this.model.getOrderNum(num, unp).then(order => {
-			this.renderOrdersTable([order]).then(html => {
-				resetBtn.disabled = false;
-				table.innerHTML = html;
-				this.afterRender();
-			});
-		});
-	}
-
-	formatOrders(data) {
-		return data.map(order => {
-			order.status_id = order.status_id == 1 ? 'Новый' : order.status_id == 2 ? 'Отменен' : 'Выполнен';
-
-			order.fio = [order.fio.split(' ')[0], `${order.fio.split(' ')[1][0]}.${order.fio.split(' ')[2][0]}.`].join(' ');
-
-			order.created_at = order.created_at.split(' ')[0].split('-').reverse().join('.');
-
-			order.closed_at = order.closed_at ? order.closed_at.split(' ')[0].split('-').reverse().join('.') : '—';
-
-			return order;
 		});
 	}
 }

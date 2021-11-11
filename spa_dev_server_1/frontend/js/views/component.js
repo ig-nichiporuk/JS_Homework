@@ -1,22 +1,13 @@
 import {parseRequestURL, openDropdown, closeDropdown, openModal, closeModal} from '../helpers/utils';
 
-import Services from '../models/services';
-
 class Component {
     constructor() {
-		this.services = new Services();
         this.request = parseRequestURL();
     }
 
     getData() {
         return new Promise(resolve => resolve());
     }
-
-	getServices() {
-		return new Promise(resolve => this.services.getServicesList().then(orders => {
-			resolve(orders);
-		}));
-	}
 
 	afterRender() {
 		document.body.onclick = () => {
@@ -39,8 +30,6 @@ class Component {
 				event.preventDefault();
 
 				let href = target.closest('.modalOpenJs').getAttribute('href');
-
-				console.log(href);
 
 				closeModal();
 				openModal(href);

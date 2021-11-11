@@ -3,10 +3,10 @@
 	<span class="modal__close modalCloseJs"></span>
 </div>
 <div class="modal__main">
-	<ul class="services-list" data-scroll-lock-scrollable>
+	<ul class="services-list addServicesListJs" data-scroll-lock-scrollable>
 	{{#each services}}
 			<li>
-				<label class="checkbox checkbox_blue">
+				<label class="checkbox checkbox_blue" data-id="{{this.id}}">
 					<input type="checkbox" class="checkbox__check">
 					<p class="checkbox__text">
 						{{this.title}}
@@ -16,6 +16,6 @@
 	{{/each}}
 	</ul>
 	<div class="services-list__btn">
-		<span class="btn-style btn-style_blue modalCloseJs">Добавить</span>
+		<span class="btn-style btn-style_blue modalCloseJs addServicesBtnJs">Добавить</span>
 	</div>
 </div>

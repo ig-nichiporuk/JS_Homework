@@ -6,11 +6,7 @@ const express = require('express'),
 	FileStore = require('session-file-store')(session),
 	passport = require('passport');
 
-require('../config/config-passport');
-router.use(passport.initialize());
-router.use(passport.session());
 
-router.use(express.json());
 
 router.use(
 	session({

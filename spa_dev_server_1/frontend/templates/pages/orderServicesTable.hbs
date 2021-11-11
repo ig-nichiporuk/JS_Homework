@@ -24,9 +24,7 @@
 		</th>
 	</tr>
 	</thead>
-	<tbody>
-		{{#each formatOrderTasks}}
-			{{> orderServicesRow orderServicesRow=this}}
-		{{/each}}
+	<tbody class="orderServicesTableBodyJs">
+		{{> orderServicesRow orderServicesRow=this}}
 	</tbody>
 </table>

@@ -4,7 +4,6 @@ const express = require('express'),
 	fs = require('file-system');
 
 router.get('/api/services',(req, res) => {
-	console.log(fs.readFileSync(config.get('database.services'), 'utf8'));
 	res.send(fs.readFileSync(config.get('database.services'), 'utf8'))
 });
 

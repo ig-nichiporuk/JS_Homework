@@ -3,25 +3,31 @@ const express = require('express'),
 	config = require('config'),
 	fs = require('file-system');
 
-router.get('/api/orders',(req, res) => res.send(fs.readFileSync(config.get('database.orders'), 'utf8')));
+// API GET Orders list
+router.get('/api/orders',(req, res) => {
+	const orders = formatOrders(JSON.parse(fs.readFileSync(config.get('database.orders'), 'utf8')));
+	res.send(orders)
+});
 
+// API Orders SORT, find UNP, find NUM
 router.post('/api/orders',(req, res) => {
 	const ordersData = getOrdersFromDB(),
 		{sort, num, unp} = req.body;
 
 	if(num && num.length) {
-		res.send(ordersData.find(order => order.code_1c == num));
+		res.send(formatOrders([ordersData.find(order => order.code_1c == num)]));
 	}
 
 	if(sort) {
-		res.send(setSort(sort, ordersData));
+		res.send(formatOrders(setSort(sort, ordersData)));
 	}
 
 	if(unp && unp.length) {
-		res.send(ordersData.find(order => order.unp == unp));
+		res.send(formatOrders([ordersData.find(order => order.unp == unp)]));
 	}
 });
 
+//SORT options
 function setSort(value, data) {
 	switch (value) {
 		case ('up-date') :
@@ -37,6 +43,7 @@ function setSort(value, data) {
 	}
 }
 
+//SORT later to earlier, earlier to later
 function sortByDate(orders, flag) {
 	return orders.sort((current, next) => {
 		if (current.created_at.split(' ')[0] < next.created_at.split(' ')[0]) return flag ? 1 : -1;
@@ -44,13 +51,28 @@ function sortByDate(orders, flag) {
 	});
 }
 
+//SORT status
 function sortByStatus(orders, status) {
 	return orders.filter(order => order.status_id == status);
+}
+
+//FORMAT data for user
+function formatOrders(data) {
+	return data.map(order => {
+		order.status_id = order.status_id == 1 ? 'Новый' : order.status_id == 2 ? 'Отменен' : 'Выполнен';
+
+		order.fio = [order.fio.split(' ')[0], `${order.fio.split(' ')[1][0]}.${order.fio.split(' ')[2][0]}.`].join(' ');
+
+		order.created_at = order.created_at.split(' ')[0].split('-').reverse().join('.');
+
+		order.closed_at = order.closed_at ? order.closed_at.split(' ')[0].split('-').reverse().join('.') : '—';
+
+		return order;
+	});
 }
 
 function getOrdersFromDB() {
 	return JSON.parse(fs.readFileSync(config.get('database.orders'), 'utf8'));
 }
-
 
 module.exports = router;
