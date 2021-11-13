@@ -5,7 +5,7 @@ const express = require('express'),
 
 // API GET Orders list
 router.get('/api/orders',(req, res) => {
-	const orders = formatOrders(JSON.parse(fs.readFileSync(config.get('database.orders'), 'utf8')));
+	const orders = fs.readFileSync(config.get('database.orders'), 'utf8');
 	res.send(orders)
 });
 
@@ -15,15 +15,15 @@ router.post('/api/orders',(req, res) => {
 		{sort, num, unp} = req.body;
 
 	if(num && num.length) {
-		res.send(formatOrders([ordersData.find(order => order.code_1c == num)]));
+		res.send(ordersData.find(order => order.code_1c == num));
 	}
 
 	if(sort) {
-		res.send(formatOrders(setSort(sort, ordersData)));
+		res.send(setSort(sort, ordersData));
 	}
 
 	if(unp && unp.length) {
-		res.send(formatOrders([ordersData.find(order => order.unp == unp)]));
+		res.send(ordersData.find(order => order.unp == unp));
 	}
 });
 
@@ -57,7 +57,7 @@ function sortByStatus(orders, status) {
 }
 
 //FORMAT data for user
-function formatOrders(data) {
+/*function formatOrders(data) {
 	return data.map(order => {
 		order.status_id = order.status_id == 1 ? 'Новый' : order.status_id == 2 ? 'Отменен' : 'Выполнен';
 
@@ -69,7 +69,7 @@ function formatOrders(data) {
 
 		return order;
 	});
-}
+}*/
 
 function getOrdersFromDB() {
 	return JSON.parse(fs.readFileSync(config.get('database.orders'), 'utf8'));

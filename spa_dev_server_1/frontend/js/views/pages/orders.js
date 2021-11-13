@@ -1,3 +1,5 @@
+import {formatOrders} from '../../helpers/utils';
+
 import Component from '../../views/component';
 
 import OrdersTemplate from '../../../templates/pages/orders.hbs';
@@ -14,33 +16,26 @@ class OrdersList extends Component {
 		this.model = new Orders();
 	}
 
-	getData() {
-		return new Promise(resolve => this.model.getOrdersList().then(orders => resolve(orders)));
+	async getData() {
+		return formatOrders(await this.model.getOrdersList());
 	}
 
-	getServices() {
-		return new Promise(resolve => this.model.getServicesList().then(orders => resolve(orders)));
+	async getServices() {
+		return await this.model.getServicesList();
 	}
 
-	getSortOrdersList(sortOptions) {
-		return new Promise(resolve => this.model.getSortOrdersList(sortOptions).then(orders => resolve(orders)));
+	async getSortOrdersList(sortOptions) {
+		return formatOrders(await this.model.getSortOrdersList(sortOptions));
 	}
 
-	getOrderNum(num, unp) {
-		return new Promise(resolve => this.model.getOrderNum(num, unp).then(order => resolve(order)));
+	async getOrderNum(num, unp) {
+		return formatOrders([await this.model.getOrderNum(num, unp)]);
 	}
 
-	render(orders) {
-		const request = this.request;
-		return new Promise(resolve => {
-			this.getServices().then(services => {
-				resolve(OrdersTemplate({orders, services, request}));
-			});
-		});
-	}
-
-	renderOrdersTable(orders) {
-		return new Promise(resolve => resolve(OrdersTableTemplate({orders})));
+	async render(orders) {
+		const request = this.request,
+			services = await this.getServices();
+		return OrdersTemplate({orders, services, request});
 	}
 
 	afterRender() {
@@ -59,11 +54,7 @@ class OrdersList extends Component {
 
 		sortSelect.addEventListener('change', () => {
 			this.getSortOrdersList(sortSelect.value).then(orders => {
-				this.renderOrdersTable(orders).then(html => {
-					tableOrders.innerHTML = html;
-
-					// this.afterRender();
-				});
+				tableOrders.innerHTML = OrdersTableTemplate({orders});
 			});
 		});
 
@@ -74,12 +65,8 @@ class OrdersList extends Component {
 			sortSelect.disabled = !!inputOrderNum.value.trim();
 
 			this.getOrderNum(inputOrderNum.value.trim().toUpperCase(), null).then(orders => {
-				this.renderOrdersTable(orders).then(html => {
-					resetOrderNum.disabled = false;
-					tableOrders.innerHTML = html;
-
-					// this.afterRender();
-				});
+				resetOrderNum.disabled = false;
+				tableOrders.innerHTML = OrdersTableTemplate({orders});
 			});
 		});
 
@@ -91,11 +78,7 @@ class OrdersList extends Component {
 			resetOrderNum.disabled = true;
 
 			this.getData().then(orders => {
-				this.renderOrdersTable(orders).then(html => {
-					tableOrders.innerHTML = html;
-
-					// this.afterRender();
-				});
+				tableOrders.innerHTML = OrdersTableTemplate({orders});
 			});
 		});
 
@@ -106,20 +89,11 @@ class OrdersList extends Component {
 
 			if (inputUnpNum.value.trim()) {
 				this.getOrderNum(null, inputUnpNum.value.trim().toUpperCase()).then(orders => {
-					this.renderOrdersTable(orders).then(html => {
-						resetOrderNum.disabled = false;
-						tableOrders.innerHTML = html;
-
-						// this.afterRender();
-					});
+					tableOrders.innerHTML = OrdersTableTemplate({orders});
 				});
 			} else {
 				this.getData().then(orders => {
-					this.renderOrdersTable(orders).then(html => {
-						tableOrders.innerHTML = html;
-
-						// this.afterRender();
-					});
+					tableOrders.innerHTML = OrdersTableTemplate({orders});
 				});
 			}
 		});

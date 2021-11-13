@@ -69,6 +69,20 @@ export const closeModal = () => {
 	resetAllInput();
 };
 
+export const formatOrders = (data) => {
+	return data.map(order => {
+		order.status_id = order.status_id == 1 ? 'Новый' : order.status_id == 2 ? 'Отменен' : 'Выполнен';
+
+		order.fio = [order.fio.split(' ')[0], `${order.fio.split(' ')[1][0]}.${order.fio.split(' ')[2][0]}.`].join(' ');
+
+		order.created_at = order.created_at.split(' ')[0].split('-').reverse().join('.');
+
+		order.closed_at = order.closed_at ? order.closed_at.split(' ')[0].split('-').reverse().join('.') : '—';
+
+		return order;
+	});
+};
+
 const resetAllInput = () => {
 	const inputsChecked = body.querySelectorAll('input:checked');
 

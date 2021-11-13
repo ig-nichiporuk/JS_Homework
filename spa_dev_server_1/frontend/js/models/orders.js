@@ -1,102 +1,75 @@
 class Orders {
-	getOrdersList() {
-		return new Promise(resolve => {
-			const xhr = new XMLHttpRequest();
+	async getOrdersList() {
+		const orders = await fetch('http://localhost:3000/api/orders')
+			.then(orders => orders.json())
+			.then(data => data);
 
-			xhr.open('GET', 'http://localhost:3000/api/orders');
+		return orders;
+	}
 
-			xhr.onload = () => resolve(JSON.parse(xhr.response));
+	async getSortOrdersList(param) {
+		const orders = await fetch('http://localhost:3000/api/orders', {
+			method: 'POST',
+			headers: {'Content-Type' : 'application/json'},
+			body: JSON.stringify({sort : param})
 
-			xhr.send();
+		})
+		.then(orders => orders.json())
+		.then(data => data);
+
+		return orders;
+	}
+
+	async getOrderNum(num, unp) {
+		const order = await fetch('http://localhost:3000/api/orders', {
+			method: 'POST',
+			headers: {'Content-Type' : 'application/json'},
+			body: JSON.stringify({num : num, unp : unp})
+
+		})
+		.then(orders => orders.json())
+		.then(data => data);
+
+		return order;
+	}
+
+	async getOrder(id) {
+		const order = await fetch(`http://localhost:3000/api/order/${id}`)
+			.then(orders => orders.json())
+			.then(data => data);
+
+		return order;
+	}
+
+	async getServicesList() {
+		const services = await fetch('http://localhost:3000/api/services')
+			.then(orders => orders.json())
+			.then(data => data);
+
+		return services;
+	}
+
+	async addServicesToOrder(newServices, amount, orderId) {
+		await fetch('http://localhost:3000/api/order/add', {
+			method: 'PUT',
+			headers: {'Content-Type' : 'application/json'},
+			body: JSON.stringify({newServices, amount, orderId})
 		});
 	}
 
-	getSortOrdersList(param) {
-		return new Promise(resolve => {
-			const xhr = new XMLHttpRequest();
-
-			xhr.open('POST', 'http://localhost:3000/api/orders');
-			xhr.setRequestHeader('Content-Type', 'application/json');
-
-			xhr.onload = () => resolve(JSON.parse(xhr.response));
-
-			xhr.send(JSON.stringify({sort : param}));
+	async addServiceAmountToOrder(amount, taskId, orderId) {
+		await fetch('http://localhost:3000/api/order/amount', {
+			method: 'PUT',
+			headers: {'Content-Type' : 'application/json'},
+			body: JSON.stringify({amount, taskId, orderId})
 		});
 	}
 
-	getOrderNum(num, unp) {
-		return new Promise(resolve => {
-			const xhr = new XMLHttpRequest();
-
-			xhr.open('POST', 'http://localhost:3000/api/orders');
-			xhr.setRequestHeader('Content-Type', 'application/json');
-
-			xhr.onload = () => resolve(JSON.parse(xhr.response));
-
-			xhr.send(JSON.stringify({num : num, unp : unp}));
-		});
-	}
-
-	getOrder(id) {
-		return new Promise(resolve => {
-			const xhr = new XMLHttpRequest();
-
-			xhr.open('GET', `http://localhost:3000/api/order/${id}`);
-
-			xhr.onload = () => resolve(JSON.parse(xhr.response));
-
-			xhr.send();
-		});
-	}
-
-	getServicesList() {
-		return new Promise(resolve => {
-			const xhr = new XMLHttpRequest();
-
-			xhr.open('GET', 'http://localhost:3000/api/services');
-
-			xhr.onload = () => resolve(JSON.parse(xhr.response));
-
-			xhr.send();
-		});
-	}
-
-	addServicesToOrder(newServices, amount, orderId) {
-		return new Promise(resolve => {
-			const xhr = new XMLHttpRequest();
-
-			xhr.open('PUT', 'http://localhost:3000/api/order/add');
-			xhr.setRequestHeader('Content-Type', 'application/json');
-
-			xhr.onload = () => resolve();
-
-			xhr.send(JSON.stringify({newServices, amount, orderId}));
-		});
-	}
-
-	addServiceAmountToOrder(amount, taskId, orderId) {
-		return new Promise(resolve => {
-			const xhr = new XMLHttpRequest();
-
-			xhr.open('PUT', 'http://localhost:3000/api/order/amount');
-			xhr.setRequestHeader('Content-Type', 'application/json');
-
-			xhr.onload = () => resolve();
-
-			xhr.send(JSON.stringify({amount, taskId, orderId}));
-		});
-	}
-
-	removeServiceFromOrder(taskId) {
-		return new Promise(resolve => {
-			const xhr = new XMLHttpRequest();
-
-			xhr.open('DELETE', 'http://localhost:3000/api/order/remove');
-			xhr.setRequestHeader('Content-Type', 'application/json');
-
-			xhr.onload = () => resolve();
-
-			xhr.send(JSON.stringify({taskId}));
+	async removeServiceFromOrder(taskId) {
+		await fetch('http://localhost:3000/api/order/remove', {
+			method: 'DELETE',
+			headers: {'Content-Type' : 'application/json'},
+			body: JSON.stringify({taskId})
 		});
 	}
 }

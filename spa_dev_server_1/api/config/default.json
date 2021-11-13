@@ -1,6 +1,5 @@
 {
 	"database": {
-		"tasks": "./database/tasks.json",
 		"users": "./database/users.json",
 		"orders": "./database/orders.json",
 		"acts": "./database/acts.json",
@@ -8,11 +7,8 @@
 		"services": "./database/services.json"
 	},
 	"routes": {
-		"tasks": "./routes/tasks.js",
-		"task": "./routes/task.js",
 		"orders": "./routes/orders.js",
 		"order": "./routes/order.js",
-		"services": "./routes/services.js",
-		"authorization": "./routes/authorization.js"
+		"services": "./routes/services.js"
 	}
 }

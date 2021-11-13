@@ -19,32 +19,7 @@ class Authorization extends Component {
 		this.setActions();
 	}
 
-	setActions() {
-		const form = document.getElementById('authorization-form'),
-			inputs = form.getElementsByTagName('input'),
-			test = document.getElementById('test');
-		form.addEventListener('submit', () => {
-			event.preventDefault();
-			this.ddd(inputs.email.value, inputs.password.value);
-		});
-
-		test.addEventListener('click', () => {
-			this.testUsers();
-		});
-
-	}
-
-	ddd(email, password) {
-		this.model.test(email, password).then((data) => {
-			console.log(data);
-		});
-	}
-
-	testUsers() {
-		this.model.testUsers().then(() => {});
-	}
-
-
+	setActions() {}
 }
 
 export default Authorization;

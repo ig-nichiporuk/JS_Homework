@@ -1,4 +1,4 @@
-import {closeModal, openModal} from '../../helpers/utils';
+import {closeModal, openModal, formatOrders} from '../../helpers/utils';
 
 import Component from '../../views/component';
 
@@ -16,38 +16,70 @@ class Order extends Component {
 		this.model = new Orders();
 	}
 
-	getData() {
-		return new Promise(resolve => this.model.getOrder(this.request.id).then(data => resolve(data)));
+	async getData() {
+		return await this.model.getOrder(this.request.id);
 	}
 
-	getServices() {
-		return new Promise(resolve => this.model.getServicesList().then(orders => {
-			resolve(orders);
-		}));
+	async getServices() {
+		return await this.model.getServicesList();
 	}
 
-	render(data) {
-		return new Promise(resolve => {
-			const [orderInfo, orderTasks] = data,
-				request = this.request;
+	async render(data) {
+		const [orderInfo, orderTasks] = data,
+			request = this.request,
+			formatOrderInfo = formatOrders([orderInfo])[0],
+			services = await this.getServices();
 
-			orderTasks.map(orderTask => {
-				orderTask.task_total = this.formatTotalPrice(orderTask.task_price * orderTask.amount);
-			});
+		orderTasks.map(orderTask => {
+			orderTask.task_total = this.formatTotalPrice(orderTask.task_price * orderTask.amount);
+		});
 
-			this.getServices().then(services => {
-				resolve(Object.keys(data).length ? OrderInfo({orderInfo, orderTasks, services, request}) : Error404Template());
+		return Object.keys(data).length ? OrderInfo({formatOrderInfo, orderTasks, services, request}) : Error404Template();
+	}
+
+	removeService(taskId, table) {
+		document.body.addEventListener('click', (e) => {
+			const target = e.target;
+			if (target.closest('.removeServiceIdJs')) {
+				this.model.removeServiceFromOrder(taskId).then(() => {
+					this.getData().then(data => {
+						const [, orderTasks] = data;
+						table.innerHTML = this.renderOrderServicesTable(orderTasks);
+						closeModal();
+					});
+				});
+			}
+		});
+	}
+
+	addServices(checkServices, amount, table) {
+		this.getData().then(data => {
+			const [orderInfo] = data;
+
+			this.model.addServicesToOrder(checkServices, amount, orderInfo.id).then(() => {
+				this.getData().then(data => {
+					const [, orderTasks] = data;
+					table.innerHTML = this.renderOrderServicesTable(orderTasks);
+				});
 			});
+		});
+	}
+
+	addServiceAmount(amount, taskId) {
+		this.getData().then(data => {
+			const [orderInfo] = data;
+
+			this.model.addServiceAmountToOrder(amount, taskId, orderInfo.id);
 		});
 	}
 
 	renderOrderServicesTable(orderTasks) {
-		return new Promise(resolve => {
-			orderTasks.map(orderTask => {
-				orderTask.task_total = this.formatTotalPrice(orderTask.task_price * orderTask.amount);
-			});
-			resolve(OrderServicesRow({orderTasks}));
-		});
+		orderTasks.map(orderTask => orderTask.task_total = this.formatTotalPrice(orderTask.task_price * orderTask.amount));
+		return OrderServicesRow({orderTasks});
+	}
+
+	formatTotalPrice(value) {
+		return Math.ceil(value * 100) / 100;
 	}
 
 	afterRender() {
@@ -109,53 +141,6 @@ class Order extends Component {
 			this.addServices(checkedServicesId, null, servicesTable);
 		});
 	}
-
-
-	removeService(taskId, table) {
-		document.body.addEventListener('click', (e) => {
-			const target = e.target;
-			if (target.closest('.removeServiceIdJs')) {
-				this.model.removeServiceFromOrder(taskId).then(() => {
-					this.getData().then(data => {
-						const [, orderTasks] = data;
-						this.renderOrderServicesTable(orderTasks).then (html => {
-							table.innerHTML = html;
-							closeModal();
-						});
-					});
-				});
-			}
-		});
-	}
-
-	addServices(checkServices, amount, table) {
-		this.getData().then(data => {
-			const [orderInfo] = data;
-
-			this.model.addServicesToOrder(checkServices, amount, orderInfo.id).then(() => {
-				this.getData().then(data => {
-					const [, orderTasks] = data;
-					this.renderOrderServicesTable(orderTasks).then (html => {
-						table.innerHTML = html;
-					});
-				});
-			});
-		});
-	}
-
-	addServiceAmount(amount, taskId) {
-		this.getData().then(data => {
-			const [orderInfo] = data;
-
-			this.model.addServiceAmountToOrder(amount, taskId, orderInfo.id);
-		});
-	}
-
-	formatTotalPrice(value) {
-		return Math.ceil(value * 100) / 100;
-	}
 }
-
-
 
 export default Order;

@@ -18,7 +18,7 @@ module.exports = {
 		paths: PATHS
 	},
 	entry: {
-		app: `${PATHS.frontend}/js/app.js`
+		app: ['@babel/polyfill', `${PATHS.frontend}/js/app.js`]
 	},
 
     output: {

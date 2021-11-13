@@ -5,8 +5,8 @@ class Component {
         this.request = parseRequestURL();
     }
 
-    getData() {
-        return new Promise(resolve => resolve());
+    async getData() {
+        return;
     }
 
 	afterRender() {
