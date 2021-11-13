@@ -61,7 +61,7 @@ class Orders {
 		});
 	}
 
-	addServicesToOrder(newServices, orderId) {
+	addServicesToOrder(newServices, amount, orderId) {
 		return new Promise(resolve => {
 			const xhr = new XMLHttpRequest();
 
@@ -70,7 +70,33 @@ class Orders {
 
 			xhr.onload = () => resolve();
 
-			xhr.send(JSON.stringify({newServices, orderId}));
+			xhr.send(JSON.stringify({newServices, amount, orderId}));
+		});
+	}
+
+	addServiceAmountToOrder(amount, taskId, orderId) {
+		return new Promise(resolve => {
+			const xhr = new XMLHttpRequest();
+
+			xhr.open('PUT', 'http://localhost:3000/api/order/amount');
+			xhr.setRequestHeader('Content-Type', 'application/json');
+
+			xhr.onload = () => resolve();
+
+			xhr.send(JSON.stringify({amount, taskId, orderId}));
+		});
+	}
+
+	removeServiceFromOrder(taskId) {
+		return new Promise(resolve => {
+			const xhr = new XMLHttpRequest();
+
+			xhr.open('DELETE', 'http://localhost:3000/api/order/remove');
+			xhr.setRequestHeader('Content-Type', 'application/json');
+
+			xhr.onload = () => resolve();
+
+			xhr.send(JSON.stringify({taskId}));
 		});
 	}
 }

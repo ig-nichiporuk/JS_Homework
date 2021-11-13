@@ -7,7 +7,6 @@ import OrdersTableTemplate from '../../../templates/pages/ordersTable.hbs';
 
 import Orders from '../../models/orders';
 
-
 class OrdersList extends Component {
 	constructor() {
 		super();
@@ -16,25 +15,19 @@ class OrdersList extends Component {
 	}
 
 	getData() {
-		return new Promise(resolve => this.model.getOrdersList().then(orders => {
-			resolve(orders);
-		}));
+		return new Promise(resolve => this.model.getOrdersList().then(orders => resolve(orders)));
 	}
 
 	getServices() {
-		return new Promise(resolve => this.model.getServicesList().then(orders => {
-			resolve(orders);
-		}));
+		return new Promise(resolve => this.model.getServicesList().then(orders => resolve(orders)));
 	}
 
-	getOrderNum(num, unp, resetBtn, table) {
-		this.model.getOrderNum(num, unp).then(order => {
-			this.renderOrdersTable(order).then(html => {
-				resetBtn.disabled = false;
-				table.innerHTML = html;
-				this.afterRender();
-			});
-		});
+	getSortOrdersList(sortOptions) {
+		return new Promise(resolve => this.model.getSortOrdersList(sortOptions).then(orders => resolve(orders)));
+	}
+
+	getOrderNum(num, unp) {
+		return new Promise(resolve => this.model.getOrderNum(num, unp).then(order => resolve(order)));
 	}
 
 	render(orders) {
@@ -65,10 +58,11 @@ class OrdersList extends Component {
 			resetOrderNum = searchOrderNumForm.getElementsByClassName('resetOrderNumJs')[0];
 
 		sortSelect.addEventListener('change', () => {
-			this.model.getSortOrdersList(sortSelect.value).then(orders => {
+			this.getSortOrdersList(sortSelect.value).then(orders => {
 				this.renderOrdersTable(orders).then(html => {
 					tableOrders.innerHTML = html;
-					this.afterRender();
+
+					// this.afterRender();
 				});
 			});
 		});
@@ -77,10 +71,16 @@ class OrdersList extends Component {
 			event.preventDefault();
 
 			inputUnpNum.value = '',
-
 			sortSelect.disabled = !!inputOrderNum.value.trim();
 
-			this.getOrderNum(inputOrderNum.value.trim().toUpperCase(), null, resetOrderNum, tableOrders);
+			this.getOrderNum(inputOrderNum.value.trim().toUpperCase(), null).then(orders => {
+				this.renderOrdersTable(orders).then(html => {
+					resetOrderNum.disabled = false;
+					tableOrders.innerHTML = html;
+
+					// this.afterRender();
+				});
+			});
 		});
 
 		searchOrderNumForm.addEventListener('reset', () => {
@@ -93,7 +93,8 @@ class OrdersList extends Component {
 			this.getData().then(orders => {
 				this.renderOrdersTable(orders).then(html => {
 					tableOrders.innerHTML = html;
-					this.afterRender();
+
+					// this.afterRender();
 				});
 			});
 		});
@@ -104,12 +105,20 @@ class OrdersList extends Component {
 			sortSelect.disabled = !!inputUnpNum.value.trim();
 
 			if (inputUnpNum.value.trim()) {
-				this.getOrderNum(null, inputUnpNum.value.trim().toUpperCase(), resetOrderNum, tableOrders);
+				this.getOrderNum(null, inputUnpNum.value.trim().toUpperCase()).then(orders => {
+					this.renderOrdersTable(orders).then(html => {
+						resetOrderNum.disabled = false;
+						tableOrders.innerHTML = html;
+
+						// this.afterRender();
+					});
+				});
 			} else {
 				this.getData().then(orders => {
 					this.renderOrdersTable(orders).then(html => {
 						tableOrders.innerHTML = html;
-						this.afterRender();
+
+						// this.afterRender();
 					});
 				});
 			}

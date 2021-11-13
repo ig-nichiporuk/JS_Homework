@@ -21,11 +21,13 @@ router.put('/api/order/add', (req, res) => {
 		newTaskInOrder ={};
 
 	orderTasks = orderTasksData.filter(task => task.order_id == orderId);
+
 	for (let serviceId of newServices) {
 		const taskInOrder = orderTasks.find(task => task.task_id == serviceId);
 
 		if(taskInOrder) {
 			taskInOrder.amount = `${++taskInOrder.amount}`;
+
 			setOrdersTasksToDB(orderTasksData);
 		} else {
 			newTaskInOrder.id = shortId.generate();
@@ -33,9 +35,38 @@ router.put('/api/order/add', (req, res) => {
 			newTaskInOrder.task_id = serviceId;
 			newTaskInOrder.amount = '1';
 			orderTasksData.push(newTaskInOrder);
+
 			setOrdersTasksToDB(orderTasksData);
 		}
 	}
+
+	res.sendStatus(204);
+});
+
+
+router.put('/api/order/amount', (req, res) => {
+	const orderTasksData = getOrdersTasksFromDB(),
+		{amount, taskId, orderId} = req.body;
+
+	orderTasks = orderTasksData.filter(task => task.order_id == orderId);
+
+	orderTasks.find(task => task.id == taskId).amount = amount;
+
+	setOrdersTasksToDB(orderTasksData);
+
+	res.sendStatus(204);
+});
+
+
+router.delete('/api/order/remove', (req, res) => {
+
+	const orderTasksData = getOrdersTasksFromDB(),
+		{taskId} = req.body;
+
+	updateOrderTasksData = orderTasksData.filter(task => task.id !=taskId);
+
+	setOrdersTasksToDB(updateOrderTasksData);
+
 	res.sendStatus(204);
 });
 
@@ -47,12 +78,10 @@ function formatOrderTasksData(orderTasks, sevicesList) {
 			servicePrice = sevicesList.find(service => service.id == orderTask.task_id).price;
 		orderTask.task_id = serviceTitle;
 		orderTask.task_price = servicePrice;
-		orderTask.task_total = Math.ceil(servicePrice * orderTask.amount * 100) / 100;
 
 		return orderTask;
 	});
 }
-
 
 function getOrdersFromDB() {
 	return JSON.parse(fs.readFileSync(config.get('database.orders'), 'utf8'));
