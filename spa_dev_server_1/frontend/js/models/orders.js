@@ -1,10 +1,8 @@
 class Orders {
 	async getOrdersList() {
-		const orders = await fetch('http://localhost:3000/api/orders')
-			.then(orders => orders.json())
-			.then(data => data);
+		const orders = await fetch('http://localhost:3000/api/orders');
 
-		return orders;
+		return await orders.json();
 	}
 
 	async getSortOrdersList(param) {
@@ -12,12 +10,9 @@ class Orders {
 			method: 'POST',
 			headers: {'Content-Type' : 'application/json'},
 			body: JSON.stringify({sort : param})
+		});
 
-		})
-		.then(orders => orders.json())
-		.then(data => data);
-
-		return orders;
+		return await orders.json();
 	}
 
 	async getOrderNum(num, unp) {
@@ -25,28 +20,25 @@ class Orders {
 			method: 'POST',
 			headers: {'Content-Type' : 'application/json'},
 			body: JSON.stringify({num : num, unp : unp})
+		});
 
-		})
-		.then(orders => orders.json())
-		.then(data => data);
-
-		return order;
+		return await order.json();
 	}
 
 	async getOrder(id) {
-		const order = await fetch(`http://localhost:3000/api/order/${id}`)
-			.then(orders => orders.json())
-			.then(data => data);
+		const order = await fetch(`http://localhost:3000/api/order/${id}`);
 
-		return order;
+		if (!order.ok) {
+			throw new Error(`Невозможно отправить запрос на ${order.url}. ${order.status} ${order.statusText}`);
+		}
+
+		return await order.json();
 	}
 
 	async getServicesList() {
-		const services = await fetch('http://localhost:3000/api/services')
-			.then(orders => orders.json())
-			.then(data => data);
+		const services = await fetch('http://localhost:3000/api/services');
 
-		return services;
+		return await services.json();
 	}
 
 	async addServicesToOrder(newServices, amount, orderId) {

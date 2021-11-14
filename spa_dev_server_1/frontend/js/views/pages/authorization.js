@@ -11,8 +11,8 @@ class Authorization extends Component {
 		this.model = new Auth();
 	}
 
-	render() {
-		return new Promise(resolve => resolve(AuthorizationTemplate()));
+	async render() {
+		return await (AuthorizationTemplate());
 	}
 
 	afterRender() {

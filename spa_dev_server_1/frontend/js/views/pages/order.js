@@ -1,4 +1,4 @@
-import {closeModal, openModal, formatOrders} from '../../helpers/utils';
+import {closeModal, openModal, formatOrders, showAlertModal} from '../../helpers/utils';
 
 import Component from '../../views/component';
 
@@ -17,7 +17,14 @@ class Order extends Component {
 	}
 
 	async getData() {
-		return await this.model.getOrder(this.request.id);
+		try {
+			return await this.model.getOrder(this.request.id);
+		} catch {
+			showAlertModal('alert-modal', {
+				title : 'Ошибка!',
+				message : 'Не удалось получить ирформацию о заказе!'
+			});
+		}
 	}
 
 	async getServices() {
@@ -27,50 +34,56 @@ class Order extends Component {
 	async render(data) {
 		const [orderInfo, orderTasks] = data,
 			request = this.request,
-			formatOrderInfo = formatOrders([orderInfo])[0],
-			services = await this.getServices();
+			formatOrderInfo = formatOrders([orderInfo])[0];
+		try {
+			const services = await this.getServices();
 
-		orderTasks.map(orderTask => {
-			orderTask.task_total = this.formatTotalPrice(orderTask.task_price * orderTask.amount);
-		});
+			orderTasks.map(orderTask => {
+				orderTask.task_total = this.formatTotalPrice(orderTask.task_price * orderTask.amount);
+			});
 
-		return Object.keys(data).length ? OrderInfo({formatOrderInfo, orderTasks, services, request}) : Error404Template();
+			return Object.keys(data).length ? OrderInfo({formatOrderInfo, orderTasks, services, request}) : Error404Template();
+		} catch {
+			showAlertModal('alert-modal', {
+				title : 'Ошибка!',
+				message : 'Не удалось получить список доступных услуг!'
+			});
+		}
 	}
 
 	removeService(taskId, table) {
-		document.body.addEventListener('click', (e) => {
+		document.body.addEventListener('click', async(e) => {
 			const target = e.target;
 			if (target.closest('.removeServiceIdJs')) {
-				this.model.removeServiceFromOrder(taskId).then(() => {
-					this.getData().then(data => {
-						const [, orderTasks] = data;
-						table.innerHTML = this.renderOrderServicesTable(orderTasks);
-						closeModal();
+				try {
+					await this.model.removeServiceFromOrder(taskId);
+					const [, orderTasks] = await this.getData();
+					table.innerHTML = this.renderOrderServicesTable(orderTasks);
+					closeModal();
+				} catch {
+					showAlertModal('alert-modal', {
+						title : 'Ошибка!',
+						message : 'Не удалось удалить услугу из заказа!'
 					});
-				});
+				}
 			}
 		});
 	}
 
-	addServices(checkServices, amount, table) {
-		this.getData().then(data => {
-			const [orderInfo] = data;
+	async addServices(checkServices, amount, table) {
+		const [orderInfo] = await this.getData();
 
-			this.model.addServicesToOrder(checkServices, amount, orderInfo.id).then(() => {
-				this.getData().then(data => {
-					const [, orderTasks] = data;
-					table.innerHTML = this.renderOrderServicesTable(orderTasks);
-				});
-			});
-		});
+		await this.model.addServicesToOrder(checkServices, amount, orderInfo.id);
+
+		const [, orderTasks] = await this.getData();
+
+		table.innerHTML = this.renderOrderServicesTable(orderTasks);
 	}
 
-	addServiceAmount(amount, taskId) {
-		this.getData().then(data => {
-			const [orderInfo] = data;
+	async addServiceAmount(amount, taskId) {
+		const [orderInfo] = await this.getData();
 
-			this.model.addServiceAmountToOrder(amount, taskId, orderInfo.id);
-		});
+		this.model.addServiceAmountToOrder(amount, taskId, orderInfo.id);
 	}
 
 	renderOrderServicesTable(orderTasks) {
@@ -104,6 +117,7 @@ class Order extends Component {
 					for (let counter of counterService) {
 						counter.innerText = +counter.innerText - 1;
 					}
+
 					this.addServiceAmount(counterService[0].innerText, serviceRow.dataset.taskId);
 				}
 			}
@@ -111,6 +125,7 @@ class Order extends Component {
 				for (let counter of counterService) {
 					counter.innerText = +counter.innerText + 1;
 				}
+
 				this.addServiceAmount(counterService[0].innerText, serviceRow.dataset.taskId);
 			}
 
@@ -137,8 +152,14 @@ class Order extends Component {
 			for (let checkbox of checkedCheckBoxs) {
 				checkedServicesId.push(checkbox.parentElement.dataset.id);
 			}
-
-			this.addServices(checkedServicesId, null, servicesTable);
+			try {
+				this.addServices(checkedServicesId, null, servicesTable);
+			} catch {
+				showAlertModal('alert-modal', {
+					title : 'Ошибка!',
+					message : 'Не удалось добавить услугу в заказ!'
+				});
+			}
 		});
 	}
 }

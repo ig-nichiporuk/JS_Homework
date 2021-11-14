@@ -4,7 +4,6 @@ const express = require('express'),
 	fs = require('file-system'),
 	shortId = require('shortid');
 
-
 router.get('/api/order/:id', (req, res) => {
 	const ordersData = getOrdersFromDB(),
 		orderTasksData = getOrdersTasksFromDB(),
@@ -17,8 +16,7 @@ router.get('/api/order/:id', (req, res) => {
 
 router.put('/api/order/add', (req, res) => {
 	const orderTasksData = getOrdersTasksFromDB(),
-		{newServices, orderId} = req.body,
-		newTaskInOrder ={};
+		{newServices, orderId} = req.body;
 
 	orderTasks = orderTasksData.filter(task => task.order_id == orderId);
 
@@ -30,6 +28,8 @@ router.put('/api/order/add', (req, res) => {
 
 			setOrdersTasksToDB(orderTasksData);
 		} else {
+			const newTaskInOrder = {};
+
 			newTaskInOrder.id = shortId.generate();
 			newTaskInOrder.order_id = orderId;
 			newTaskInOrder.task_id = serviceId;
@@ -42,7 +42,6 @@ router.put('/api/order/add', (req, res) => {
 
 	res.sendStatus(204);
 });
-
 
 router.put('/api/order/amount', (req, res) => {
 	const orderTasksData = getOrdersTasksFromDB(),
@@ -57,7 +56,6 @@ router.put('/api/order/amount', (req, res) => {
 	res.sendStatus(204);
 });
 
-
 router.delete('/api/order/remove', (req, res) => {
 
 	const orderTasksData = getOrdersTasksFromDB(),
@@ -69,8 +67,6 @@ router.delete('/api/order/remove', (req, res) => {
 
 	res.sendStatus(204);
 });
-
-
 
 function formatOrderTasksData(orderTasks, sevicesList) {
 	return orderTasks.map(orderTask => {

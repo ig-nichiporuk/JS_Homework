@@ -1,3 +1,5 @@
+import ModalAlertTemplate from '../../templates/pages/modalAlert.hbs';
+
 const body = document.body;
 
 export const parseRequestURL = () => {
@@ -67,6 +69,13 @@ export const closeModal = () => {
 	body.classList.remove('modal-open',  'overlay-open',  'js-scroll-lock');
 
 	resetAllInput();
+};
+
+export const showAlertModal = (id, content) => {
+	closeModal();
+	const modal = document.getElementById(id);
+	modal.innerHTML = ModalAlertTemplate(content);
+	openModal(id);
 };
 
 export const formatOrders = (data) => {

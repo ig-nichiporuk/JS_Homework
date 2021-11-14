@@ -1,6 +1,6 @@
 import '../styles/main';
 
-import {parseRequestURL} from './helpers/utils';
+import {parseRequestURL, showAlertModal} from './helpers/utils';
 
 import Header from './views/partials/header';
 import Footer from './views/partials/footer';
@@ -19,27 +19,28 @@ const Routes = {
     '/order/:id': Order
 };
 
-function router() {
-	const headerContainer = document.getElementsByTagName('header')[0],
-		contentContainer = document.getElementsByTagName('main')[0],
-		footerContainer = document.getElementsByTagName('footer')[0],
-        header = new Header(),
-        footer = new Footer();
+async function router() {
+		const headerContainer = document.getElementsByTagName('header')[0],
+			contentContainer = document.getElementsByTagName('main')[0],
+			footerContainer = document.getElementsByTagName('footer')[0],
+			header = new Header(),
+			footer = new Footer();
 
-    header.render().then(html => headerContainer.innerHTML = html);
+		headerContainer.innerHTML = await header.render();
 
-    const request = parseRequestURL(),
-        parsedURL = `/${request.resource || ''}${request.id ? '/:id' : ''}${request.action ? `/${request.action}` : ''}`,
-        page = Routes[parsedURL] ? new Routes[parsedURL]() : new Error404();
+		const request = parseRequestURL(),
+			parsedURL = `/${request.resource || ''}${request.id ? '/:id' : ''}${request.action ? `/${request.action}` : ''}`,
+			page = Routes[parsedURL] ? new Routes[parsedURL]() : new Error404();
 
-    page.getData().then(data => {
-        page.render(data).then(html => {
-            contentContainer.innerHTML = html;
-            page.afterRender();
-        });
-    });
+		const data = await page.getData(),
+			html = await page.render(data);
 
-    footer.render().then(html => footerContainer.innerHTML = html);
+		if (html) contentContainer.innerHTML = html;
+
+		page.afterRender();
+
+		footerContainer.innerHTML = await footer.render();
+
 }
 
 module.hot ? module.hot.accept(router()) : window.addEventListener('load', router);

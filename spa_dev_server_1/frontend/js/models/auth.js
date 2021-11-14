@@ -1,5 +1,5 @@
 class Auth {
-	test(email, password) {
+	/* test(email, password) {
 		return new Promise(resolve => {
 			const xhr = new XMLHttpRequest();
 
@@ -28,7 +28,7 @@ class Auth {
 
 			xhr.send();
 		});
-	}
+	}*/
 }
 
 export default Auth;
