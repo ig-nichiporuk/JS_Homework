@@ -77,8 +77,11 @@ export const closeModal = () => {
 
 export const showAlertModal = (id, content) => {
 	closeModal();
+
 	const modal = document.getElementById(id);
+
 	modal.innerHTML = ModalAlertTemplate(content);
+
 	openModal(id);
 };
 

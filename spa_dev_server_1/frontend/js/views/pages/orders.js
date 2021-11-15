@@ -86,11 +86,11 @@ class OrdersList extends Component {
 	setActions() {
 		const sortSelect = document.getElementById('sort-orders'),
 			tableOrders = document.getElementsByClassName('tableOrdersBodyJs')[0],
-			searchUnpNumForm = document.getElementById('search-unp-num'),
-			inputUnpNum = searchUnpNumForm.getElementsByClassName('inputUnpNumJs')[0],
-			searchOrderNumForm = document.getElementById('search-order-num'),
-			inputOrderNum = searchOrderNumForm.getElementsByClassName('searchOrderNumJs')[0],
-			resetOrderNum = searchOrderNumForm.getElementsByClassName('resetOrderNumJs')[0];
+			unpNumForm = document.getElementById('search-unp-num'),
+			inputUnpNum = unpNumForm.getElementsByClassName('inputUnpNumJs')[0],
+			orderNumForm = document.getElementById('search-order-num'),
+			inputOrderNum = orderNumForm.getElementsByClassName('searchOrderNumJs')[0],
+			resetOrderNum = orderNumForm.getElementsByClassName('resetOrderNumJs')[0];
 
 		sortSelect.addEventListener('change', async() => {
 			const orders = await this.getSortOrdersList(sortSelect.value);
@@ -98,7 +98,7 @@ class OrdersList extends Component {
 			tableOrders.innerHTML = OrdersTableTemplate({orders});
 		});
 
-		searchOrderNumForm.addEventListener('submit', async(e) => {
+		orderNumForm.addEventListener('submit', async(e) => {
 			e.preventDefault();
 
 			const orders = await this.getOrderNum(inputOrderNum, inputUnpNum, sortSelect);
@@ -109,7 +109,7 @@ class OrdersList extends Component {
 			tableOrders.innerHTML = OrdersTableTemplate({orders});
 		});
 
-		searchOrderNumForm.addEventListener('reset', async(e) => {
+		orderNumForm.addEventListener('reset', async(e) => {
 			e.preventDefault();
 
 			inputOrderNum.value = '';
@@ -121,7 +121,7 @@ class OrdersList extends Component {
 			tableOrders.innerHTML = OrdersTableTemplate({orders});
 		});
 
-		searchUnpNumForm.addEventListener('submit', async(e) => {
+		unpNumForm.addEventListener('submit', async(e) => {
 			e.preventDefault();
 
 			sortSelect.disabled = !!inputUnpNum.value.trim();

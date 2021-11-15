@@ -5,7 +5,7 @@ import Component from '../../views/component';
 import OrderInfo from '../../../templates/pages/order.hbs';
 import UserInfo from '../../../templates/pages/userInfo.hbs';
 import Error404Template from '../../../templates/pages/error404.hbs';
-import OrderServicesRow from '../../../templates/pages/orderServicesRow.hbs';
+import OrderTaskRow from '../../../templates/pages/orderTaskRow.hbs';
 
 import Orders from '../../models/orders';
 
@@ -53,16 +53,14 @@ class Order extends Component {
 
 	async render(data) {
 		try {
-			const [orderInfo, orderServices] = data,
+			const [orderInfo, orderTasks] = data,
 				request = this.request,
 				formatOrderInfo = formatOrders([orderInfo])[0],
-				services = await this.getServices();
+				services = await this.getServices(),
+				formatOrderTasks = this.formatOrderTasksData(orderTasks, services),
+				orderTotal = this.formatOrderTotal(formatOrderTasks);
 
-			const formatOrderServices = this.formatOrderTasksData(orderServices, services);
-
-			const orderTotal = this.formatOrderTotal(formatOrderServices);
-
-			return Object.keys(data).length ? OrderInfo({formatOrderInfo, formatOrderServices, services, request, orderTotal}) : Error404Template();
+			return Object.keys(data).length ? OrderInfo({formatOrderInfo, formatOrderTasks, services, request, orderTotal}) : Error404Template();
 		} catch (e) {
 			showAlertModal('alert-modal', {
 				title : 'Ошибка!',
@@ -71,26 +69,26 @@ class Order extends Component {
 		}
 	}
 
-	renderTable(table, orderServices, services) {
-		const formatOrderServices = this.formatOrderTasksData(orderServices, services),
-			orderTotal = this.formatOrderTotal(formatOrderServices);
+	renderTable(table, orderTasks, services) {
+		const formatOrderTasks = this.formatOrderTasksData(orderTasks, services),
+			orderTotal = this.formatOrderTotal(formatOrderTasks);
 
-		table.innerHTML = OrderServicesRow({formatOrderServices, orderTotal});
+		table.innerHTML = OrderTaskRow({formatOrderTasks, orderTotal});
 	}
 
-	formatOrderTasksData(orderServices, sevicesList) {
-		return orderServices.map(orderService => {
-			const {id, order_id, task_id, amount} = orderService,
-				serviceTitle = sevicesList.find(service => service.id === task_id).title,
-				servicePrice = sevicesList.find(service => service.id === task_id).price;
+	formatOrderTasksData(orderTasks, services) {
+		return orderTasks.map(orderTask => {
+			const {id, order_id, task_id, amount} = orderTask,
+				taskTitle = services.find(service => service.id === task_id).title,
+				taskPrice = services.find(service => service.id === task_id).price;
 
 			const formatOrder = {
 				id,
 				order_id,
-				task_id : serviceTitle,
+				task_id : taskTitle,
 				amount,
-				task_price : servicePrice,
-				task_total : this.formatTotalPrice(servicePrice * amount)
+				task_price : taskPrice,
+				task_total : this.formatTotalPrice(taskPrice * amount)
 			};
 
 			return formatOrder;
@@ -103,65 +101,72 @@ class Order extends Component {
 
 	formatOrderTotal(order) {
 		let totalOrder = 0;
-		for (let service of order) {
-			totalOrder += service.task_total;
+		for (let task of order) {
+			totalOrder += task.task_total;
 		}
 		return this.formatTotalPrice(totalOrder);
 	}
 
-	disabledSaveBtn(btn) {
-		btn.removeAttribute('disabled');
-	}
-
-	afterRender() {
+	async afterRender() {
 		super.afterRender();
-		this.setActions();
+		await this.setActions();
 	}
 
 	async setActions() {
 		const userInfoBlock = document.getElementsByClassName('userInfoBlockJs')[0],
-			addServiceBtn = document.getElementsByClassName('addServicesBtnJs')[0],
-			addServicesList = document.getElementsByClassName('addServicesListJs')[0],
-			setUserInfoForm = document.getElementById('editUserForm'),
-			setUserInfoInputs = setUserInfoForm.getElementsByTagName('input'),
-			servicesTable = document.getElementsByClassName('orderServicesTableBodyJs')[0],
+			addTaskBtn = document.getElementsByClassName('addTaskBtnJs')[0],
+			addTasksList = document.getElementsByClassName('addTasksListJs')[0],
+			userInfoForm = document.getElementById('userForm'),
+			userInfoInputs = userInfoForm.getElementsByTagName('input'),
+			tasksTable = document.getElementsByClassName('orderTasksTableBodyJs')[0],
 			setStatus = document.getElementsByClassName('orderStatusJs')[0],
 			saveChanges = document.getElementsByClassName('saveOrderChanges')[0],
 			services = await this.getServices(),
 			request = this.request;
 
-		let [orderInfo, orderServices] = await this.getData();
+		let [orderInfo, orderTasks] = await this.getData();
 
-
-		setUserInfoForm.addEventListener('submit', () => {
+		userInfoForm.addEventListener('submit', () => {
 			event.preventDefault();
 
-			orderInfo.fio = setUserInfoInputs.editUserName.value ? setUserInfoInputs.editUserName.value.trim() : orderInfo.fio;
-			orderInfo.car = setUserInfoInputs.editUserCar.value ? setUserInfoInputs.editUserCar.value.trim() : orderInfo.car;
-			orderInfo.reg_number = setUserInfoInputs.editUserCarNum.value ? setUserInfoInputs.editUserCarNum.value.trim() : orderInfo.reg_number;
+			let fio = userInfoInputs.userName.value.trim(),
+				car = userInfoInputs.userCar.value.trim(),
+				carNum = userInfoInputs.userCarNum.value.trim();
+
+
+			orderInfo.fio = fio ? fio : orderInfo.fio;
+			orderInfo.car = car ? car : orderInfo.car;
+			orderInfo.reg_number = carNum ? carNum : orderInfo.reg_number;
 
 			const formatOrderInfo = formatOrders([orderInfo])[0];
 
 			userInfoBlock.innerHTML = UserInfo({formatOrderInfo, request});
 
-			for (let  input of setUserInfoInputs) {
+			for (let  input of userInfoInputs) {
 				input.value = '';
 			}
 
 			closeModal();
 
-			this.disabledSaveBtn(saveChanges);
+			saveChanges.removeAttribute('disabled');
 		});
 
 		setStatus.addEventListener('change', () => {
-			const date = new Date();
+			const date = new Date(),
+				gYear = date.getFullYear(),
+				gMonth = date.getMonth() + 1,
+				gData = date.getDate(),
+				gHours = date.getHours(),
+				gMin = date.getMinutes(),
+				gSec = date.getSeconds();
+
 
 			switch (setStatus.value) {
 				case 'done':
 					setStatus.classList.remove('in-process');
 					setStatus.classList.add('done');
 					orderInfo.status_id = '3';
-					orderInfo.closed_at =`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+					orderInfo.closed_at =`${gYear}-${gMonth}-${gData} ${gHours}:${gMin}:${gSec}`;
 					break;
 				case 'in-process':
 					setStatus.classList.remove('done');
@@ -175,47 +180,48 @@ class Order extends Component {
 
 			userInfoBlock.innerHTML = UserInfo({formatOrderInfo, request});
 
-			this.disabledSaveBtn(saveChanges);
+			saveChanges.removeAttribute('disabled');
 		});
 
-		servicesTable.addEventListener('click', (e) => {
+		tasksTable.addEventListener('click', (e) => {
 			const target = e.target,
-				serviceRow = target.closest('.serviceRowJs'),
-				counterService = serviceRow.querySelectorAll('.counterValueJs'),
-				totalSevice = serviceRow.querySelectorAll('.serviceTotalPriceJs'),
-				priceService = +(serviceRow.querySelectorAll('.servicePriceJs')[0]).innerText;
+				taskRow = target.closest('.taskRowJs'),
+				counterTask = taskRow.querySelectorAll('.counterValueJs'),
+				totalTask = taskRow.querySelectorAll('.taskTotalPriceJs'),
+				priceTask = +(taskRow.querySelectorAll('.taskPriceJs')[0]).innerText;
 
 			if (target.closest('.counterMinusJs')) {
 
 				if (+target.nextElementSibling.innerText > 1) {
-					for (let counter of counterService) {
+					for (let counter of counterTask) {
 						counter.innerText = +counter.innerText - 1;
 
-						orderServices.find(task => task.id === serviceRow.dataset.taskId).amount = counter.innerText;
+						orderTasks.find(task => task.id === taskRow.dataset.taskId).amount = counter.innerText;
 
-						this.renderTable(servicesTable, orderServices, services);
+						this.renderTable(tasksTable, orderTasks, services);
 					}
 
-					this.disabledSaveBtn(saveChanges);
+					saveChanges.removeAttribute('disabled');
 				}
 			}
+
 			if (target.closest('.counterPlusJs')) {
-				for (let counter of counterService) {
+				for (let counter of counterTask) {
 					counter.innerText = +counter.innerText + 1;
 
-					orderServices.find(task => task.id === serviceRow.dataset.taskId).amount = counter.innerText;
+					orderTasks.find(task => task.id === taskRow.dataset.taskId).amount = counter.innerText;
 
-					this.renderTable(servicesTable, orderServices, services);
+					this.renderTable(tasksTable, orderTasks, services);
 				}
 
-				this.disabledSaveBtn(saveChanges);
+				saveChanges.removeAttribute('disabled');
 			}
 
-			if (target.closest('.removeServiceJs')) {
+			if (target.closest('.removeTaskJs')) {
 				event.preventDefault();
 
-				const href = target.closest('.removeServiceJs').getAttribute('href'),
-					serviceRowId = serviceRow.dataset.taskId;
+				const href = target.closest('.removeTaskJs').getAttribute('href'),
+					taskRowId = taskRow.dataset.taskId;
 
 				closeModal();
 				openModal(href);
@@ -223,59 +229,63 @@ class Order extends Component {
 				document.body.addEventListener('click', async(e) => {
 					const target = e.target;
 
-					if (target.closest('.removeServiceIdJs')) {
-						orderServices = orderServices.filter(task => task.id !== serviceRowId);
+					if (target.closest('.removeTaskIdJs')) {
+						orderTasks = orderTasks.filter(task => task.id !== taskRowId);
 
-						this.renderTable(servicesTable, orderServices, services);
+						this.renderTable(tasksTable, orderTasks, services);
 
 						closeModal();
 
-						this.disabledSaveBtn(saveChanges);
+						saveChanges.removeAttribute('disabled');
 					}
 				});
 			}
 
-			for (let total of totalSevice) {
-				total.innerText = this.formatTotalPrice(counterService[0].innerText * priceService);
+			for (let total of totalTask) {
+				total.innerText = this.formatTotalPrice(counterTask[0].innerText * priceTask);
 			}
 
 		});
 
-		addServiceBtn.addEventListener('click', async() => {
-			const checkedCheckBoxs = addServicesList.querySelectorAll('input:checked');
+
+
+
+
+		addTaskBtn.addEventListener('click', async() => {
+			const checkedCheckBoxs = addTasksList.querySelectorAll('input:checked');
 
 			for (let checkbox of checkedCheckBoxs) {
-				const serviceInOrder = orderServices.find(task => task.task_id === checkbox.parentElement.dataset.id);
+				const taskInOrder = orderTasks.find(task => task.task_id === checkbox.parentElement.dataset.id);
 
-				if (serviceInOrder) {
-					const serviceRow = servicesTable.querySelectorAll(`[data-task-id = "${serviceInOrder.id}"]`)[0],
-						counterService = serviceRow.querySelectorAll('.counterValueJs'),
-						totalSevice = serviceRow.querySelectorAll('.serviceTotalPriceJs'),
-						priceService = +(serviceRow.querySelectorAll('.servicePriceJs')[0]).innerText;
+				if (taskInOrder) {
+					const taskRow = tasksTable.querySelectorAll(`[data-task-id = "${taskInOrder.id}"]`)[0],
+						counterTask = taskRow.querySelectorAll('.counterValueJs'),
+						totalTask = taskRow.querySelectorAll('.taskTotalPriceJs'),
+						priceTask = +(taskRow.querySelectorAll('.taskPriceJs')[0]).innerText;
 
-					serviceInOrder.amount = `${++serviceInOrder.amount}`;
+					taskInOrder.amount = `${++taskInOrder.amount}`;
 
-					for (let counter of counterService) {
+					for (let counter of counterTask) {
 						counter.innerText = +counter.innerText + 1;
 					}
-					for (let total of totalSevice) {
-						total.innerText = this.formatTotalPrice(counterService[0].innerText * priceService);
+					for (let total of totalTask) {
+						total.innerText = this.formatTotalPrice(counterTask[0].innerText * priceTask);
 					}
 
 				} else {
-					const newServiceInOrder = {};
+					const newTaskInOrder = {};
 
-					newServiceInOrder.id = generateID();
-					newServiceInOrder.order_id = orderInfo.id;
-					newServiceInOrder.task_id = checkbox.parentElement.dataset.id;
-					newServiceInOrder.amount = '1';
-					orderServices.push(newServiceInOrder);
+					newTaskInOrder.id = generateID();
+					newTaskInOrder.order_id = orderInfo.id;
+					newTaskInOrder.task_id = checkbox.parentElement.dataset.id;
+					newTaskInOrder.amount = '1';
+					orderTasks.push(newTaskInOrder);
 				}
 			}
 
-			this.renderTable(servicesTable, orderServices, services);
+			this.renderTable(tasksTable, orderTasks, services);
 
-			this.disabledSaveBtn(saveChanges);
+			saveChanges.removeAttribute('disabled');
 		});
 
 		saveChanges.addEventListener('click', (e) => {
@@ -290,8 +300,8 @@ class Order extends Component {
 			document.body.addEventListener('click', async(e) => {
 				const target = e.target;
 
-				if (target.closest('.saveServicesDataJs')) {
-					await this.setOrderChanges(orderInfo, orderServices);
+				if (target.closest('.saveTasksDataJs')) {
+					await this.setOrderChanges(orderInfo, orderTasks);
 
 					closeModal();
 

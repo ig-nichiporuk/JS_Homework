@@ -1,4 +1,6 @@
-{{> userInfo }}
+<div class="info userInfoBlockJs">
+	{{> userInfo }}
+</div>
 <div class="content">
 	<div class="container">
 		<div class="controls controls_admin">
@@ -54,7 +56,7 @@
 					<span>Тип</span>
 				</th>
 				<th class="cell__order-type_order-num">
-					<span>Номер / Тип</span>
+					<span>Тип / Номер</span>
 				</th>
 				<th class="cell__order-code"><span>Код</span></th>
 				<th class="cell__date-add">
@@ -93,7 +95,7 @@
 				<th class="cell-left">
 					<span>Тип</span>
 					<span>/&nbsp;Номер</span>
-					${userToken == 'manager' ? `<span>/ Код</span>` : ''}
+					<span>/ Код</span>
 					<span>/&nbsp;ФИО</span>
 					<span class="br"></span>
 					<span>/&nbsp;Марка</span>
