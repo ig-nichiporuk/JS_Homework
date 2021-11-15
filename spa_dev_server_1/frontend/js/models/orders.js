@@ -41,27 +41,11 @@ class Orders {
 		return await services.json();
 	}
 
-	async addServicesToOrder(newServices, amount, orderId) {
-		await fetch('http://localhost:3000/api/order/add', {
+	async setOrderChanges(changesInfo, changesTasks) {
+		await fetch('http://localhost:3000/api/order/changes', {
 			method: 'PUT',
 			headers: {'Content-Type' : 'application/json'},
-			body: JSON.stringify({newServices, amount, orderId})
-		});
-	}
-
-	async addServiceAmountToOrder(amount, taskId, orderId) {
-		await fetch('http://localhost:3000/api/order/amount', {
-			method: 'PUT',
-			headers: {'Content-Type' : 'application/json'},
-			body: JSON.stringify({amount, taskId, orderId})
-		});
-	}
-
-	async removeServiceFromOrder(taskId) {
-		await fetch('http://localhost:3000/api/order/remove', {
-			method: 'DELETE',
-			headers: {'Content-Type' : 'application/json'},
-			body: JSON.stringify({taskId})
+			body: JSON.stringify({changesInfo, changesTasks})
 		});
 	}
 }

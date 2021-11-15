@@ -1,6 +1,6 @@
 import '../styles/main';
 
-import {parseRequestURL, showAlertModal} from './helpers/utils';
+import {parseRequestURL} from './helpers/utils';
 
 import Header from './views/partials/header';
 import Footer from './views/partials/footer';

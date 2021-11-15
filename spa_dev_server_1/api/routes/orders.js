@@ -56,21 +56,6 @@ function sortByStatus(orders, status) {
 	return orders.filter(order => order.status_id == status);
 }
 
-//FORMAT data for user
-/*function formatOrders(data) {
-	return data.map(order => {
-		order.status_id = order.status_id == 1 ? 'Новый' : order.status_id == 2 ? 'Отменен' : 'Выполнен';
-
-		order.fio = [order.fio.split(' ')[0], `${order.fio.split(' ')[1][0]}.${order.fio.split(' ')[2][0]}.`].join(' ');
-
-		order.created_at = order.created_at.split(' ')[0].split('-').reverse().join('.');
-
-		order.closed_at = order.closed_at ? order.closed_at.split(' ')[0].split('-').reverse().join('.') : '—';
-
-		return order;
-	});
-}*/
-
 function getOrdersFromDB() {
 	return JSON.parse(fs.readFileSync(config.get('database.orders'), 'utf8'));
 }

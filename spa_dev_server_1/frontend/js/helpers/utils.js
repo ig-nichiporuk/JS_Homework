@@ -11,6 +11,10 @@ export const parseRequestURL = () => {
     return request;
 };
 
+export const generateID = () => {
+	return Math.random().toString(36).substr(2, 10);
+};
+
 
 
 export const openDropdown = (elem, duration) => {
@@ -80,17 +84,25 @@ export const showAlertModal = (id, content) => {
 
 export const formatOrders = (data) => {
 	return data.map(order => {
-		order.status_id = order.status_id == 1 ? 'Новый' : order.status_id == 2 ? 'Отменен' : 'Выполнен';
+		let {id, code_1c, type, code, fio, car, reg_number, sum, status_id, login, unp, created_at, closed_at} = order,
+			surname = fio.split(' ')[0][0].toUpperCase() + fio.split(' ')[0].slice(1),
+			name = fio.split(' ')[1] ? `${fio.split(' ')[1][0].toUpperCase()}.` : '',
+			patronymic = fio.split(' ')[2] ? `${fio.split(' ')[2][0].toUpperCase()}.` : '';
 
-		order.fio = [order.fio.split(' ')[0], `${order.fio.split(' ')[1][0]}.${order.fio.split(' ')[2][0]}.`].join(' ');
+		fio = [surname, `${name}${patronymic}`].join(' ');
 
-		order.created_at = order.created_at.split(' ')[0].split('-').reverse().join('.');
+		status_id = status_id == 1 ? 'Новый' : status_id == 2 ? 'Отменен' : 'Выполнен';
 
-		order.closed_at = order.closed_at ? order.closed_at.split(' ')[0].split('-').reverse().join('.') : '—';
+		created_at = created_at.split(' ')[0].split('-').reverse().join('.');
 
-		return order;
+		closed_at = closed_at ? closed_at.split(' ')[0].split('-').reverse().join('.') : '—';
+
+		const formatOrder = {id, code_1c, type, code, fio, car, reg_number, sum, status_id, login, unp, created_at, closed_at};
+
+		return formatOrder;
 	});
 };
+
 
 const resetAllInput = () => {
 	const inputsChecked = body.querySelectorAll('input:checked');
