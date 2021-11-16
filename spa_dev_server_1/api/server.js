@@ -17,7 +17,8 @@ app.use((req, res, next) => {
 app.use(
     require(config.get('routes.orders')),
     require(config.get('routes.order')),
-    require(config.get('routes.services'))
+    require(config.get('routes.services')),
+    require(config.get('routes.acts'))
 );
 
 

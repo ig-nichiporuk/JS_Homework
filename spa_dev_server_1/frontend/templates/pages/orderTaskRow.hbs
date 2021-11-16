@@ -10,35 +10,51 @@
 		<span class="taskPriceJs">{{this.task_price}}</span>
 	</td>
 	<td class="cell__counter">
-		<span class="text_bold hidden">{{this.amount}}</span>
-		<div class="counter">
-			<span class="counter__minus counterMinusJs"></span>
-			<span class="counter__value counterValueJs">{{this.amount}}</span>
-			<span class="counter__plus counterPlusJs"></span>
-		</div>
+		{{#ifCond @root.formatOrderInfo.status_id '===' 'Отменен'}}
+			<span class="text_bold">{{this.amount}}</span>
+		{{/ifCond}}
+
+		{{#ifCond @root.formatOrderInfo.status_id '!==' 'Отменен'}}
+			<div class="counter">
+				<span class="counter__minus counterMinusJs"></span>
+				<span class="counter__value counterValueJs">{{this.amount}}</span>
+				<span class="counter__plus counterPlusJs"></span>
+			</div>
+		{{/ifCond}}
 	</td>
-	<td class="cell__total edited">
+	<td class="cell__total {{#ifCond @root.formatOrderInfo.status_id '!==' 'Отменен'}} edited {{/ifCond}}">
 		<span class="text_bold taskTotalPriceJs">{{this.task_total}}</span>
-		<a href="delete-service" class="delete-item removeTaskJs" data-status-scroll="0">
-			<svg>
-				<use xlink:href="#close"></use>
-			</svg>
-		</a>
+		{{#ifCond @root.formatOrderInfo.status_id '!==' 'Отменен'}}
+			<a href="delete-service" class="delete-item removeTaskJs" data-status-scroll="0">
+				<svg>
+					<use xlink:href="#close"></use>
+				</svg>
+			</a>
+		{{/ifCond}}
 	</td>
-	<td class="cell-right edited">
+	<td class="cell-right {{#ifCond @root.formatOrderInfo.status_id '!==' 'Отменен'}} edited {{/ifCond}}">
 		<span>{{this.task_price}}</span>
-		<span class="text_bold hidden">{{this.amount}}</span>
-		<div class="counter">
-			<span class="counter__minus counterMinusJs"></span>
-			<span class="counter__value counterValueJs">{{this.amount}}</span>
-			<span class="counter__plus counterPlusJs"></span>
-		</div>
+		{{#ifCond @root.formatOrderInfo.status_id '===' 'Отменен'}}
+			<span class="text_bold">{{this.amount}}</span>
+		{{/ifCond}}
+
+		{{#ifCond @root.formatOrderInfo.status_id '!==' 'Отменен'}}
+			<div class="counter">
+				<span class="counter__minus counterMinusJs"></span>
+				<span class="counter__value counterValueJs">{{this.amount}}</span>
+				<span class="counter__plus counterPlusJs"></span>
+			</div>
+		{{/ifCond}}
+
 		<span class="text_bold taskTotalPriceJs">{{this.task_total}}</span>
-		<a href="delete-service" class="delete-item removeTaskJs" data-status-scroll="0">
-			<svg>
-				<use xlink:href="#close"></use>
-			</svg>
-		</a>
+
+		{{#ifCond @root.formatOrderInfo.status_id '!==' 'Отменен'}}
+			<a href="delete-service" class="delete-item removeTaskJs" data-status-scroll="0">
+				<svg>
+					<use xlink:href="#close"></use>
+				</svg>
+			</a>
+		{{/ifCond}}
 	</td>
 </tr>
 {{/each}}

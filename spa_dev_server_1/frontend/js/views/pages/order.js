@@ -1,9 +1,9 @@
-import {closeModal, openModal, formatOrders, generateID, showAlertModal} from '../../helpers/utils';
+import {closeModal, formatOrders, generateID, showAlertModal} from '../../helpers/utils';
 
 import Component from '../../views/component';
 
 import OrderInfo from '../../../templates/pages/order.hbs';
-import UserInfo from '../../../templates/pages/userInfo.hbs';
+import UserInfo from '../../../templates/pages/userInfoData.hbs';
 import Error404Template from '../../../templates/pages/error404.hbs';
 import OrderTaskRow from '../../../templates/pages/orderTaskRow.hbs';
 
@@ -21,7 +21,7 @@ class Order extends Component {
 		try {
 			return await this.model.getOrder(this.request.id);
 		} catch {
-			showAlertModal('alert-modal', {
+			showAlertModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
 				message : 'Не удалось получить данные о заказе!'
 			});
@@ -33,7 +33,7 @@ class Order extends Component {
 		try {
 			return await this.model.getServicesList();
 		} catch {
-			showAlertModal('alert-modal', {
+			showAlertModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
 				message : 'Не удалось получить справочник услуг!'
 			});
@@ -44,7 +44,7 @@ class Order extends Component {
 		try {
 			return await this.model.setOrderChanges(changesInfo, changesTasks);
 		} catch {
-			showAlertModal('alert-modal', {
+			showAlertModal('alert-modal', 'alert',  {
 				title : 'Ошибка!',
 				message : 'Не удалось сохранить изменения в заказе!'
 			});
@@ -62,9 +62,9 @@ class Order extends Component {
 
 			return Object.keys(data).length ? OrderInfo({formatOrderInfo, formatOrderTasks, services, request, orderTotal}) : Error404Template();
 		} catch (e) {
-			showAlertModal('alert-modal', {
+			showAlertModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
-				message : 'Не сформировать страницу!'
+				message : 'Не удалось сформировать страницу!'
 			});
 		}
 	}
@@ -96,7 +96,7 @@ class Order extends Component {
 	}
 
 	formatTotalPrice(value) {
-		return Math.ceil(value * 100) / 100;
+		return +value.toFixed(2);
 	}
 
 	formatOrderTotal(order) {
@@ -104,7 +104,7 @@ class Order extends Component {
 		for (let task of order) {
 			totalOrder += task.task_total;
 		}
-		return this.formatTotalPrice(totalOrder);
+		return totalOrder.toFixed(2);
 	}
 
 	async afterRender() {
@@ -114,10 +114,9 @@ class Order extends Component {
 
 	async setActions() {
 		const userInfoBlock = document.getElementsByClassName('userInfoBlockJs')[0],
+			openUserInfoBlock = document.getElementsByClassName('openChangeInfoModalJs')[0],
 			addTaskBtn = document.getElementsByClassName('addTaskBtnJs')[0],
 			addTasksList = document.getElementsByClassName('addTasksListJs')[0],
-			userInfoForm = document.getElementById('userForm'),
-			userInfoInputs = userInfoForm.getElementsByTagName('input'),
 			tasksTable = document.getElementsByClassName('orderTasksTableBodyJs')[0],
 			setStatus = document.getElementsByClassName('orderStatusJs')[0],
 			saveChanges = document.getElementsByClassName('saveOrderChanges')[0],
@@ -126,29 +125,43 @@ class Order extends Component {
 
 		let [orderInfo, orderTasks] = await this.getData();
 
-		userInfoForm.addEventListener('submit', () => {
-			event.preventDefault();
+		openUserInfoBlock.addEventListener('click', (e) => {
+			e.preventDefault();
 
-			let fio = userInfoInputs.userName.value.trim(),
-				car = userInfoInputs.userCar.value.trim(),
-				carNum = userInfoInputs.userCarNum.value.trim();
+			const href = openUserInfoBlock.getAttribute('href');
 
+			showAlertModal(href, 'edit-data', {
+				fio : orderInfo.fio,
+				userCar : orderInfo.car,
+				userCarNum : orderInfo.reg_number
+			});
 
-			orderInfo.fio = fio ? fio : orderInfo.fio;
-			orderInfo.car = car ? car : orderInfo.car;
-			orderInfo.reg_number = carNum ? carNum : orderInfo.reg_number;
+			document.body.addEventListener('submit', async(e) => {
+				const target = e.target;
 
-			const formatOrderInfo = formatOrders([orderInfo])[0];
+				if (target.closest('#userForm')) {
+					event.preventDefault();
 
-			userInfoBlock.innerHTML = UserInfo({formatOrderInfo, request});
+					const userInfoForm = target.closest('#userForm'),
+						userInfoInputs = userInfoForm.getElementsByTagName('input');
 
-			for (let  input of userInfoInputs) {
-				input.value = '';
-			}
+					let fio = userInfoInputs.userName.value.trim(),
+						car = userInfoInputs.userCar.value.trim(),
+						carNum = userInfoInputs.userCarNum.value.trim();
 
-			closeModal();
+					orderInfo.fio = fio ? fio : orderInfo.fio;
+					orderInfo.car = car ? car : orderInfo.car;
+					orderInfo.reg_number = carNum ? carNum : orderInfo.reg_number;
 
-			saveChanges.removeAttribute('disabled');
+					const formatOrderInfo = formatOrders([orderInfo])[0];
+
+					userInfoBlock.innerHTML = UserInfo({formatOrderInfo, request});
+
+					saveChanges.removeAttribute('disabled');
+
+					closeModal();
+				}
+			});
 		});
 
 		setStatus.addEventListener('change', () => {
@@ -173,6 +186,12 @@ class Order extends Component {
 					setStatus.classList.add('in-process');
 					orderInfo.status_id = '1';
 					orderInfo.closed_at = '—';
+					break;
+				case 'cancel':
+					setStatus.classList.remove('done');
+					setStatus.classList.remove('in-process');
+					orderInfo.status_id = '2';
+					orderInfo.closed_at = `${gYear}-${gMonth}-${gData} ${gHours}:${gMin}:${gSec}`;
 					break;
 			}
 
@@ -223,8 +242,8 @@ class Order extends Component {
 				const href = target.closest('.removeTaskJs').getAttribute('href'),
 					taskRowId = taskRow.dataset.taskId;
 
-				closeModal();
-				openModal(href);
+				showAlertModal(href, 'remove-task', {});
+
 
 				document.body.addEventListener('click', async(e) => {
 					const target = e.target;
@@ -234,9 +253,9 @@ class Order extends Component {
 
 						this.renderTable(tasksTable, orderTasks, services);
 
-						closeModal();
-
 						saveChanges.removeAttribute('disabled');
+
+						closeModal();
 					}
 				});
 			}
@@ -246,10 +265,6 @@ class Order extends Component {
 			}
 
 		});
-
-
-
-
 
 		addTaskBtn.addEventListener('click', async() => {
 			const checkedCheckBoxs = addTasksList.querySelectorAll('input:checked');
@@ -294,8 +309,7 @@ class Order extends Component {
 			const target = e.target,
 				href = target.getAttribute('href');
 
-			closeModal();
-			openModal(href);
+			showAlertModal(href, 'change-service', {});
 
 			document.body.addEventListener('click', async(e) => {
 				const target = e.target;
@@ -303,9 +317,9 @@ class Order extends Component {
 				if (target.closest('.saveTasksDataJs')) {
 					await this.setOrderChanges(orderInfo, orderTasks);
 
-					closeModal();
-
 					saveChanges.setAttribute('disabled', 'true');
+
+					closeModal();
 				}
 			});
 		});

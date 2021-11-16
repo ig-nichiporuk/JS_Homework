@@ -11,12 +11,14 @@ import Error404 from './views/pages/error404';
 import Authorization from './views/pages/authorization';
 import Orders from './views/pages/orders';
 import Order from './views/pages/order';
+import Acts from './views/pages/acts';
 
 const Routes = {
     // '/': About,
     '/': Authorization,
     '/orders': Orders,
-    '/order/:id': Order
+    '/order/:id': Order,
+    '/acts': Acts
 };
 
 async function router() {

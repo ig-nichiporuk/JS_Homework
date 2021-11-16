@@ -20,7 +20,7 @@ class OrdersList extends Component {
 		try {
 			return formatOrders(await this.model.getOrdersList());
 		} catch {
-			showAlertModal('alert-modal', {
+			showAlertModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
 				message : 'Не удалось получить список заказов!'
 			});
@@ -31,7 +31,7 @@ class OrdersList extends Component {
 		try {
 			return await this.model.getServicesList();
 		} catch (e) {
-			showAlertModal('alert-modal', {
+			showAlertModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
 				message : 'Не удалось получить справочник услуг!'
 			});
@@ -42,7 +42,7 @@ class OrdersList extends Component {
 		try {
 			return formatOrders(await this.model.getSortOrdersList(sortOptions));
 		} catch (e) {
-			showAlertModal('alert-modal', {
+			showAlertModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
 				message : 'Не удалось отсортировать заказ-наряды!'
 			});
@@ -55,9 +55,9 @@ class OrdersList extends Component {
 		try {
 			let numVal = num ? num.value.trim().toUpperCase() : null,
 				unpVal = unp ? unp.value.trim() : null;
-			return formatOrders([await this.model.getOrderNum(numVal, unpVal)]);
+			return formatOrders(await this.model.getOrderNum(numVal, unpVal));
 		} catch (e) {
-			showAlertModal('alert-modal', {
+			showAlertModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
 				message : 'Не удалось получить заказ-наряд!'
 			});
@@ -103,6 +103,7 @@ class OrdersList extends Component {
 
 			const orders = await this.getOrderNum(inputOrderNum, inputUnpNum, sortSelect);
 
+
 			inputUnpNum.value = '',
 			sortSelect.disabled = !!inputOrderNum.value.trim();
 			resetOrderNum.disabled = false;
@@ -129,7 +130,14 @@ class OrdersList extends Component {
 			if (inputUnpNum.value.trim()) {
 				const orders = await this.getOrderNum(inputOrderNum, inputUnpNum, sortSelect);
 
-				tableOrders.innerHTML = OrdersTableTemplate({orders});
+				if (orders.length) {
+					tableOrders.innerHTML = OrdersTableTemplate({orders});
+				} else {
+					showAlertModal('alert-modal', 'alert', {
+						title : 'Ошибка!',
+						message : 'Не удалось получить заказ-наряд!'
+					});
+				}
 			} else {
 				const orders = await this.getData();
 

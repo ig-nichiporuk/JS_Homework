@@ -1,14 +1,14 @@
 {{#each orders}}
 	<tr class="table__row {{#ifCond this.status_id '===' 'Новый'}}new{{/ifCond}}{{#ifCond this.status_id '===' 'Отменен'}}cancel{{/ifCond}}{{#ifCond this.status_id '===' 'Выполнен'}}done{{/ifCond}}">
 		<td class="cell__order-num">
-			<a href="#/order/{{this.id}}" class="link link_blue">{{this.code_1c}}</a>
+			<a href="#/order/{{this.id}}" class="link_blue">{{this.code_1c}}</a>
 		</td>
 		<td class="cell__order-type">
 			<span>{{this.type}}</span>
 		</td>
 		<td class="cell__order-type_order-num">
 			<span>{{this.type}}</span>
-			<a href="#/order/{{this.id}}" class="link link_blue">{{this.code_1c}}</a>
+			<a href="#/order/{{this.id}}" class="link_blue">{{this.code_1c}}</a>
 		</td>
 		<td class="cell__order-code"><span>{{this.code}}</span></td>
 		<td class="cell__date-add">
@@ -58,7 +58,7 @@
 			</div>
 		</td>
 		<td class="cell-left">
-			<span>{{this.type}} <a href="#/order/{{this.id}}" class="link link_blue">{{this.code_1c}}</a> <span>{{this.code}}</span></span>
+			<span>{{this.type}} <a href="#/order/{{this.id}}" class="link_blue">{{this.code_1c}}</a> <span>{{this.code}}</span></span>
 			<span>{{this.fio}}</span>
 			<span>{{this.car}}</span>
 			<span>{{this.reg_number}}</span>

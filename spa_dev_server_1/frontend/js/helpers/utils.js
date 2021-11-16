@@ -1,4 +1,8 @@
 import ModalAlertTemplate from '../../templates/pages/modalAlert.hbs';
+import ModalRemoveActTemplate from '../../templates/pages/modalRemoveAct.hbs';
+import ModalRemoveTaskTemplate from '../../templates/pages/modalRemoveTask.hbs';
+import ModalSaveChangesTemplate from '../../templates/pages/modalSaveChanges.hbs';
+import ModalEditDataTemplate from '../../templates/pages/modalEditData.hbs';
 
 const body = document.body;
 
@@ -75,15 +79,36 @@ export const closeModal = () => {
 	resetAllInput();
 };
 
-export const showAlertModal = (id, content) => {
+export const showAlertModal = (id, type, content) => {
 	closeModal();
 
 	const modal = document.getElementById(id);
 
-	modal.innerHTML = ModalAlertTemplate(content);
+	switch (type) {
+		case 'alert':
+			modal.innerHTML = ModalAlertTemplate(content);
+			break;
+
+		case 'remove-act':
+			modal.innerHTML = ModalRemoveActTemplate(content);
+			break;
+
+		case 'remove-task':
+			modal.innerHTML = ModalRemoveTaskTemplate(content);
+			break;
+
+		case 'change-service':
+			modal.innerHTML = ModalSaveChangesTemplate(content);
+			break;
+
+		case 'edit-data':
+			modal.innerHTML = ModalEditDataTemplate(content);
+			break;
+	}
 
 	openModal(id);
 };
+
 
 export const formatOrders = (data) => {
 	return data.map(order => {

@@ -23,7 +23,7 @@ router.post('/api/orders',(req, res) => {
 	}
 
 	if(unp && unp.length) {
-		res.send(ordersData.find(order => order.unp == unp));
+		res.send(ordersData.filter(order => order.unp == unp));
 	}
 });
 

@@ -15,24 +15,29 @@ router.get('/api/order/:id', (req, res) => {
 
 // API SET Order changes
 router.put('/api/order/changes', (req, res) => {
-	const orders = getOrdersFromDB(),
+	const ordersData = getOrdersFromDB(),
+		tasksData = getTasksFromDB(),
 		orderTasksData = getOrdersTasksFromDB(),
 		{changesInfo, changesTasks} = req.body;
 
-	console.log(changesInfo.status_id);
+	const updateOrderTasksData = orderTasksData.filter(task => task.order_id != changesInfo.id);
 
-	updateOrders = orders.map(task => {
-		if(task.id == changesInfo.id) {
-			task.status_id = changesInfo.status_id;
-			task.fio = changesInfo.fio;
-			task.car = changesInfo.car;
-			task.reg_number = changesInfo.reg_number;
-			task.closed_at = changesInfo.closed_at;
+	const updateOrders = ordersData.map(order => {
+		if(order.id == changesInfo.id) {
+			order.status_id = changesInfo.status_id;
+			order.fio = changesInfo.fio;
+			order.car = changesInfo.car;
+			order.reg_number = changesInfo.reg_number;
+			order.closed_at = changesInfo.closed_at;
+			order.sum = '0';
+
+			for (let obj of changesTasks) {
+				const taskPrice = tasksData.find(task => task.id === obj.task_id).price;
+				order.sum = `${(+order.sum + taskPrice * obj.amount).toFixed(2)}`;
+			}
 		}
-		return task;
+		return order;
 	});
-
-	updateOrderTasksData = orderTasksData.filter(task => task.order_id != changesInfo.id);
 
 	for (let obj of changesTasks) {
 		updateOrderTasksData.push(obj);
@@ -50,6 +55,10 @@ function getOrdersFromDB() {
 
 function getOrdersTasksFromDB() {
 	return JSON.parse(fs.readFileSync(config.get('database.order_tasks'), 'utf8'));
+}
+
+function getTasksFromDB() {
+	return JSON.parse(fs.readFileSync(config.get('database.services'), 'utf8'));
 }
 
 function setOrdersToDB(ordersTasksData) {
