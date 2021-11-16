@@ -30,7 +30,7 @@
 
 		{{#ifCond formatOrderInfo.status_id '!==' 'Отменен'}}
 			<div class="table__add">
-				<a href="services-list" class="table__add-btn btn-style btn-style_green modalOpenJs">
+				<a href="services-list" class="table__add-btn btn-style btn-style_green openTaskModalJS">
 					<svg>
 						<use xlink:href="#plus"></use>
 					</svg>
@@ -52,9 +52,7 @@
 </div>
 
 <div class="modal-container">
-	<div class="modal modalJs" id="services-list">
-		{{> modalServicesTitle}}
-	</div>
+	<div class="modal modalJs" id="services-list"></div>
 </div>
 
 <div class="modal-container">

@@ -115,13 +115,15 @@ class Order extends Component {
 	async setActions() {
 		const userInfoBlock = document.getElementsByClassName('userInfoBlockJs')[0],
 			openUserInfoBlock = document.getElementsByClassName('openChangeInfoModalJs')[0],
-			addTaskBtn = document.getElementsByClassName('addTaskBtnJs')[0],
-			addTasksList = document.getElementsByClassName('addTasksListJs')[0],
 			tasksTable = document.getElementsByClassName('orderTasksTableBodyJs')[0],
 			setStatus = document.getElementsByClassName('orderStatusJs')[0],
 			saveChanges = document.getElementsByClassName('saveOrderChanges')[0],
 			services = await this.getServices(),
-			request = this.request;
+			request = this.request,
+
+			openTaskModalJS = document.getElementsByClassName('openTaskModalJS')[0];
+
+
 
 		let [orderInfo, orderTasks] = await this.getData();
 
@@ -266,48 +268,59 @@ class Order extends Component {
 
 		});
 
-		addTaskBtn.addEventListener('click', async() => {
-			const checkedCheckBoxs = addTasksList.querySelectorAll('input:checked');
+		openTaskModalJS.addEventListener('click', (e) => {
+			e.preventDefault();
 
-			for (let checkbox of checkedCheckBoxs) {
-				const taskInOrder = orderTasks.find(task => task.task_id === checkbox.parentElement.dataset.id);
+			const href = openTaskModalJS.getAttribute('href');
 
-				if (taskInOrder) {
-					const taskRow = tasksTable.querySelectorAll(`[data-task-id = "${taskInOrder.id}"]`)[0],
-						counterTask = taskRow.querySelectorAll('.counterValueJs'),
-						totalTask = taskRow.querySelectorAll('.taskTotalPriceJs'),
-						priceTask = +(taskRow.querySelectorAll('.taskPriceJs')[0]).innerText;
+			showAlertModal(href, 'services-list', {services});
 
-					taskInOrder.amount = `${++taskInOrder.amount}`;
+			const addTaskBtn = document.getElementsByClassName('addTaskBtnJs')[0],
+				addTasksList = document.getElementsByClassName('addTasksListJs')[0];
 
-					for (let counter of counterTask) {
-						counter.innerText = +counter.innerText + 1;
+			addTaskBtn.addEventListener('click', () => {
+				const checkedCheckBoxs = addTasksList.querySelectorAll('input:checked');
+
+				for (let checkbox of checkedCheckBoxs) {
+					const taskInOrder = orderTasks.find(task => task.task_id === checkbox.parentElement.dataset.id);
+
+					if (taskInOrder) {
+						const taskRow = tasksTable.querySelectorAll(`[data-task-id = "${taskInOrder.id}"]`)[0],
+							counterTask = taskRow.querySelectorAll('.counterValueJs'),
+							totalTask = taskRow.querySelectorAll('.taskTotalPriceJs'),
+							priceTask = +(taskRow.querySelectorAll('.taskPriceJs')[0]).innerText;
+
+						taskInOrder.amount = `${++taskInOrder.amount}`;
+
+						for (let counter of counterTask) {
+							counter.innerText = +counter.innerText + 1;
+						}
+						for (let total of totalTask) {
+							total.innerText = this.formatTotalPrice(counterTask[0].innerText * priceTask);
+						}
+
+					} else {
+						const newTaskInOrder = {};
+
+						newTaskInOrder.id = generateID();
+						newTaskInOrder.order_id = orderInfo.id;
+						newTaskInOrder.task_id = checkbox.parentElement.dataset.id;
+						newTaskInOrder.amount = '1';
+						orderTasks.push(newTaskInOrder);
 					}
-					for (let total of totalTask) {
-						total.innerText = this.formatTotalPrice(counterTask[0].innerText * priceTask);
-					}
-
-				} else {
-					const newTaskInOrder = {};
-
-					newTaskInOrder.id = generateID();
-					newTaskInOrder.order_id = orderInfo.id;
-					newTaskInOrder.task_id = checkbox.parentElement.dataset.id;
-					newTaskInOrder.amount = '1';
-					orderTasks.push(newTaskInOrder);
 				}
-			}
 
-			this.renderTable(tasksTable, orderTasks, services);
+				this.renderTable(tasksTable, orderTasks, services);
 
-			saveChanges.removeAttribute('disabled');
+				saveChanges.removeAttribute('disabled');
+
+			});
 		});
 
 		saveChanges.addEventListener('click', (e) => {
 			e.preventDefault();
 
-			const target = e.target,
-				href = target.getAttribute('href');
+			const href = saveChanges.getAttribute('href');
 
 			showAlertModal(href, 'change-service', {});
 

@@ -1,9 +1,10 @@
-import ModalAlertTemplate from '../../templates/pages/modalAlert.hbs';
-import ModalRemoveActTemplate from '../../templates/pages/modalRemoveAct.hbs';
-import ModalRemoveTaskTemplate from '../../templates/pages/modalRemoveTask.hbs';
-import ModalSaveChangesTemplate from '../../templates/pages/modalSaveChanges.hbs';
-import ModalEditDataTemplate from '../../templates/pages/modalEditData.hbs';
-import ModalTasksWithPriceTemplate from '../../templates/pages/modalServicesWithPrice.hbs';
+import ModalAlertTemplate from '../../templates/pages/modals/modalAlert.hbs';
+import ModalRemoveActTemplate from '../../templates/pages/modals/modalRemoveAct.hbs';
+import ModalRemoveTaskTemplate from '../../templates/pages/modals/modalRemoveTask.hbs';
+import ModalSaveChangesTemplate from '../../templates/pages/modals/modalSaveChanges.hbs';
+import ModalEditDataTemplate from '../../templates/pages/modals/modalEditData.hbs';
+import ModalTasksWithPriceTemplate from '../../templates/pages/modals/modalServicesWithPrice.hbs';
+import ModalTasksTemplate from '../../templates/pages/modals/modalServicesTitle.hbs';
 
 const body = document.body;
 
@@ -108,6 +109,10 @@ export const showAlertModal = (id, type, content) => {
 
 		case 'services-prices':
 			modal.innerHTML = ModalTasksWithPriceTemplate(content);
+			break;
+
+		case 'services-list':
+			modal.innerHTML = ModalTasksTemplate(content);
 			break;
 	}
 

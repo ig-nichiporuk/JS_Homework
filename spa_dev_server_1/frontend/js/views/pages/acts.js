@@ -31,6 +31,8 @@ class OrdersList extends Component {
 	async render(acts) {
 		const request = this.request;
 
+		console.log(acts);
+
 		return ActsTemplate({acts, request});
 	}
 
