@@ -51,11 +51,10 @@ class OrdersList extends Component {
 
 	}
 
-	async getOrderNum(num, unp, sortSelect) {
+	async getOrderByNum(num, sortSelect) {
+		const val = num.value.trim().toUpperCase();
 		try {
-			let numVal = num ? num.value.trim().toUpperCase() : null,
-				unpVal = unp ? unp.value.trim() : null;
-			return formatOrders(await this.model.getOrderNum(numVal, unpVal));
+			return formatOrders([await this.model.getOrderByNum(val)]);
 		} catch (e) {
 			showAlertModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
@@ -64,18 +63,28 @@ class OrdersList extends Component {
 
 			sortSelect.disabled = false;
 			num.value = '';
-			unp.value = '';
-
-			throw new Error (e);
 		}
+	}
 
+	async getOrderByUnp(unp, sortSelect) {
+		const val = unp.value.trim();
+		try {
+			return formatOrders(await this.model.getOrderByUnp(val));
+		} catch (e) {
+			showAlertModal('alert-modal', 'alert', {
+				title : 'Ошибка!',
+				message : 'Не удалось получить заказ-наряд!'
+			});
+
+			sortSelect.disabled = false;
+			unp.value = '';
+		}
 	}
 
 	async render(orders) {
-		const request = this.request,
-			services = await this.getServices();
+		const request = this.request;
 
-		return OrdersTemplate({orders, services, request});
+		return OrdersTemplate({orders, request});
 	}
 
 	afterRender() {
@@ -84,7 +93,8 @@ class OrdersList extends Component {
 	}
 
 	setActions() {
-		const sortSelect = document.getElementById('sort-orders'),
+		const openTaskModal = document.getElementsByClassName('openTasksModalJs')[0],
+			sortSelect = document.getElementById('sort-orders'),
 			tableOrders = document.getElementsByClassName('tableOrdersBodyJs')[0],
 			unpNumForm = document.getElementById('search-unp-num'),
 			inputUnpNum = unpNumForm.getElementsByClassName('inputUnpNumJs')[0],
@@ -92,8 +102,20 @@ class OrdersList extends Component {
 			inputOrderNum = orderNumForm.getElementsByClassName('searchOrderNumJs')[0],
 			resetOrderNum = orderNumForm.getElementsByClassName('resetOrderNumJs')[0];
 
+		openTaskModal.addEventListener('click', async(e) => {
+			e.preventDefault();
+
+			const services = await this.getServices(),
+				href = openTaskModal.getAttribute('href');
+
+			showAlertModal(href, 'services-prices', {services});
+		});
+
 		sortSelect.addEventListener('change', async() => {
 			const orders = await this.getSortOrdersList(sortSelect.value);
+
+			inputOrderNum.value = '';
+			inputUnpNum.value = '';
 
 			tableOrders.innerHTML = OrdersTableTemplate({orders});
 		});
@@ -101,13 +123,14 @@ class OrdersList extends Component {
 		orderNumForm.addEventListener('submit', async(e) => {
 			e.preventDefault();
 
-			const orders = await this.getOrderNum(inputOrderNum, inputUnpNum, sortSelect);
+			const orders = await this.getOrderByNum(inputOrderNum, sortSelect);
 
+			if (orders.length) {
+				tableOrders.innerHTML = OrdersTableTemplate({orders});
+				sortSelect.disabled = !!inputOrderNum.value.trim();
+				resetOrderNum.disabled = false;
+			}
 
-			inputUnpNum.value = '',
-			sortSelect.disabled = !!inputOrderNum.value.trim();
-			resetOrderNum.disabled = false;
-			tableOrders.innerHTML = OrdersTableTemplate({orders});
 		});
 
 		orderNumForm.addEventListener('reset', async(e) => {
@@ -125,18 +148,19 @@ class OrdersList extends Component {
 		unpNumForm.addEventListener('submit', async(e) => {
 			e.preventDefault();
 
-			sortSelect.disabled = !!inputUnpNum.value.trim();
-
 			if (inputUnpNum.value.trim()) {
-				const orders = await this.getOrderNum(inputOrderNum, inputUnpNum, sortSelect);
+				const orders = await this.getOrderByUnp(inputUnpNum);
 
 				if (orders.length) {
 					tableOrders.innerHTML = OrdersTableTemplate({orders});
+					sortSelect.disabled = !!inputUnpNum.value.trim();
 				} else {
 					showAlertModal('alert-modal', 'alert', {
 						title : 'Ошибка!',
 						message : 'Не удалось получить заказ-наряд!'
 					});
+
+					sortSelect.disabled = false;
 				}
 			} else {
 				const orders = await this.getData();

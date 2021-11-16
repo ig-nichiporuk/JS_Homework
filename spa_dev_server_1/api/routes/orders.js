@@ -9,22 +9,30 @@ router.get('/api/orders',(req, res) => {
 	res.send(orders)
 });
 
-// API Orders SORT, find UNP, find NUM
+// API Orders SORT
 router.post('/api/orders',(req, res) => {
 	const ordersData = getOrdersFromDB(),
-		{sort, num, unp} = req.body;
-
-	if(num && num.length) {
-		res.send(ordersData.find(order => order.code_1c == num));
-	}
+		{sort} = req.body;
 
 	if(sort) {
 		res.send(setSort(sort, ordersData));
 	}
+});
 
-	if(unp && unp.length) {
-		res.send(ordersData.filter(order => order.unp == unp));
-	}
+// API Orders find NUM
+router.post('/api/orders/num',(req, res) => {
+	const ordersData = getOrdersFromDB(),
+		{num} = req.body;
+
+	res.send(ordersData.find(order => order.code_1c == num));
+});
+
+// API Orders find UNP
+router.post('/api/orders/unp',(req, res) => {
+	const ordersData = getOrdersFromDB(),
+		{unp} = req.body;
+
+	res.send(ordersData.filter(order => order.unp == unp));
 });
 
 //SORT options

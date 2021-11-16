@@ -15,6 +15,26 @@ class Orders {
 		return await orders.json();
 	}
 
+	async getOrderByNum(num) {
+		const order = await fetch('http://localhost:3000/api/orders/num', {
+			method: 'POST',
+			headers: {'Content-Type' : 'application/json'},
+			body: JSON.stringify({num})
+		});
+
+		return await order.json();
+	}
+
+	async getOrderByUnp(unp) {
+		const order = await fetch('http://localhost:3000/api/orders/unp', {
+			method: 'POST',
+			headers: {'Content-Type' : 'application/json'},
+			body: JSON.stringify({unp})
+		});
+
+		return await order.json();
+	}
+
 	async getOrderNum(num, unp) {
 		const order = await fetch('http://localhost:3000/api/orders', {
 			method: 'POST',

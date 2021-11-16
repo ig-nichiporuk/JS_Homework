@@ -3,6 +3,7 @@ import ModalRemoveActTemplate from '../../templates/pages/modalRemoveAct.hbs';
 import ModalRemoveTaskTemplate from '../../templates/pages/modalRemoveTask.hbs';
 import ModalSaveChangesTemplate from '../../templates/pages/modalSaveChanges.hbs';
 import ModalEditDataTemplate from '../../templates/pages/modalEditData.hbs';
+import ModalTasksWithPriceTemplate from '../../templates/pages/modalServicesWithPrice.hbs';
 
 const body = document.body;
 
@@ -103,6 +104,10 @@ export const showAlertModal = (id, type, content) => {
 
 		case 'edit-data':
 			modal.innerHTML = ModalEditDataTemplate(content);
+			break;
+
+		case 'services-prices':
+			modal.innerHTML = ModalTasksWithPriceTemplate(content);
 			break;
 	}
 
