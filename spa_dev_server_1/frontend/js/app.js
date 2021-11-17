@@ -29,6 +29,7 @@ async function router() {
 		footer = new Footer();
 
 	headerContainer.innerHTML = await header.render();
+	header.afterRender();
 
 	const request = parseRequestURL(),
 		parsedURL = `/${request.resource || ''}${request.id ? '/:id' : ''}${request.action ? `/${request.action}` : ''}`,

@@ -3,19 +3,28 @@ const express = require('express'),
 	config = require('config'),
 	fs = require('file-system');
 
-// API GET Orders list
-router.get('/api/acts',(req, res) => {
-	const acts = fs.readFileSync(config.get('database.acts'), 'utf8');
+const auth = require('../middleware/auth')
 
-	res.send(acts)
+// API GET Orders list
+router.get('/api/acts', auth,  (req, res) => {
+	const actsData = getActsFromDB();
+
+	if(req.user.is_manager !== '0') {
+		res.send(actsData);
+	} else {
+		res.send(actsData.filter(act => act.login == req.user.login));
+	}
 });
 
-router.post('/api/acts',(req, res) => {
+router.post('/api/acts', auth, (req, res) => {
 	const actsData = getActsFromDB(),
 		{num} = req.body;
 
-	if(num) {
+	if(req.user.is_manager !== '0') {
 		res.send(actsData.find(act => act.code_1c == num));
+	} else {
+		const userActs = actsData.filter(act => act.login == req.user.login);
+		res.send(userActs.find(act => act.code_1c == num));
 	}
 });
 

@@ -10,6 +10,7 @@
 		"acts": "./routes/acts.js",
 		"orders": "./routes/orders.js",
 		"order": "./routes/order.js",
-		"services": "./routes/services.js"
+		"services": "./routes/services.js",
+		"authorization": "./routes/authorization.js"
 	}
 }

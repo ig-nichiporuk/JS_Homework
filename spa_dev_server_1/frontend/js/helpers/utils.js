@@ -141,6 +141,14 @@ export const formatOrders = (data) => {
 	});
 };
 
+export const checkWS = () => {
+	const userInLS = localStorage.getItem('user'),
+		userInSS = sessionStorage.getItem('user');
+	if (userInLS || userInSS) {
+		return JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
+	}
+};
+
 
 const resetAllInput = () => {
 	const inputsChecked = body.querySelectorAll('input:checked');

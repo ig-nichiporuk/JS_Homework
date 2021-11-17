@@ -2,20 +2,21 @@
 
 .header {
 	&__main {
-		background-color: $main-color;
-
-		.header_inside & {
-			position: fixed;
-			z-index: 99;
-			top: 0;
-			left: 0;
-			width: 100%;
-		}
+        background-color: $main-color;
+        .header_inside & {
+            position: fixed;
+            z-index: 99;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
 
 		&-wrapper {
 			display: flex;
 			align-items: center;
 			height: $header-height-main;
+
+
 		}
 
 		&-logo {

@@ -4,6 +4,12 @@ const express = require('express'),
     config = require('config'),
     app = express();
 
+/*-------------*/
+// app.use(express.json());
+/*-------------*/
+
+
+
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(morgan('common'));
@@ -18,7 +24,8 @@ app.use(
     require(config.get('routes.orders')),
     require(config.get('routes.order')),
     require(config.get('routes.services')),
-    require(config.get('routes.acts'))
+    require(config.get('routes.acts')),
+    require(config.get('routes.authorization'))
 );
 
 

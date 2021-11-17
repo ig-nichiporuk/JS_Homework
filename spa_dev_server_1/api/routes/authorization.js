@@ -2,53 +2,49 @@ const express = require('express'),
 	router = express.Router(),
 	config = require('config'),
 	fs = require('file-system'),
-	session = require('express-session'),
-	FileStore = require('session-file-store')(session),
-	passport = require('passport');
+	jwt = require('jsonwebtoken');
+
+const auth = require('../middleware/auth')
+
+const {secret} = require("../secret");
+
+const users = getActsFromDB();
+
+const generateAccessToken = (name, login, is_manager) => {
+	const payload = {name, login, is_manager}
+	return jwt.sign(payload, secret, /*{expiresIn: "24h"} */)
+}
 
 
+router.post('/api/login',(req, res) => {
 
-router.use(
-	session({
-		secret: 'MY_SECRET_KEY_BUBALECH',
-		store: new FileStore(),
-		cookie: {
-			path: '/',
-			httpOnly: true,
-			maxAge: 3600000,
-		},
-		resave: false,
-		saveUninitialized: false,
-	})
-);
-const auth = (req, res, next) => {
-	console.log(req);
-	if (req.isAuthenticated()) {
-		next();
-	} else {
-		return res.redirect('/');
+	const {email, password} = req.body;
+
+	const user = users.find(user => user.email === email);
+
+	console.log(user);
+	if (!user) {
+		return res.status(400).json({message: `Пользователь ${username} не найден`})
 	}
-};
-router.post('/api/login', (req, res, next) => {
-	passport.authenticate('local', function(err, user) {
-		if (err) {
-			return next(err);
-		}
-		if (!user) {
-			return res.send({message : 'Укажите правильный email или пароль!'});
-		}
-		req.logIn(user, function(err) {
-			if (err) {
-				return next(err);
-			}
-			return res.send(user);
-		});
-	})(req, res, next);
+	const validPassword = users.find(user => user.password = password)
+	if (!validPassword) {
+		return res.status(400).json({message: `Введен неверный пароль`})
+	}
+	const token = generateAccessToken(user.name, user.login, user.is_manager)
+	return res.json({token, name : user.name, status : user.is_manager})
+
 });
 
-router.get('/api/logout', (req, res) => {
-	req.logOut();
-	res.redirect('/');
-});
+
+/*router.get('/api/acts', auth, (req, res) => {
+	const acts = fs.readFileSync(config.get('database.acts'), 'utf8');
+
+	res.send(JSON.parse(acts));
+});*/
+
+
+function getActsFromDB() {
+	return JSON.parse(fs.readFileSync(config.get('database.users'), 'utf8'));
+}
 
 module.exports = router;
