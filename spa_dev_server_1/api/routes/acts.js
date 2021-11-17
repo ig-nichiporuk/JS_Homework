@@ -6,12 +6,8 @@ const express = require('express'),
 // API GET Orders list
 router.get('/api/acts',(req, res) => {
 	const acts = fs.readFileSync(config.get('database.acts'), 'utf8');
-		formatActs = JSON.parse(acts).map(act => {
-			act.attach = `${__dirname}/${act.attach}`;
-			return act;
-		});
 
-	res.send(formatActs)
+	res.send(acts)
 });
 
 router.post('/api/acts',(req, res) => {
