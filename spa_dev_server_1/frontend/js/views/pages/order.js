@@ -1,13 +1,20 @@
 import {checkUser, closeModal, formatOrders, generateID, showAlertModal} from '../../helpers/utils';
 
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import htmlToPdfmake from 'html-to-pdfmake';
+
 import Component from '../../views/component';
 
 import OrderInfo from '../../../templates/pages/order.hbs';
 import UserInfo from '../../../templates/pages/userInfoData.hbs';
 import Error404Template from '../../../templates/pages/error404.hbs';
 import OrderTaskRow from '../../../templates/pages/order/orderTaskRow.hbs';
+import PrintTemplate from '../../../templates/pages/printTemplate.hbs';
 
 import Orders from '../../models/orders';
+
 
 
 class Order extends Component {
@@ -108,6 +115,18 @@ class Order extends Component {
 		return totalOrder.toFixed(2);
 	}
 
+	printOrder(source) {
+		var val = htmlToPdfmake(source);
+		var docDefinition = {
+			content:val,
+			defaultStyle: {
+				fontSize: 10,
+				bold: true
+			}
+		};
+		pdfMake.createPdf(docDefinition).download();
+	}
+
 	async afterRender() {
 		super.afterRender();
 		await this.setActions();
@@ -119,6 +138,7 @@ class Order extends Component {
 			tasksTable = document.getElementsByClassName('orderTasksTableBodyJs')[0],
 			setStatus = document.getElementsByClassName('orderStatusJs')[0],
 			saveChanges = document.getElementsByClassName('saveOrderChanges')[0],
+			printOrder = document.getElementsByClassName('printOrderJs')[0],
 			services = await this.getServices(),
 			request = this.request,
 
@@ -127,6 +147,8 @@ class Order extends Component {
 
 
 		let [orderInfo, orderTasks] = await this.getData();
+
+		printOrder.disabled = !(orderInfo.status_id == 3);
 
 		if (openUserInfoBlock){
 			openUserInfoBlock.addEventListener('click', (e) => {
@@ -337,9 +359,20 @@ class Order extends Component {
 
 					saveChanges.setAttribute('disabled', 'true');
 
+					printOrder.disabled = !(orderInfo.status_id == 3);
+
 					closeModal();
 				}
 			});
+		});
+
+
+		printOrder.addEventListener('click', () => {
+			const auth = checkUser(),
+				formatOrderTasks = this.formatOrderTasksData(orderTasks, services),
+				orderTotal = this.formatOrderTotal(formatOrderTasks);
+
+			this.printOrder(PrintTemplate({orderInfo, formatOrderTasks, auth, orderTotal}));
 		});
 	}
 }
