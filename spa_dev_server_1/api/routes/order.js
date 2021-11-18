@@ -3,50 +3,56 @@ const express = require('express'),
 	config = require('config'),
 	fs = require('file-system');
 
-// API GET Order info
-router.get('/api/order/:id', (req, res) => {
-	const ordersData = getOrdersFromDB(),
-		orderTasksData = getOrdersTasksFromDB(),
-		order = ordersData.find(order => order.id === req.params.id),
-		orderTasks = orderTasksData.filter(order => order.order_id === req.params.id);
+const auth = require('../middleware/auth');
 
-	order ? res.send([order, orderTasks]) : res.send({});
+// API GET Order info
+router.get('/api/order/:id', auth, (req, res) => {
+	if(req.user) {
+		const ordersData = getOrdersFromDB(),
+			orderTasksData = getOrdersTasksFromDB(),
+			order = ordersData.find(order => order.id === req.params.id),
+			orderTasks = orderTasksData.filter(order => order.order_id === req.params.id);
+
+		order ? res.send([order, orderTasks]) : res.send({});
+	}
 });
 
 // API SET Order changes
-router.put('/api/order/changes', (req, res) => {
-	const ordersData = getOrdersFromDB(),
-		tasksData = getTasksFromDB(),
-		orderTasksData = getOrdersTasksFromDB(),
-		{changesInfo, changesTasks} = req.body;
+router.put('/api/order/changes', auth, (req, res) => {
+	if(req.user) {
+		const ordersData = getOrdersFromDB(),
+			tasksData = getTasksFromDB(),
+			orderTasksData = getOrdersTasksFromDB(),
+			{changesInfo, changesTasks} = req.body;
 
-	const updateOrderTasksData = orderTasksData.filter(task => task.order_id != changesInfo.id);
+		const updateOrderTasksData = orderTasksData.filter(task => task.order_id != changesInfo.id);
 
-	const updateOrders = ordersData.map(order => {
-		if(order.id == changesInfo.id) {
-			order.status_id = changesInfo.status_id;
-			order.fio = changesInfo.fio;
-			order.car = changesInfo.car;
-			order.reg_number = changesInfo.reg_number;
-			order.closed_at = changesInfo.closed_at;
-			order.sum = '0';
+		const updateOrders = ordersData.map(order => {
+			if(order.id == changesInfo.id) {
+				order.status_id = changesInfo.status_id;
+				order.fio = changesInfo.fio;
+				order.car = changesInfo.car;
+				order.reg_number = changesInfo.reg_number;
+				order.closed_at = changesInfo.closed_at;
+				order.sum = '0';
 
-			for (let obj of changesTasks) {
-				const taskPrice = tasksData.find(task => task.id === obj.task_id).price;
-				order.sum = `${(+order.sum + taskPrice * obj.amount).toFixed(2)}`;
+				for (let obj of changesTasks) {
+					const taskPrice = tasksData.find(task => task.id === obj.task_id).price;
+					order.sum = `${(+order.sum + taskPrice * obj.amount).toFixed(2)}`;
+				}
 			}
+			return order;
+		});
+
+		for (let obj of changesTasks) {
+			updateOrderTasksData.push(obj);
 		}
-		return order;
-	});
 
-	for (let obj of changesTasks) {
-		updateOrderTasksData.push(obj);
+		setOrdersToDB(updateOrders);
+		setOrdersTasksToDB(updateOrderTasksData);
+
+		res.sendStatus(204);
 	}
-
-	setOrdersToDB(updateOrders);
-	setOrdersTasksToDB(updateOrderTasksData);
-
-	res.sendStatus(204);
 });
 
 function getOrdersFromDB() {

@@ -10,26 +10,30 @@
 		<span class="taskPriceJs">{{this.task_price}}</span>
 	</td>
 	<td class="cell__counter">
-		{{#ifCond @root.formatOrderInfo.status_id '===' 'Отменен'}}
+
+		{{#ifCond @root.auth.status '===' '0'}}
 			<span class="text_bold">{{this.amount}}</span>
 		{{/ifCond}}
-
-		{{#ifCond @root.formatOrderInfo.status_id '!==' 'Отменен'}}
-			<div class="counter">
-				<span class="counter__minus counterMinusJs"></span>
-				<span class="counter__value counterValueJs">{{this.amount}}</span>
-				<span class="counter__plus counterPlusJs"></span>
-			</div>
+		{{#ifCond @root.auth.status '!==' '0'}}
+			{{#ifCond @root.formatOrderInfo.status_id '!==' 'Отменен'}}
+				<div class="counter">
+					<span class="counter__minus counterMinusJs"></span>
+					<span class="counter__value counterValueJs">{{this.amount}}</span>
+					<span class="counter__plus counterPlusJs"></span>
+				</div>
+			{{/ifCond}}
 		{{/ifCond}}
 	</td>
-	<td class="cell__total {{#ifCond @root.formatOrderInfo.status_id '!==' 'Отменен'}} edited {{/ifCond}}">
+	<td class="cell__total {{#ifCond @root.auth.status '!==' '0'}} edited {{/ifCond}}">
 		<span class="text_bold taskTotalPriceJs">{{this.task_total}}</span>
-		{{#ifCond @root.formatOrderInfo.status_id '!==' 'Отменен'}}
-			<a href="delete-service" class="delete-item removeTaskJs" data-status-scroll="0">
-				<svg>
-					<use xlink:href="#close"></use>
-				</svg>
-			</a>
+		{{#ifCond @root.auth.status '!==' '0'}}
+			{{#ifCond @root.formatOrderInfo.status_id '!==' 'Отменен'}}
+				<a href="delete-service" class="delete-item removeTaskJs" data-status-scroll="0">
+					<svg>
+						<use xlink:href="#close"></use>
+					</svg>
+				</a>
+			{{/ifCond}}
 		{{/ifCond}}
 	</td>
 	<td class="cell-right {{#ifCond @root.formatOrderInfo.status_id '!==' 'Отменен'}} edited {{/ifCond}}">

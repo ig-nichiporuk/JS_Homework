@@ -1,22 +1,22 @@
 class Orders {
-	async getOrdersList() {
-		const orders = await fetch('http://localhost:3000/api/orders');
+	async getOrdersList(token) {
+		const orders = await fetch(`http://localhost:3000/api/orders?token=${token}`);
 
 		return await orders.json();
 	}
 
-	async getSortOrdersList(param) {
-		const orders = await fetch('http://localhost:3000/api/orders', {
+	async getSortOrdersList(unp, param, token) {
+		const orders = await fetch(`http://localhost:3000/api/orders?token=${token}`, {
 			method: 'POST',
 			headers: {'Content-Type' : 'application/json'},
-			body: JSON.stringify({sort : param})
+			body: JSON.stringify({unp, param})
 		});
 
 		return await orders.json();
 	}
 
-	async getOrderByNum(num) {
-		const order = await fetch('http://localhost:3000/api/orders/num', {
+	async getOrderByNum(num, token) {
+		const order = await fetch(`http://localhost:3000/api/orders/num?token=${token}`, {
 			method: 'POST',
 			headers: {'Content-Type' : 'application/json'},
 			body: JSON.stringify({num})
@@ -25,8 +25,8 @@ class Orders {
 		return await order.json();
 	}
 
-	async getOrderByUnp(unp) {
-		const order = await fetch('http://localhost:3000/api/orders/unp', {
+	async getOrderByUnp(unp, token) {
+		const order = await fetch(`http://localhost:3000/api/orders/unp?token=${token}`, {
 			method: 'POST',
 			headers: {'Content-Type' : 'application/json'},
 			body: JSON.stringify({unp})
@@ -35,18 +35,8 @@ class Orders {
 		return await order.json();
 	}
 
-	async getOrderNum(num, unp) {
-		const order = await fetch('http://localhost:3000/api/orders', {
-			method: 'POST',
-			headers: {'Content-Type' : 'application/json'},
-			body: JSON.stringify({num, unp})
-		});
-
-		return await order.json();
-	}
-
-	async getOrder(id) {
-		const order = await fetch(`http://localhost:3000/api/order/${id}`);
+	async getOrder(id, token) {
+		const order = await fetch(`http://localhost:3000/api/order/${id}?token=${token}`);
 
 		if (!order.ok) {
 			throw new Error(`Невозможно отправить запрос на ${order.url}. ${order.status} ${order.statusText}`);
@@ -61,8 +51,8 @@ class Orders {
 		return await services.json();
 	}
 
-	async setOrderChanges(changesInfo, changesTasks) {
-		await fetch('http://localhost:3000/api/order/changes', {
+	async setOrderChanges(changesInfo, changesTasks, token) {
+		await fetch(`http://localhost:3000/api/order/changes?token=${token}`, {
 			method: 'PUT',
 			headers: {'Content-Type' : 'application/json'},
 			body: JSON.stringify({changesInfo, changesTasks})

@@ -1,4 +1,4 @@
-import {closeModal, formatOrders, generateID, showAlertModal} from '../../helpers/utils';
+import {checkUser, closeModal, formatOrders, generateID, showAlertModal} from '../../helpers/utils';
 
 import Component from '../../views/component';
 
@@ -19,7 +19,7 @@ class Order extends Component {
 
 	async getData() {
 		try {
-			return await this.model.getOrder(this.request.id);
+			return await this.model.getOrder(this.request.id, checkUser().token);
 		} catch {
 			showAlertModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
@@ -40,9 +40,9 @@ class Order extends Component {
 		}
 	}
 
-	async setOrderChanges(changesInfo, changesTasks) {
+	async setOrderChanges(changesInfo, changesTasks, token) {
 		try {
-			return await this.model.setOrderChanges(changesInfo, changesTasks);
+			return await this.model.setOrderChanges(changesInfo, changesTasks, token);
 		} catch {
 			showAlertModal('alert-modal', 'alert',  {
 				title : 'Ошибка!',
@@ -58,9 +58,10 @@ class Order extends Component {
 				formatOrderInfo = formatOrders([orderInfo])[0],
 				services = await this.getServices(),
 				formatOrderTasks = this.formatOrderTasksData(orderTasks, services),
-				orderTotal = this.formatOrderTotal(formatOrderTasks);
+				orderTotal = this.formatOrderTotal(formatOrderTasks),
+				auth = checkUser();
 
-			return Object.keys(data).length ? OrderInfo({formatOrderInfo, formatOrderTasks, services, request, orderTotal}) : Error404Template();
+			return Object.keys(data).length ? OrderInfo({formatOrderInfo, formatOrderTasks, services, request, orderTotal, auth}) : Error404Template();
 		} catch (e) {
 			showAlertModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
@@ -127,44 +128,46 @@ class Order extends Component {
 
 		let [orderInfo, orderTasks] = await this.getData();
 
-		openUserInfoBlock.addEventListener('click', (e) => {
-			e.preventDefault();
+		if (openUserInfoBlock){
+			openUserInfoBlock.addEventListener('click', (e) => {
+				e.preventDefault();
 
-			const href = openUserInfoBlock.getAttribute('href');
+				const href = openUserInfoBlock.getAttribute('href');
 
-			showAlertModal(href, 'edit-data', {
-				fio : orderInfo.fio,
-				userCar : orderInfo.car,
-				userCarNum : orderInfo.reg_number
+				showAlertModal(href, 'edit-data', {
+					fio : orderInfo.fio,
+					userCar : orderInfo.car,
+					userCarNum : orderInfo.reg_number
+				});
+
+				document.body.addEventListener('submit', async(e) => {
+					const target = e.target;
+
+					if (target.closest('#userForm')) {
+						event.preventDefault();
+
+						const userInfoForm = target.closest('#userForm'),
+							userInfoInputs = userInfoForm.getElementsByTagName('input');
+
+						let fio = userInfoInputs.userName.value.trim(),
+							car = userInfoInputs.userCar.value.trim(),
+							carNum = userInfoInputs.userCarNum.value.trim();
+
+						orderInfo.fio = fio ? fio : orderInfo.fio;
+						orderInfo.car = car ? car : orderInfo.car;
+						orderInfo.reg_number = carNum ? carNum : orderInfo.reg_number;
+
+						const formatOrderInfo = formatOrders([orderInfo])[0];
+
+						userInfoBlock.innerHTML = UserInfo({formatOrderInfo, request});
+
+						saveChanges.removeAttribute('disabled');
+
+						closeModal();
+					}
+				});
 			});
-
-			document.body.addEventListener('submit', async(e) => {
-				const target = e.target;
-
-				if (target.closest('#userForm')) {
-					event.preventDefault();
-
-					const userInfoForm = target.closest('#userForm'),
-						userInfoInputs = userInfoForm.getElementsByTagName('input');
-
-					let fio = userInfoInputs.userName.value.trim(),
-						car = userInfoInputs.userCar.value.trim(),
-						carNum = userInfoInputs.userCarNum.value.trim();
-
-					orderInfo.fio = fio ? fio : orderInfo.fio;
-					orderInfo.car = car ? car : orderInfo.car;
-					orderInfo.reg_number = carNum ? carNum : orderInfo.reg_number;
-
-					const formatOrderInfo = formatOrders([orderInfo])[0];
-
-					userInfoBlock.innerHTML = UserInfo({formatOrderInfo, request});
-
-					saveChanges.removeAttribute('disabled');
-
-					closeModal();
-				}
-			});
-		});
+		}
 
 		setStatus.addEventListener('change', () => {
 			const date = new Date(),
@@ -268,54 +271,56 @@ class Order extends Component {
 
 		});
 
-		openTaskModalJS.addEventListener('click', (e) => {
-			e.preventDefault();
+		if (openTaskModalJS) {
+			openTaskModalJS.addEventListener('click', (e) => {
+				e.preventDefault();
 
-			const href = openTaskModalJS.getAttribute('href');
+				const href = openTaskModalJS.getAttribute('href');
 
-			showAlertModal(href, 'services-list', {services});
+				showAlertModal(href, 'services-list', {services});
 
-			const addTaskBtn = document.getElementsByClassName('addTaskBtnJs')[0],
-				addTasksList = document.getElementsByClassName('addTasksListJs')[0];
+				const addTaskBtn = document.getElementsByClassName('addTaskBtnJs')[0],
+					addTasksList = document.getElementsByClassName('addTasksListJs')[0];
 
-			addTaskBtn.addEventListener('click', () => {
-				const checkedCheckBoxs = addTasksList.querySelectorAll('input:checked');
+				addTaskBtn.addEventListener('click', () => {
+					const checkedCheckBoxs = addTasksList.querySelectorAll('input:checked');
 
-				for (let checkbox of checkedCheckBoxs) {
-					const taskInOrder = orderTasks.find(task => task.task_id === checkbox.parentElement.dataset.id);
+					for (let checkbox of checkedCheckBoxs) {
+						const taskInOrder = orderTasks.find(task => task.task_id === checkbox.parentElement.dataset.id);
 
-					if (taskInOrder) {
-						const taskRow = tasksTable.querySelectorAll(`[data-task-id = "${taskInOrder.id}"]`)[0],
-							counterTask = taskRow.querySelectorAll('.counterValueJs'),
-							totalTask = taskRow.querySelectorAll('.taskTotalPriceJs'),
-							priceTask = +(taskRow.querySelectorAll('.taskPriceJs')[0]).innerText;
+						if (taskInOrder) {
+							const taskRow = tasksTable.querySelectorAll(`[data-task-id = "${taskInOrder.id}"]`)[0],
+								counterTask = taskRow.querySelectorAll('.counterValueJs'),
+								totalTask = taskRow.querySelectorAll('.taskTotalPriceJs'),
+								priceTask = +(taskRow.querySelectorAll('.taskPriceJs')[0]).innerText;
 
-						taskInOrder.amount = `${++taskInOrder.amount}`;
+							taskInOrder.amount = `${++taskInOrder.amount}`;
 
-						for (let counter of counterTask) {
-							counter.innerText = +counter.innerText + 1;
+							for (let counter of counterTask) {
+								counter.innerText = +counter.innerText + 1;
+							}
+							for (let total of totalTask) {
+								total.innerText = this.formatTotalPrice(counterTask[0].innerText * priceTask);
+							}
+
+						} else {
+							const newTaskInOrder = {};
+
+							newTaskInOrder.id = generateID();
+							newTaskInOrder.order_id = orderInfo.id;
+							newTaskInOrder.task_id = checkbox.parentElement.dataset.id;
+							newTaskInOrder.amount = '1';
+							orderTasks.push(newTaskInOrder);
 						}
-						for (let total of totalTask) {
-							total.innerText = this.formatTotalPrice(counterTask[0].innerText * priceTask);
-						}
-
-					} else {
-						const newTaskInOrder = {};
-
-						newTaskInOrder.id = generateID();
-						newTaskInOrder.order_id = orderInfo.id;
-						newTaskInOrder.task_id = checkbox.parentElement.dataset.id;
-						newTaskInOrder.amount = '1';
-						orderTasks.push(newTaskInOrder);
 					}
-				}
 
-				this.renderTable(tasksTable, orderTasks, services);
+					this.renderTable(tasksTable, orderTasks, services);
 
-				saveChanges.removeAttribute('disabled');
+					saveChanges.removeAttribute('disabled');
 
+				});
 			});
-		});
+		}
 
 		saveChanges.addEventListener('click', (e) => {
 			e.preventDefault();
@@ -328,7 +333,7 @@ class Order extends Component {
 				const target = e.target;
 
 				if (target.closest('.saveTasksDataJs')) {
-					await this.setOrderChanges(orderInfo, orderTasks);
+					await this.setOrderChanges(orderInfo, orderTasks, checkUser().token);
 
 					saveChanges.setAttribute('disabled', 'true');
 

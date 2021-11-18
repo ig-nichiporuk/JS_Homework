@@ -11,12 +11,12 @@ class Authorization extends Component {
 		this.model = new Auth();
 	}
 
-	async login(email, password) {
-		return await this.model.login(email, password);
+	async getData(email, password) {
+		return await this.model.getData(email, password);
 	}
 
-	async render() {
-		return await (AuthorizationTemplate());
+	render() {
+		return (AuthorizationTemplate());
 	}
 
 	afterRender() {
@@ -34,13 +34,15 @@ class Authorization extends Component {
 			let email = authFormInputs.email.value.trim(),
 				password = authFormInputs.password.value.trim();
 
-			const user = await this.login(email, password);
+			const user = await this.getData(email, password);
 
 			if (rememberUser.checked == true) {
 				localStorage.setItem('user', JSON.stringify(user));
 			} else {
 				sessionStorage.setItem('user', JSON.stringify(user));
 			}
+
+			location.hash = '#/orders';
 		});
 	}
 }

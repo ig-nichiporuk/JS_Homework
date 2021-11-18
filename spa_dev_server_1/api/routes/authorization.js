@@ -17,12 +17,10 @@ const generateAccessToken = (name, login, is_manager) => {
 
 
 router.post('/api/login',(req, res) => {
-
 	const {email, password} = req.body;
 
 	const user = users.find(user => user.email === email);
 
-	console.log(user);
 	if (!user) {
 		return res.status(400).json({message: `Пользователь ${username} не найден`})
 	}

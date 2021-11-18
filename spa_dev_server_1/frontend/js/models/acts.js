@@ -1,12 +1,12 @@
 class Acts {
-	async getActsList(cookie) {
-		const acts = await fetch(`http://localhost:3000/api/acts?id=${cookie}`);
+	async getActsList(token) {
+		const acts = await fetch(`http://localhost:3000/api/acts?token=${token}`);
 
 		return await acts.json();
 	}
 
-	async getActsNum(num, cookie) {
-		const acts = await fetch(`http://localhost:3000/api/acts?id=${cookie}`, {
+	async getActsNum(num, token) {
+		const acts = await fetch(`http://localhost:3000/api/acts?token=${token}`, {
 			method: 'POST',
 			headers: {'Content-Type' : 'application/json'},
 			body: JSON.stringify({num})
@@ -15,8 +15,8 @@ class Acts {
 		return await acts.json();
 	}
 
-	async removeAct(code, cookie) {
-		await fetch(`http://localhost:3000/api/acts?id=${cookie}`, {
+	async removeAct(code, token) {
+		await fetch(`http://localhost:3000/api/acts?token=${token}`, {
 			method: 'DELETE',
 			headers: {'Content-Type' : 'application/json'},
 			body: JSON.stringify({code})

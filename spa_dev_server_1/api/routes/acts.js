@@ -5,7 +5,7 @@ const express = require('express'),
 
 const auth = require('../middleware/auth')
 
-// API GET Orders list
+// API GET Acts list
 router.get('/api/acts', auth,  (req, res) => {
 	const actsData = getActsFromDB();
 
@@ -16,6 +16,7 @@ router.get('/api/acts', auth,  (req, res) => {
 	}
 });
 
+// API GET Acts by Num
 router.post('/api/acts', auth, (req, res) => {
 	const actsData = getActsFromDB(),
 		{num} = req.body;
@@ -28,6 +29,7 @@ router.post('/api/acts', auth, (req, res) => {
 	}
 });
 
+// API DELETE Act
 router.delete('/api/acts', (req, res) => {
 	const actsData = getActsFromDB(),
 		{code} = req.body,

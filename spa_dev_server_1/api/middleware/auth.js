@@ -7,7 +7,7 @@ module.exports = function (req, res, next) {
 	}
 
 	try {
-		const token = req.query.id;
+		const token = req.query.token;
 
 		if (!token) {
 			return res.status(403).json({message: "Пользователь не авторизован"})

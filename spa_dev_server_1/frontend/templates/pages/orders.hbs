@@ -3,7 +3,8 @@
 </div>
 <div class="content">
 	<div class="container">
-		<div class="controls controls_admin">
+		{{#ifCond auth.status '!==' '0'}}
+			<div class="controls controls_admin">
 			<div class="controls__item">
 				<form class="unp-wrap" id="search-unp-num">
 					<div>
@@ -17,6 +18,7 @@
 				<a href="services-prices" class="link_blue openTasksModalJs">Справочник работ</a>
 			</div>
 		</div>
+		{{/ifCond}}
 		<div class="controls">
 			<div class="controls__item">
 				<label>Сортировать</label>

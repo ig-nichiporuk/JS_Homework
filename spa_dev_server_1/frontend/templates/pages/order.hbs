@@ -28,7 +28,7 @@
 
 		{{> orderServicesTable}}
 
-		{{#ifCond formatOrderInfo.status_id '!==' 'Отменен'}}
+		{{#ifCond @root.auth.status '!==' '0'}}
 			<div class="table__add">
 				<a href="services-list" class="table__add-btn btn-style btn-style_green openTaskModalJS">
 					<svg>

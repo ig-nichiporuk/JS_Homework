@@ -3,36 +3,62 @@ const express = require('express'),
 	config = require('config'),
 	fs = require('file-system');
 
+const auth = require('../middleware/auth');
+
 // API GET Orders list
-router.get('/api/orders',(req, res) => {
-	const orders = fs.readFileSync(config.get('database.orders'), 'utf8');
-	res.send(orders)
+router.get('/api/orders', auth,(req, res) => {
+	const ordersData = getOrdersFromDB();
+
+	if(req.user.is_manager !== '0') {
+		res.send(ordersData);
+	} else {
+		res.send(ordersData.filter(order => order.login == req.user.login));
+	}
 });
 
 // API Orders SORT
-router.post('/api/orders',(req, res) => {
+router.post('/api/orders', auth, (req, res) => {
 	const ordersData = getOrdersFromDB(),
-		{sort} = req.body;
+		{unp, param} = req.body;
 
-	if(sort) {
-		res.send(setSort(sort, ordersData));
+	if(req.user.is_manager !== '0') {
+		if(unp) {
+			const ordersDataByUnp = ordersData.filter(order => order.unp == unp)
+			res.send(setSort(param, ordersDataByUnp));
+		} else {
+			res.send(setSort(param, ordersData));
+		}
+	} else {
+		const userOrders = ordersData.filter(order => order.login == req.user.login);
+
+		res.send(setSort(param, userOrders));
 	}
 });
 
 // API Orders find NUM
-router.post('/api/orders/num',(req, res) => {
+router.post('/api/orders/num', auth, (req, res) => {
 	const ordersData = getOrdersFromDB(),
 		{num} = req.body;
 
-	res.send(ordersData.find(order => order.code_1c == num));
+	if(req.user.is_manager !== '0') {
+		res.send(ordersData.find(order => order.code_1c == num));
+	} else {
+		const userOrders = ordersData.filter(order => order.login == req.user.login);
+
+		res.send(userOrders.find(order => order.code_1c == num));
+	}
 });
 
 // API Orders find UNP
-router.post('/api/orders/unp',(req, res) => {
+router.post('/api/orders/unp', auth,  (req, res) => {
 	const ordersData = getOrdersFromDB(),
 		{unp} = req.body;
 
-	res.send(ordersData.filter(order => order.unp == unp));
+	if(req.user.is_manager !== '0') {
+		res.send(ordersData.filter(order => order.unp == unp));
+	} else {
+		res.send('У пользователя нет прав доступа!');
+	}
 });
 
 //SORT options

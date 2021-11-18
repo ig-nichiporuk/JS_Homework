@@ -1,7 +1,7 @@
 [
 	{
 		"id": "1",
-		"name": "ИП Соболевский Николай Александрович",
+		"name": "ИП Соболевский Н.А.",
 		"email": "qwe",
 		"email_verified_at": null,
 		"password": "123",
@@ -17,7 +17,7 @@
 	},
 	{
 		"id": "2",
-		"name": "ИП Дехтярёнок Дмитрий Александрович",
+		"name": "ИП Дехтярёнок Д.А.",
 		"email": "6460066@inbox.ru",
 		"email_verified_at": null,
 		"password": "$2y$10$vXuz5fzbdBO1E1HRnZqvneasLZj7V2z\/ykPYn5zfNiqi1N7l7fBAO",
@@ -33,7 +33,7 @@
 	},
 	{
 		"id": "3",
-		"name": "Общество с ограниченной ответственностью \"АС-Север\"",
+		"name": "ООО \"АС-Север\"",
 		"email": "auto.polotsk@tut.by",
 		"email_verified_at": null,
 		"password": "$2y$10$sT9P73iHTyWjN3V1h2xM2..TOMaNR4n9HFd5Q8m8eyXdvzV1Uq1V6",
@@ -49,7 +49,7 @@
 	},
 	{
 		"id": "4",
-		"name": "ИП Толкач Жанна Николаевна",
+		"name": "ИП Толкач Ж.Н.",
 		"email": "tolkach_65@mail.ru",
 		"email_verified_at": null,
 		"password": "$2y$10$izxMP3Wtaw2XxlBkizOnGuNt9gGO\/qYkxdtcqaPyC9JeEJHAdSScW",
@@ -65,7 +65,7 @@
 	},
 	{
 		"id": "5",
-		"name": "ИП Суровец Александр Николаевич",
+		"name": "ИП Суровец А. Н.",
 		"email": "surovets1972@mail.ru",
 		"email_verified_at": null,
 		"password": "$2y$10$D2DqDCaHmon7eHu6qn3zs.BKDfcIhvxEmfVHhUMHkWZHUeFvo1m3G",
@@ -81,7 +81,7 @@
 	},
 	{
 		"id": "6",
-		"name": "Общество с ограниченной ответственностью \"Гутснаб\"",
+		"name": "ООО \"Гутснаб\"",
 		"email": "x3mtyres@mail.ru",
 		"email_verified_at": null,
 		"password": "$2y$10$JLaXPA5CyE5NEGLVEvKCwualcgeuhnFfjDiuh0P4Cs7W.Q7Qenn8O",
@@ -97,7 +97,7 @@
 	},
 	{
 		"id": "7",
-		"name": "admin",
+		"name": "Ничипорук И.А.",
 		"email": "admin",
 		"email_verified_at": null,
 		"password": "admin",

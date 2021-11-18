@@ -141,7 +141,7 @@ export const formatOrders = (data) => {
 	});
 };
 
-export const checkWS = () => {
+export const checkUser = () => {
 	const userInLS = localStorage.getItem('user'),
 		userInSS = sessionStorage.getItem('user');
 	if (userInLS || userInSS) {

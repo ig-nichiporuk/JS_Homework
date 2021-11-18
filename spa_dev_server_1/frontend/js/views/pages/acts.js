@@ -1,4 +1,4 @@
-import {closeModal, showAlertModal, checkWS} from '../../helpers/utils';
+import {closeModal, showAlertModal, checkUser} from '../../helpers/utils';
 
 import Component from '../../views/component';
 
@@ -17,21 +17,22 @@ class OrdersList extends Component {
 	}
 
 	async getData() {
-		return await this.model.getActsList(checkWS().token);
+		return await this.model.getActsList(checkUser().token);
 	}
 
-	async getActsNum(num, cookies) {
-		return await this.model.getActsNum(num, cookies);
+	async getActsNum(num, token) {
+		return await this.model.getActsNum(num, token);
 	}
 
-	async removeActs(num, cookies) {
-		return await this.model.removeAct(num, cookies);
+	async removeActs(num, token) {
+		return await this.model.removeAct(num, token);
 	}
 
 	async render(acts) {
-		const request = this.request;
+		const request = this.request,
+			auth = checkUser();
 
-		return ActsTemplate({acts, request});
+		return ActsTemplate({acts, request, auth});
 	}
 
 	async afterRender() {
@@ -49,7 +50,7 @@ class OrdersList extends Component {
 			e.preventDefault();
 
 			if (inputActs.value.trim()) {
-				const acts = [await this.getActsNum(inputActs.value, checkWS().token)];
+				const acts = [await this.getActsNum(inputActs.value, checkUser().token)];
 
 				tableActs.innerHTML = ActsTableTemplate({acts});
 			} else {
@@ -81,7 +82,7 @@ class OrdersList extends Component {
 
 						const acts = actsData.filter(act => act.code_1c !== actRowCode);
 
-						await this.removeActs(actRowCode, checkWS().token);
+						await this.removeActs(actRowCode, checkUser().token);
 
 						tableActs.innerHTML = ActsTableTemplate({acts});
 

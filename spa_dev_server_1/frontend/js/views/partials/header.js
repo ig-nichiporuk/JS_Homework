@@ -1,4 +1,4 @@
-import {checkWS} from '../../helpers/utils';
+import {checkUser} from '../../helpers/utils';
 
 import Component from '../../views/component';
 import HeaderTemplate from '../../../templates/partials/header';
@@ -6,8 +6,7 @@ import HeaderTemplate from '../../../templates/partials/header';
 class Header extends Component {
     async render() {
 		const request = this.request,
-			auth = checkWS();
-	    console.log(request.resource);
+			auth = checkUser();
         return await (HeaderTemplate({auth, request}));
     }
 	afterRender() {

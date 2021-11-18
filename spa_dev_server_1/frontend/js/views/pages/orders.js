@@ -1,4 +1,4 @@
-import {formatOrders, showAlertModal} from '../../helpers/utils';
+import {checkUser, formatOrders, showAlertModal} from '../../helpers/utils';
 
 import Component from '../../views/component';
 
@@ -18,7 +18,7 @@ class OrdersList extends Component {
 
 	async getData() {
 		try {
-			return formatOrders(await this.model.getOrdersList());
+			return formatOrders(await this.model.getOrdersList(checkUser().token));
 		} catch {
 			showAlertModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
@@ -38,9 +38,9 @@ class OrdersList extends Component {
 		}
 	}
 
-	async getSortOrdersList(sortOptions) {
+	async getSortOrdersList(unp, sortOptions, token) {
 		try {
-			return formatOrders(await this.model.getSortOrdersList(sortOptions));
+			return formatOrders(await this.model.getSortOrdersList(unp,sortOptions, token));
 		} catch (e) {
 			showAlertModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
@@ -51,10 +51,10 @@ class OrdersList extends Component {
 
 	}
 
-	async getOrderByNum(num, sortSelect) {
+	async getOrderByNum(num, sortSelect, token) {
 		const val = num.value.trim().toUpperCase();
 		try {
-			return formatOrders([await this.model.getOrderByNum(val)]);
+			return formatOrders([await this.model.getOrderByNum(val, token)]);
 		} catch (e) {
 			showAlertModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
@@ -66,10 +66,10 @@ class OrdersList extends Component {
 		}
 	}
 
-	async getOrderByUnp(unp, sortSelect) {
+	async getOrderByUnp(unp, sortSelect, token) {
 		const val = unp.value.trim();
 		try {
-			return formatOrders(await this.model.getOrderByUnp(val));
+			return formatOrders(await this.model.getOrderByUnp(val, token));
 		} catch (e) {
 			showAlertModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
@@ -82,9 +82,10 @@ class OrdersList extends Component {
 	}
 
 	async render(orders) {
-		const request = this.request;
+		const request = this.request,
+			auth = checkUser();
 
-		return OrdersTemplate({orders, request});
+		return OrdersTemplate({orders, request, auth});
 	}
 
 	afterRender() {
@@ -97,40 +98,49 @@ class OrdersList extends Component {
 			sortSelect = document.getElementById('sort-orders'),
 			tableOrders = document.getElementsByClassName('tableOrdersBodyJs')[0],
 			unpNumForm = document.getElementById('search-unp-num'),
-			inputUnpNum = unpNumForm.getElementsByClassName('inputUnpNumJs')[0],
+			inputUnpNum = unpNumForm ? unpNumForm.getElementsByClassName('inputUnpNumJs')[0] : null,
 			orderNumForm = document.getElementById('search-order-num'),
 			inputOrderNum = orderNumForm.getElementsByClassName('searchOrderNumJs')[0],
 			resetOrderNum = orderNumForm.getElementsByClassName('resetOrderNumJs')[0];
 
-		openTaskModal.addEventListener('click', async(e) => {
-			e.preventDefault();
+		if (openTaskModal) {
+			openTaskModal.addEventListener('click', async(e) => {
+				e.preventDefault();
 
-			const services = await this.getServices(),
-				href = openTaskModal.getAttribute('href');
+				const services = await this.getServices(),
+					href = openTaskModal.getAttribute('href');
 
-			showAlertModal(href, 'services-prices', {services});
-		});
+				showAlertModal(href, 'services-prices', {services});
+			});
+		}
 
 		sortSelect.addEventListener('change', async() => {
-			const orders = await this.getSortOrdersList(sortSelect.value);
+			if (inputUnpNum) {
+				const orders = await this.getSortOrdersList(inputUnpNum.value, sortSelect.value, checkUser().token);
 
-			inputOrderNum.value = '';
-			inputUnpNum.value = '';
+				inputOrderNum.value = '';
 
-			tableOrders.innerHTML = OrdersTableTemplate({orders});
+				tableOrders.innerHTML = OrdersTableTemplate({orders});
+			} else {
+				const orders = await this.getSortOrdersList(null, sortSelect.value, checkUser().token);
+
+				tableOrders.innerHTML = OrdersTableTemplate({orders});
+			}
 		});
 
 		orderNumForm.addEventListener('submit', async(e) => {
 			e.preventDefault();
 
-			const orders = await this.getOrderByNum(inputOrderNum, sortSelect);
+			sortSelect.disabled = !!inputOrderNum.value.trim();
+
+			const orders = await this.getOrderByNum(inputOrderNum, sortSelect, checkUser().token);
 
 			if (orders.length) {
-				tableOrders.innerHTML = OrdersTableTemplate({orders});
-				sortSelect.disabled = !!inputOrderNum.value.trim();
+				if (inputUnpNum) inputUnpNum.value = '';
 				resetOrderNum.disabled = false;
-			}
 
+				tableOrders.innerHTML = OrdersTableTemplate({orders});
+			}
 		});
 
 		orderNumForm.addEventListener('reset', async(e) => {
@@ -140,34 +150,43 @@ class OrdersList extends Component {
 			sortSelect.disabled = false;
 			resetOrderNum.disabled = true;
 
-			const orders = await this.getData();
+			const orders = await this.getData(checkUser().token);
 
 			tableOrders.innerHTML = OrdersTableTemplate({orders});
 		});
 
-		unpNumForm.addEventListener('submit', async(e) => {
-			e.preventDefault();
+		if (unpNumForm) {
+			unpNumForm.addEventListener('submit', async(e) => {
+				e.preventDefault();
 
-			if (inputUnpNum.value.trim()) {
-				const orders = await this.getOrderByUnp(inputUnpNum);
+				if (inputUnpNum.value.trim()) {
+					const orders = await this.getOrderByUnp(inputUnpNum, sortSelect,checkUser().token);
 
-				if (orders.length) {
-					tableOrders.innerHTML = OrdersTableTemplate({orders});
-					sortSelect.disabled = !!inputUnpNum.value.trim();
+					if (orders.length) {
+						inputOrderNum.value = '';
+
+						sortSelect.disabled = false;
+						sortSelect.value = 'up-date';
+
+						tableOrders.innerHTML = OrdersTableTemplate({orders});
+					} else {
+						showAlertModal('alert-modal', 'alert', {
+							title : 'Ошибка!',
+							message : 'Не найдено заказов по веденному УНП!'
+						});
+
+						inputUnpNum.value = '';
+
+					}
 				} else {
-					showAlertModal('alert-modal', 'alert', {
-						title : 'Ошибка!',
-						message : 'Не удалось получить заказ-наряд!'
-					});
+					const orders = await this.getData();
 
-					sortSelect.disabled = false;
+					sortSelect.value = 'up-date';
+
+					tableOrders.innerHTML = OrdersTableTemplate({orders});
 				}
-			} else {
-				const orders = await this.getData();
-
-				tableOrders.innerHTML = OrdersTableTemplate({orders});
-			}
-		});
+			});
+		}
 	}
 }
 
