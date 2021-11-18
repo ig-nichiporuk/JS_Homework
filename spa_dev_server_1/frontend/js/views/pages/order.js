@@ -5,7 +5,7 @@ import Component from '../../views/component';
 import OrderInfo from '../../../templates/pages/order.hbs';
 import UserInfo from '../../../templates/pages/userInfoData.hbs';
 import Error404Template from '../../../templates/pages/error404.hbs';
-import OrderTaskRow from '../../../templates/pages/orderTaskRow.hbs';
+import OrderTaskRow from '../../../templates/pages/order/orderTaskRow.hbs';
 
 import Orders from '../../models/orders';
 

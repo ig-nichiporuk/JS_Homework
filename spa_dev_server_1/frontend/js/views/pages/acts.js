@@ -6,7 +6,7 @@ import ActsTemplate from '../../../templates/pages/acts.hbs';
 
 
 import Acts from '../../models/acts';
-import ActsTableTemplate from '../../../templates/pages/actsTable.hbs';
+import ActsTableTemplate from '../../../templates/pages/acts/actsTable.hbs';
 
 
 class OrdersList extends Component {

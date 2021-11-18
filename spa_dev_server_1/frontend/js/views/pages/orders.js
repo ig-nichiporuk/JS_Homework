@@ -4,7 +4,7 @@ import Component from '../../views/component';
 
 import OrdersTemplate from '../../../templates/pages/orders.hbs';
 
-import OrdersTableTemplate from '../../../templates/pages/ordersTable.hbs';
+import OrdersTableTemplate from '../../../templates/pages/orders/ordersTable.hbs';
 
 
 import Orders from '../../models/orders';
