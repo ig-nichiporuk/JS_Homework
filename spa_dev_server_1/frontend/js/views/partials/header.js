@@ -15,7 +15,18 @@ class Header extends Component {
 	}
 
 	setActions() {
-		const headerTop = document.getElementsByClassName('headerMainJs')[0];
+		const headerTop = document.getElementsByClassName('headerMainJs')[0],
+			logOutBtn = document.getElementsByClassName('logOutJs')[0];
+
+		if (logOutBtn) {
+			logOutBtn.addEventListener('click', (e) => {
+				e.preventDefault();
+
+				location.hash = '#/';
+
+				localStorage.removeItem('user');
+			});
+		}
 
 		window.onscroll = () => {
 			window.scrollY > 60 ? headerTop.classList.add('scrollable') : headerTop.classList.remove('scrollable');
