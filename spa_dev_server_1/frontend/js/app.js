@@ -49,6 +49,9 @@ async function router() {
 			} else {
 				location.hash = '#/';
 			}
+		} else if (authorization) {
+			location.hash = '#/orders';
+
 		} else {
 			page = new Authorization();
 
