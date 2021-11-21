@@ -17,11 +17,28 @@ class OrdersList extends Component {
 	}
 
 	async getData() {
-		return await this.model.getActsList(checkUser().token);
+		try {
+			return await this.model.getActsList(checkUser().token);
+		} catch {
+			showAlertModal('alert-modal', 'alert', {
+				title : 'Ошибка!',
+				message : 'Не удалось получить список актов!'
+			});
+		}
 	}
 
 	async getActsNum(num, token) {
-		return await this.model.getActsNum(num, token);
+		try {
+			return await this.model.getActsNum(num, token);
+		} catch {
+			showAlertModal('alert-modal', 'alert', {
+				title : 'Ошибка!',
+				message : 'Не удалось получить акт по номеру!'
+			});
+
+			num.value = '';
+		}
+
 	}
 
 	async removeActs(num, token) {
@@ -52,7 +69,9 @@ class OrdersList extends Component {
 			if (inputActs.value.trim()) {
 				const acts = [await this.getActsNum(inputActs.value, checkUser().token)];
 
-				tableActs.innerHTML = ActsTableTemplate({acts});
+				if (acts.length) {
+					tableActs.innerHTML = ActsTableTemplate({acts});
+				}
 			} else {
 				const acts = await this.getData();
 

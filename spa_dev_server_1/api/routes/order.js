@@ -7,13 +7,18 @@ const auth = require('../middleware/auth');
 
 // API GET Order info
 router.get('/api/order/:id', auth, (req, res) => {
-	if(req.user) {
-		const ordersData = getOrdersFromDB(),
-			orderTasksData = getOrdersTasksFromDB(),
-			order = ordersData.find(order => order.id === req.params.id),
-			orderTasks = orderTasksData.filter(order => order.order_id === req.params.id);
+	const ordersData = getOrdersFromDB(),
+		orderTasksData = getOrdersTasksFromDB(),
+		order = ordersData.find(order => order.id === req.params.id),
+		orderTasks = orderTasksData.filter(order => order.order_id === req.params.id);
 
+	if(req.user.is_manager !== '0') {
 		order ? res.send([order, orderTasks]) : res.send({});
+	} else {
+		const userOrders = ordersData.filter(order => order.login == req.user.login),
+			userOrder = userOrders.find(order => order.id === req.params.id);
+
+		order ? res.send([userOrder, orderTasks]) : res.send({});
 	}
 });
 

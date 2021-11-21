@@ -30,7 +30,7 @@ class OrdersList extends Component {
 	async getServices() {
 		try {
 			return await this.model.getServicesList();
-		} catch (e) {
+		} catch {
 			showAlertModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
 				message : 'Не удалось получить справочник услуг!'
@@ -55,7 +55,7 @@ class OrdersList extends Component {
 		const val = num.value.trim().toUpperCase();
 		try {
 			return formatOrders([await this.model.getOrderByNum(val, token)]);
-		} catch (e) {
+		} catch {
 			showAlertModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
 				message : 'Не удалось получить заказ-наряд!'
@@ -70,7 +70,7 @@ class OrdersList extends Component {
 		const val = unp.value.trim();
 		try {
 			return formatOrders(await this.model.getOrderByUnp(val, token));
-		} catch (e) {
+		} catch {
 			showAlertModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
 				message : 'Не удалось получить заказ-наряд!'
