@@ -150,7 +150,7 @@ class OrdersList extends Component {
 			sortSelect.disabled = false;
 			resetOrderNum.disabled = true;
 
-			const orders = await this.getData(checkUser().token);
+			const orders = await this.getData();
 
 			tableOrders.innerHTML = OrdersTableTemplate({orders});
 		});
