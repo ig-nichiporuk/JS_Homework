@@ -13,12 +13,15 @@ router.get('/api/order/:id', auth, (req, res) => {
 		orderTasks = orderTasksData.filter(order => order.order_id === req.params.id);
 
 	if(req.user.is_manager !== '0') {
+
 		order ? res.send([order, orderTasks]) : res.send({});
 	} else {
 		const userOrders = ordersData.filter(order => order.login == req.user.login),
 			userOrder = userOrders.find(order => order.id === req.params.id);
 
-		order ? res.send([userOrder, orderTasks]) : res.send({});
+		console.log(userOrder);
+
+		userOrder ? res.send([userOrder, orderTasks]) : res.send({});
 	}
 });
 

@@ -59,7 +59,7 @@ class Order extends Component {
 	}
 
 	async render(data) {
-		try {
+		if (Object.keys(data).length) {
 			const [orderInfo, orderTasks] = data,
 				request = this.request,
 				formatOrderInfo = formatOrders([orderInfo])[0],
@@ -68,12 +68,9 @@ class Order extends Component {
 				orderTotal = this.formatOrderTotal(formatOrderTasks),
 				auth = checkUser();
 
-			return Object.keys(data).length ? OrderInfo({formatOrderInfo, formatOrderTasks, services, request, orderTotal, auth}) : Error404Template();
-		} catch (e) {
-			showAlertModal('alert-modal', 'alert', {
-				title : 'Ошибка!',
-				message : 'Не удалось сформировать страницу!'
-			});
+			return OrderInfo({formatOrderInfo, formatOrderTasks, services, request, orderTotal, auth});
+		} else {
+			return Error404Template();
 		}
 	}
 
