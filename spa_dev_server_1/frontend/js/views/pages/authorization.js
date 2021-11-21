@@ -36,12 +36,11 @@ class Authorization extends Component {
 
 			const user = await this.getData(email, password);
 
-			if (rememberUser.checked == true) {
-				localStorage.setItem('user', JSON.stringify(user));
-			} else {
-				sessionStorage.setItem('user', JSON.stringify(user));
-			}
+			localStorage.setItem('user', JSON.stringify(user));
 
+			if (rememberUser.checked !== true) {
+				window.addEventListener('unload', () => localStorage.removeItem('user'));
+			}
 			location.hash = '#/orders';
 		});
 	}

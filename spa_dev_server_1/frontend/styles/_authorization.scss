@@ -31,6 +31,15 @@
     &__title + &__item {
         margin-top: 32px;
     }
+    &__item {
+        &.error-message {
+            display: block;
+            text-align: center;
+            font-size: 14px;
+            line-height: 17px;
+            color: $red-color;
+        }
+    }
     &__item + &__item:not(&__item_btn):not(&__item_check) {
         margin-top: 24px;
     }

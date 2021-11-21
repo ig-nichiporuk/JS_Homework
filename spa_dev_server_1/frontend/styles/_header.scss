@@ -32,7 +32,7 @@
 				transition: opacity .3s ease-in-out;
 			}
 
-			a {
+			span {
 				display: block;
 
 				svg {
@@ -212,7 +212,7 @@
 }
 
 @media (max-width: 959px) {
-	.header__main-logo a svg {
+	.header__main-logo span svg {
 		width: 162px;
 		height: 20px;
 	}

@@ -115,7 +115,7 @@ class Order extends Component {
 		return totalOrder.toFixed(2);
 	}
 
-	printOrder(source) {
+	printOrder(source, orderInfo) {
 		var val = htmlToPdfmake(source);
 		var docDefinition = {
 			content:val,
@@ -124,7 +124,7 @@ class Order extends Component {
 				bold: true
 			}
 		};
-		pdfMake.createPdf(docDefinition).download();
+		pdfMake.createPdf(docDefinition).download(`order-${orderInfo.code_1c}.pdf`);
 	}
 
 	async afterRender() {
@@ -372,7 +372,7 @@ class Order extends Component {
 				formatOrderTasks = this.formatOrderTasksData(orderTasks, services),
 				orderTotal = this.formatOrderTotal(formatOrderTasks);
 
-			this.printOrder(PrintTemplate({orderInfo, formatOrderTasks, auth, orderTotal}));
+			this.printOrder(PrintTemplate({orderInfo, formatOrderTasks, auth, orderTotal}), orderInfo);
 		});
 	}
 }
