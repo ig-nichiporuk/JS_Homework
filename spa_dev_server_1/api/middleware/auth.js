@@ -1,24 +1,24 @@
 const jwt = require('jsonwebtoken'),
 	{secret} = require('../secret')
 
-module.exports = function (req, res, next) {
+module.exports = (req, res, next) => {
 	if (req.method === "OPTIONS") {
-		next()
+
+		next();
 	}
 
 	try {
 		const token = req.query.token;
 
 		if (!token) {
-			return res.status(403).json({message: "Пользователь не авторизован"})
+			return res.status(403).json({message: "Пользователь не авторизован"});
 		}
-		const decodedData = jwt.verify(token, secret)
+		const decodedData = jwt.verify(token, secret);
 
-		req.user = decodedData
+		req.user = decodedData;
 
-		next()
+		next();
 	} catch (e) {
-		console.log(e)
-		return res.status(403).json({message: "Пользователь не авторизован"})
+		return res.status(403).json({message: "Пользователь не авторизован"});
 	}
 };
