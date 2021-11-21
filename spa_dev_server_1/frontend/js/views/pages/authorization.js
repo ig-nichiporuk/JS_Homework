@@ -25,8 +25,7 @@ class Authorization extends Component {
 
 	setActions() {
 		const authForm = document.getElementById('authorization-form'),
-			authFormInputs = authForm.getElementsByTagName('input'),
-			rememberUser = document.getElementById('rememberUser');
+			authFormInputs = authForm.getElementsByTagName('input');
 
 		authForm.addEventListener('submit', async(e) => {
 			e.preventDefault();
@@ -38,9 +37,6 @@ class Authorization extends Component {
 
 			localStorage.setItem('user', JSON.stringify(user));
 
-			if (rememberUser.checked !== true) {
-				window.addEventListener('unload', () => localStorage.removeItem('user'));
-			}
 			location.hash = '#/orders';
 		});
 	}
