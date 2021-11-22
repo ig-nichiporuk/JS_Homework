@@ -9,7 +9,7 @@
 				<form class="unp-wrap" id="search-unp-num">
 					<div>
 						<label>УНП / Наименование</label>
-						<input type="text" class="input-style inputUnpNumJs">
+						<input type="text" class="input-style inputUnpNumJs" value="{{unp}}">
 					</div>
 					<button type="submit" class="btn-style btn-style_green">Показать</button>
 				</form>
@@ -23,17 +23,17 @@
 			<div class="controls__item">
 				<label>Сортировать</label>
 				<select class="select-style" id="sort-orders">
-					<option value="up-date">По возрастанию даты</option>
-					<option value="down-date">По убыванию даты</option>
-					<option value="done">Выполненные</option>
-					<option value="new">Новые</option>
-					<option value="cancel">Отмененные</option>
+					<option value="up-date" {{#ifCond param '===' 'up-date'}}selected{{/ifCond}}>По возрастанию даты</option>
+					<option value="down-date" {{#ifCond param '===' 'down-date'}}selected{{/ifCond}}>По убыванию даты</option>
+					<option value="done" {{#ifCond param '===' 'done'}}selected{{/ifCond}}>Выполненные</option>
+					<option value="new" {{#ifCond param '===' 'new'}}selected{{/ifCond}}>Новые</option>
+					<option value="cancel" {{#ifCond param '===' 'cancel'}}selected{{/ifCond}}>Отмененные</option>
 				</select>
 			</div>
 			<div class="controls__item">
 				<form class="search__form" id="search-order-num">
 					<label class="search__label">
-						<input type="text" class="search__input input-style searchOrderNumJs" placeholder="Поиск по номеру">
+						<input type="text" class="search__input input-style searchOrderNumJs" placeholder="Поиск по номеру" value="{{num}}">
 						<button type="submit" class="search__find">
 							<svg>
 								<use xlink:href="#magnifying"></use>

@@ -17,10 +17,16 @@ class OrdersList extends Component {
 	}
 
 	async getData() {
+		const {unp, num, param} = this.getOrdersOptionsFromLS(),
+			data = await this.model.getOrdersList(unp, num, param, checkUser().token);
+
 		try {
-			return formatOrders(await this.model.getOrdersList(checkUser().token));
+			if (data.length) {
+				return formatOrders(data);
+			} else {
+				return formatOrders([data]);
+			}
 		} catch {
-			hideL();
 
 			showInfoModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
@@ -58,7 +64,7 @@ class OrdersList extends Component {
 	}
 
 	async getOrderByNum(num, sortSelect, token) {
-		const val = num.value.trim().toUpperCase();
+		const val = num.value.toUpperCase();
 		try {
 			return formatOrders([await this.model.getOrderByNum(val, token)]);
 		} catch {
@@ -93,9 +99,18 @@ class OrdersList extends Component {
 
 	async render(orders) {
 		const request = this.request,
-			auth = checkUser();
+			auth = checkUser(),
+			{unp, num, param} = this.getOrdersOptionsFromLS();
 
-		return OrdersTemplate({orders, request, auth});
+		return OrdersTemplate({orders, request, auth, unp, num, param});
+	}
+
+	getOrdersOptionsFromLS() {
+		const unp = JSON.parse(localStorage.getItem('orderUnp')),
+			num = JSON.parse(localStorage.getItem('orderNum')),
+			param = JSON.parse(localStorage.getItem('orderSort'));
+
+		return {unp, num, param};
 	}
 
 	afterRender() {
@@ -113,6 +128,9 @@ class OrdersList extends Component {
 			inputOrderNum = orderNumForm.getElementsByClassName('searchOrderNumJs')[0],
 			resetOrderNum = orderNumForm.getElementsByClassName('resetOrderNumJs')[0];
 
+		resetOrderNum.disabled = !inputOrderNum.value.trim();
+		sortSelect.disabled = !!inputOrderNum.value.trim();
+
 		if (openTaskModal) {
 			openTaskModal.addEventListener('click', async(e) => {
 				e.preventDefault();
@@ -125,6 +143,8 @@ class OrdersList extends Component {
 		}
 
 		sortSelect.addEventListener('change', async() => {
+			localStorage.setItem('orderSort', JSON.stringify(sortSelect.value));
+
 			showL();
 
 			if (inputUnpNum) {
@@ -147,15 +167,18 @@ class OrdersList extends Component {
 
 			showL();
 
-			sortSelect.disabled = !!inputOrderNum.value.trim();
+			if (inputOrderNum.value.trim()) {
+				localStorage.setItem('orderNum', JSON.stringify(inputOrderNum.value.trim()));
 
-			const orders = await this.getOrderByNum(inputOrderNum, sortSelect, checkUser().token);
+				sortSelect.disabled = !!inputOrderNum.value;
 
-			if (orders.length) {
-				if (inputUnpNum) inputUnpNum.value = '';
-				resetOrderNum.disabled = false;
+				const orders = await this.getOrderByNum(inputOrderNum, sortSelect, checkUser().token);
 
-				tableOrders.innerHTML = OrdersTableTemplate({orders});
+				if (orders.length) {
+					resetOrderNum.disabled = false;
+
+					tableOrders.innerHTML = OrdersTableTemplate({orders});
+				}
 			}
 
 			hideL();
@@ -163,6 +186,8 @@ class OrdersList extends Component {
 
 		orderNumForm.addEventListener('reset', async(e) => {
 			e.preventDefault();
+
+			localStorage.removeItem('orderNum');
 
 			showL();
 
@@ -184,6 +209,9 @@ class OrdersList extends Component {
 				showL();
 
 				if (inputUnpNum.value.trim()) {
+					localStorage.setItem('orderSort', JSON.stringify('up-date'));
+					localStorage.setItem('orderUnp', JSON.stringify(inputUnpNum.value.trim()));
+
 					const orders = await this.getOrderByUnp(inputUnpNum, sortSelect,checkUser().token);
 
 					if (orders.length) {
@@ -202,6 +230,9 @@ class OrdersList extends Component {
 						inputUnpNum.value = '';
 					}
 				} else {
+					localStorage.removeItem('orderUnp');
+					localStorage.setItem('orderSort', JSON.stringify('up-date'));
+
 					const orders = await this.getData();
 
 					sortSelect.value = 'up-date';

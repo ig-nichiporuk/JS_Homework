@@ -39,6 +39,12 @@ class Component {
 				closeModal();
 			}
 		};
+
+		window.addEventListener('unload', () => {
+			localStorage.removeItem('orderUnp');
+			localStorage.removeItem('orderNum');
+			localStorage.removeItem('orderSort');
+		});
 	}
 }
 

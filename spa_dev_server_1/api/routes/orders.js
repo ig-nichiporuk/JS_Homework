@@ -6,18 +6,51 @@ const express = require('express'),
 const auth = require('../middleware/auth');
 
 // API GET Orders list
-router.get('/api/orders', auth,(req, res) => {
-	const ordersData = getOrdersFromDB();
+router.post('/api/orders', auth,(req, res) => {
+	const ordersData = getOrdersFromDB(),
+		{unp, num, param} = req.body;
 
 	if(req.user.is_manager !== '0') {
-		res.send(ordersData);
+		if(unp) {
+			const ordersByUnp = ordersData.filter(order => order.unp == unp);
+
+			if(num) {
+				res.send(ordersByUnp.find(order => order.code_1c == num));
+			} else if(param) {
+				res.send(setSort(param, ordersByUnp));
+			} else {
+				res.send(ordersByUnp);
+			}
+		} else if(param) {
+			if(num) {
+				res.send(ordersData.find(order => order.code_1c == num));
+			} else {
+				res.send(setSort(param, ordersData));
+			}
+		} else if(num) {
+			res.send(ordersData.find(order => order.code_1c == num));
+		} else {
+			res.send(ordersData);
+		}
+
 	} else {
-		res.send(ordersData.filter(order => order.login == req.user.login));
+		const userOrders = ordersData.filter(order => order.login == req.user.login)
+		if(param) {
+			if(num) {
+				res.send(userOrders.find(order => order.code_1c == num));
+			} else {
+				res.send(setSort(param, userOrders));
+			}
+		} else if(num) {
+			res.send(ordersData.find(order => order.code_1c == num));
+		} else {
+			res.send(userOrders);
+		}
 	}
 });
 
 // API Orders SORT
-router.post('/api/orders', auth, (req, res) => {
+router.post('/api/orders/sort', auth, (req, res) => {
 	const ordersData = getOrdersFromDB(),
 		{unp, param} = req.body;
 

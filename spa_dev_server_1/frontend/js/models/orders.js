@@ -1,12 +1,16 @@
 class Orders {
-	async getOrdersList(token) {
-		const orders = await fetch(`http://localhost:3000/api/orders?token=${token}`);
+	async getOrdersList(unp, num, param, token) {
+		const orders = await fetch(`http://localhost:3000/api/orders?token=${token}`, {
+			method: 'POST',
+			headers: {'Content-Type' : 'application/json'},
+			body: JSON.stringify({unp, num, param})
+		});
 
 		return await orders.json();
 	}
 
 	async getSortOrdersList(unp, param, token) {
-		const orders = await fetch(`http://localhost:3000/api/orders?token=${token}`, {
+		const orders = await fetch(`http://localhost:3000/api/orders/sort?token=${token}`, {
 			method: 'POST',
 			headers: {'Content-Type' : 'application/json'},
 			body: JSON.stringify({unp, param})
