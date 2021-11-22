@@ -20,13 +20,13 @@ router.post('/api/login',(req, res) => {
 		user = users.find(user => user.email === email);
 
 	if (!user) {
-		return res.status(400).json({message: `Пользователь ${username} не найден`});
+		return res.status(400).json({'error-email': `Пользователь ${email} не найден`});
 	}
 
-	const validPassword = users.find(user => user.password = password);
+	const validPassword = users.find(user => user.password == password);
 
 	if (!validPassword) {
-		return res.status(400).json({message: `Введен неверный пароль`});
+		return res.status(400).json({'error-password': `Введен неверный пароль`});
 	}
 
 	const token = generateAccessToken(user.name, user.login, user.is_manager);

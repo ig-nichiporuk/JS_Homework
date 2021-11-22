@@ -1,5 +1,3 @@
-import {hideL} from '../../helpers/utils';
-
 import Component from '../../views/component';
 
 import Auth from '../../models/auth';
@@ -14,11 +12,14 @@ class Authorization extends Component {
 	}
 
 	async getData(email, password) {
-		return await this.model.getData(email, password);
+		try {
+			return await this.model.getData(email, password);
+		} catch {
+			throw new Error('Невозможно отправить запрос!');
+		}
 	}
 
 	render() {
-		hideL();
 		return (AuthorizationTemplate());
 	}
 
@@ -28,7 +29,8 @@ class Authorization extends Component {
 
 	setActions() {
 		const authForm = document.getElementById('authorization-form'),
-			authFormInputs = authForm.getElementsByTagName('input');
+			authFormInputs = authForm.getElementsByTagName('input'),
+			messangeError = authForm.getElementsByClassName('errorAuthJs')[0];
 
 		authForm.addEventListener('submit', async(e) => {
 			e.preventDefault();
@@ -38,9 +40,31 @@ class Authorization extends Component {
 
 			const user = await this.getData(email, password);
 
-			localStorage.setItem('user', JSON.stringify(user));
+			if (user['error-email']) {
+				authFormInputs.email.classList.add('error');
 
-			location.hash = '#/orders';
+				messangeError.classList.remove('hidden');
+				messangeError.innerText = user['error-email'];
+			} else if (user['error-password']) {
+				authFormInputs.password.classList.add('error');
+
+				messangeError.classList.remove('hidden');
+				messangeError.innerText = user['error-password'];
+			} else {
+				localStorage.setItem('user', JSON.stringify(user));
+
+				location.hash = '#/orders';
+			}
+		});
+
+		authForm.addEventListener('keyup', (e) => {
+			const target = e.target;
+
+			if ((target.id == 'email' || target.id == 'password') && e.keyCode !== 13) {
+				if (target.value != '') {
+					target.classList.remove('error');
+				}
+			}
 		});
 	}
 }
