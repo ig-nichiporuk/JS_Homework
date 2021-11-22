@@ -7,18 +7,10 @@ module.exports = (req, res, next) => {
 		next();
 	}
 
-	try {
-		const token = req.query.token;
+	const token = req.query.token,
+		decodedData = jwt.verify(token, secret);
 
-		if (!token) {
-			return res.status(403).json({message: "Пользователь не авторизован"});
-		}
-		const decodedData = jwt.verify(token, secret);
+	req.user = decodedData;
 
-		req.user = decodedData;
-
-		next();
-	} catch (e) {
-		return res.status(403).json({message: "Пользователь не авторизован"});
-	}
+	next();
 };

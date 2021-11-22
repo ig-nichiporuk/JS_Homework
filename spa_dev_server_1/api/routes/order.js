@@ -19,8 +19,6 @@ router.get('/api/order/:id', auth, (req, res) => {
 		const userOrders = ordersData.filter(order => order.login == req.user.login),
 			userOrder = userOrders.find(order => order.id === req.params.id);
 
-		console.log(userOrder);
-
 		userOrder ? res.send([userOrder, orderTasks]) : res.send({});
 	}
 });
