@@ -1,6 +1,6 @@
 import '../styles/main';
 
-import {parseRequestURL, checkUser} from './helpers/utils';
+import {parseRequestURL, checkUser, showL, hideL} from './helpers/utils';
 
 import Header from './views/partials/header';
 import Footer from './views/partials/footer';
@@ -29,39 +29,45 @@ async function router() {
 		footer = new Footer(),
 		authorization = checkUser();
 
-		headerContainer.innerHTML = await header.render();
-		header.afterRender();
+	showL();
 
-		const request = parseRequestURL(),
-			parsedURL = `/${request.resource || ''}${request.id ? '/:id' : ''}${request.action ? `/${request.action}` : ''}`;
+	headerContainer.innerHTML = await header.render();
+	header.afterRender();
 
-		let page;
+	const request = parseRequestURL(),
+		parsedURL = `/${request.resource || ''}${request.id ? '/:id' : ''}${request.action ? `/${request.action}` : ''}`;
 
-		if (request.resource) {
-			if (authorization) {
-				page = Routes[parsedURL] ? new Routes[parsedURL]() : page = new Error404();
+	let page;
 
-				const data = await page.getData(),
-					html = await page.render(data);
-				contentContainer.innerHTML = html;
+	if (request.resource) {
+		if (authorization) {
+			page = Routes[parsedURL] ? new Routes[parsedURL]() : page = new Error404();
 
-				page.afterRender();
-			} else {
-				location.hash = '#/';
-			}
-		} else if (authorization) {
-			location.hash = '#/orders';
-
-		} else {
-			page = new Authorization();
-
-			const html = page.render();
+			const data = await page.getData(),
+				html = await page.render(data);
 			contentContainer.innerHTML = html;
 
-			page.afterRender();
-		}
 
-		footerContainer.innerHTML = await footer.render();
+
+			page.afterRender();
+		} else {
+			location.hash = '#/';
+		}
+	} else if (authorization) {
+		location.hash = '#/orders';
+
+	} else {
+		page = new Authorization();
+
+		const html = page.render();
+		contentContainer.innerHTML = html;
+
+		page.afterRender();
+	}
+
+	footerContainer.innerHTML = await footer.render();
+
+	hideL();
 }
 
 module.hot ? module.hot.accept(router()) : window.addEventListener('load', router);

@@ -1,4 +1,4 @@
-import {checkUser, formatOrders, showAlertModal} from '../../helpers/utils';
+import {checkUser, formatOrders, hideL, showInfoModal, showL} from '../../helpers/utils';
 
 import Component from '../../views/component';
 
@@ -20,7 +20,9 @@ class OrdersList extends Component {
 		try {
 			return formatOrders(await this.model.getOrdersList(checkUser().token));
 		} catch {
-			showAlertModal('alert-modal', 'alert', {
+			hideL();
+
+			showInfoModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
 				message : 'Не удалось получить список заказов!'
 			});
@@ -31,7 +33,9 @@ class OrdersList extends Component {
 		try {
 			return await this.model.getServicesList();
 		} catch {
-			showAlertModal('alert-modal', 'alert', {
+			hideL();
+
+			showInfoModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
 				message : 'Не удалось получить справочник услуг!'
 			});
@@ -42,7 +46,9 @@ class OrdersList extends Component {
 		try {
 			return formatOrders(await this.model.getSortOrdersList(unp,sortOptions, token));
 		} catch (e) {
-			showAlertModal('alert-modal', 'alert', {
+			hideL();
+
+			showInfoModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
 				message : 'Не удалось отсортировать заказ-наряды!'
 			});
@@ -56,7 +62,9 @@ class OrdersList extends Component {
 		try {
 			return formatOrders([await this.model.getOrderByNum(val, token)]);
 		} catch {
-			showAlertModal('alert-modal', 'alert', {
+			hideL();
+
+			showInfoModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
 				message : 'Не удалось получить заказ-наряд!'
 			});
@@ -71,7 +79,9 @@ class OrdersList extends Component {
 		try {
 			return formatOrders(await this.model.getOrderByUnp(val, token));
 		} catch {
-			showAlertModal('alert-modal', 'alert', {
+			hideL();
+
+			showInfoModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
 				message : 'Не удалось получить заказ-наряд!'
 			});
@@ -110,11 +120,13 @@ class OrdersList extends Component {
 				const services = await this.getServices(),
 					href = openTaskModal.getAttribute('href');
 
-				showAlertModal(href, 'services-prices', {services});
+				showInfoModal(href, 'services-prices', {services});
 			});
 		}
 
 		sortSelect.addEventListener('change', async() => {
+			showL();
+
 			if (inputUnpNum) {
 				const orders = await this.getSortOrdersList(inputUnpNum.value, sortSelect.value, checkUser().token);
 
@@ -126,10 +138,14 @@ class OrdersList extends Component {
 
 				tableOrders.innerHTML = OrdersTableTemplate({orders});
 			}
+
+			hideL();
 		});
 
 		orderNumForm.addEventListener('submit', async(e) => {
 			e.preventDefault();
+
+			showL();
 
 			sortSelect.disabled = !!inputOrderNum.value.trim();
 
@@ -141,10 +157,14 @@ class OrdersList extends Component {
 
 				tableOrders.innerHTML = OrdersTableTemplate({orders});
 			}
+
+			hideL();
 		});
 
 		orderNumForm.addEventListener('reset', async(e) => {
 			e.preventDefault();
+
+			showL();
 
 			inputOrderNum.value = '';
 			sortSelect.disabled = false;
@@ -153,11 +173,15 @@ class OrdersList extends Component {
 			const orders = await this.getData();
 
 			tableOrders.innerHTML = OrdersTableTemplate({orders});
+
+			hideL();
 		});
 
 		if (unpNumForm) {
 			unpNumForm.addEventListener('submit', async(e) => {
 				e.preventDefault();
+
+				showL();
 
 				if (inputUnpNum.value.trim()) {
 					const orders = await this.getOrderByUnp(inputUnpNum, sortSelect,checkUser().token);
@@ -170,13 +194,12 @@ class OrdersList extends Component {
 
 						tableOrders.innerHTML = OrdersTableTemplate({orders});
 					} else {
-						showAlertModal('alert-modal', 'alert', {
+						showInfoModal('alert-modal', 'alert', {
 							title : 'Ошибка!',
 							message : 'Не найдено заказов по веденному УНП!'
 						});
 
 						inputUnpNum.value = '';
-
 					}
 				} else {
 					const orders = await this.getData();
@@ -185,6 +208,8 @@ class OrdersList extends Component {
 
 					tableOrders.innerHTML = OrdersTableTemplate({orders});
 				}
+
+				hideL();
 			});
 		}
 	}

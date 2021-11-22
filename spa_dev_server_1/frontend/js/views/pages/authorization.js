@@ -1,3 +1,5 @@
+import {hideL} from '../../helpers/utils';
+
 import Component from '../../views/component';
 
 import Auth from '../../models/auth';
@@ -16,6 +18,7 @@ class Authorization extends Component {
 	}
 
 	render() {
+		hideL();
 		return (AuthorizationTemplate());
 	}
 

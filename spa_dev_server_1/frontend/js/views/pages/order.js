@@ -1,4 +1,4 @@
-import {checkUser, closeModal, formatOrders, generateID, showAlertModal} from '../../helpers/utils';
+import {checkUser, closeModal, formatOrders, generateID, hideL, showInfoModal, showL} from '../../helpers/utils';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -28,7 +28,9 @@ class Order extends Component {
 		try {
 			return await this.model.getOrder(this.request.id, checkUser().token);
 		} catch {
-			showAlertModal('alert-modal', 'alert', {
+			hideL();
+
+			showInfoModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
 				message : 'Не удалось получить данные о заказе!'
 			});
@@ -40,7 +42,9 @@ class Order extends Component {
 		try {
 			return await this.model.getServicesList();
 		} catch {
-			showAlertModal('alert-modal', 'alert', {
+			hideL();
+
+			showInfoModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
 				message : 'Не удалось получить справочник услуг!'
 			});
@@ -49,12 +53,18 @@ class Order extends Component {
 
 	async setOrderChanges(changesInfo, changesTasks, token) {
 		try {
+			showL();
+
 			return await this.model.setOrderChanges(changesInfo, changesTasks, token);
 		} catch {
-			showAlertModal('alert-modal', 'alert',  {
+			hideL();
+
+			showInfoModal('alert-modal', 'alert',  {
 				title : 'Ошибка!',
 				message : 'Не удалось сохранить изменения в заказе!'
 			});
+		} finally {
+			hideL();
 		}
 	}
 
@@ -153,7 +163,7 @@ class Order extends Component {
 
 				const href = openUserInfoBlock.getAttribute('href');
 
-				showAlertModal(href, 'edit-data', {
+				showInfoModal(href, 'edit-data', {
 					fio : orderInfo.fio,
 					userCar : orderInfo.car,
 					userCarNum : orderInfo.reg_number
@@ -266,7 +276,7 @@ class Order extends Component {
 				const href = target.closest('.removeTaskJs').getAttribute('href'),
 					taskRowId = taskRow.dataset.taskId;
 
-				showAlertModal(href, 'remove-task', {});
+				showInfoModal(href, 'remove-task', {});
 
 
 				document.body.addEventListener('click', async(e) => {
@@ -296,7 +306,7 @@ class Order extends Component {
 
 				const href = openTaskModalJS.getAttribute('href');
 
-				showAlertModal(href, 'services-list', {services});
+				showInfoModal(href, 'services-list', {services});
 
 				const addTaskBtn = document.getElementsByClassName('addTaskBtnJs')[0],
 					addTasksList = document.getElementsByClassName('addTasksListJs')[0];
@@ -346,7 +356,7 @@ class Order extends Component {
 
 			const href = saveChanges.getAttribute('href');
 
-			showAlertModal(href, 'change-service', {});
+			showInfoModal(href, 'change-service', {});
 
 			document.body.addEventListener('click', async(e) => {
 				const target = e.target;

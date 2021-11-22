@@ -6,6 +6,9 @@ import ModalEditDataTemplate from '../../templates/pages/modals/modalEditData.hb
 import ModalTasksWithPriceTemplate from '../../templates/pages/modals/modalServicesWithPrice.hbs';
 import ModalTasksTemplate from '../../templates/pages/modals/modalServicesTitle.hbs';
 
+
+import Preloader from '../../templates/pages/preloader/preloader.hbs';
+
 const body = document.body;
 
 export const parseRequestURL = () => {
@@ -21,7 +24,19 @@ export const generateID = () => {
 	return Math.random().toString(36).substr(2, 10);
 };
 
+export const showL = () => {
+	body.insertAdjacentHTML('afterbegin', '<div class="preloader__bg preloaderBgJs"></div>');
 
+	body.insertAdjacentHTML('afterbegin', Preloader());
+};
+
+export const hideL = () => {
+	const pleloaderBg = body.getElementsByClassName('preloaderBgJs')[0],
+		pleloader = body.getElementsByClassName('preloaderJs')[0];
+
+	pleloaderBg.remove();
+	pleloader.remove();
+};
 
 export const openDropdown = (elem, duration) => {
 	const dropdownBody = elem.nextElementSibling;
@@ -81,7 +96,7 @@ export const closeModal = () => {
 	resetAllInput();
 };
 
-export const showAlertModal = (id, type, content) => {
+export const showInfoModal = (id, type, content) => {
 	closeModal();
 
 	const modal = document.getElementById(id);

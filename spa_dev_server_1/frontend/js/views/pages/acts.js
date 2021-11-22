@@ -1,4 +1,4 @@
-import {closeModal, showAlertModal, checkUser} from '../../helpers/utils';
+import {closeModal, showInfoModal, checkUser, hideL, showL} from '../../helpers/utils';
 
 import Component from '../../views/component';
 
@@ -20,7 +20,7 @@ class OrdersList extends Component {
 		try {
 			return await this.model.getActsList(checkUser().token);
 		} catch {
-			showAlertModal('alert-modal', 'alert', {
+			showInfoModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
 				message : 'Не удалось получить список актов!'
 			});
@@ -31,7 +31,9 @@ class OrdersList extends Component {
 		try {
 			return await this.model.getActsNum(num, token);
 		} catch {
-			showAlertModal('alert-modal', 'alert', {
+			hideL();
+
+			showInfoModal('alert-modal', 'alert', {
 				title : 'Ошибка!',
 				message : 'Не удалось получить акт по номеру!'
 			});
@@ -66,6 +68,8 @@ class OrdersList extends Component {
 		actsForm.addEventListener('submit', async(e) => {
 			e.preventDefault();
 
+			showL();
+
 			if (inputActs.value.trim()) {
 				const acts = [await this.getActsNum(inputActs.value, checkUser().token)];
 
@@ -77,6 +81,8 @@ class OrdersList extends Component {
 
 				tableActs.innerHTML = ActsTableTemplate({acts});
 			}
+
+			hideL();
 		});
 
 
@@ -90,7 +96,7 @@ class OrdersList extends Component {
 				const href = target.closest('.removeActsJs').getAttribute('href'),
 					actRowCode = taskRow.dataset.code;
 
-				showAlertModal(href, 'remove-act', {
+				showInfoModal(href, 'remove-act', {
 					actCode : actRowCode
 				});
 
