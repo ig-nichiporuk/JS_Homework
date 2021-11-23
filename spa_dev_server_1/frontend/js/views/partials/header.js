@@ -24,7 +24,7 @@ class Header extends Component {
 
 				location.hash = '#/';
 
-				localStorage.removeItem('user');
+				localStorage.clear();
 			});
 		}
 
