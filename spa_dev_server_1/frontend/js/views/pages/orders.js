@@ -175,7 +175,7 @@ class OrdersList extends Component {
 
 					hideL();
 				} else {
-					hideL();
+					localStorage.removeItem('orderNum');
 
 					showInfoModal('alert-modal', 'alert', {
 						title : 'Ошибка!',
@@ -185,6 +185,8 @@ class OrdersList extends Component {
 					inputOrderNum.value = '';
 				}
 			}
+
+			hideL();
 		});
 
 		orderNumForm.addEventListener('reset', async(e) => {
@@ -221,6 +223,8 @@ class OrdersList extends Component {
 
 						tableOrders.innerHTML = OrdersTableTemplate({orders});
 					} else {
+						localStorage.removeItem('orderUnp');
+
 						showInfoModal('alert-modal', 'alert', {
 							title : 'Ошибка!',
 							message : 'Не найдено заказов по веденному УНП!'
