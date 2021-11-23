@@ -7,10 +7,10 @@
 			{{#ifCond formatOrderInfo.status_id '!==' 'Отменен'}}
 				<div class="controls__item">
 					<label>Статус</label>
-					<select class="select-style orderStatusJs {{#ifCond formatOrderInfo.status_id '===' 'Новый'}}in-process{{/ifCond}}{{#ifCond formatOrderInfo.status_id '===' 'Выполнен'}}done{{/ifCond}}">
-						<option value="in-process" {{#ifCond formatOrderInfo.status_id '===' 'Новый'}}selected{{/ifCond}}>Не выполнен</option>
-						<option value="done" {{#ifCond formatOrderInfo.status_id '===' 'Выполнен'}}selected{{/ifCond}}>Выполнен</option>
-						<option value="cancel">Отменить</option>
+					<select class="select-style orderStatusJs {{#ifCond @root.formatOrderInfo.status_id '===' 'Новый'}}in-process{{/ifCond}}{{#ifCond @root.formatOrderInfo.status_id '===' 'Выполнен'}}done{{/ifCond}}">
+						<option value="in-process" {{#ifCond @root.formatOrderInfo.status_id '===' 'Новый'}}selected{{/ifCond}}>Не выполнен</option>
+						<option value="done" {{#ifCond @root.formatOrderInfo.status_id '===' 'Выполнен'}}selected{{/ifCond}}>Выполнен</option>
+						<option value="cancel" {{#ifCond @root.formatOrderInfo.status_id '===' 'Отменен'}}selected{{/ifCond}}>Отменить</option>
 					</select>
 				</div>
 			{{/ifCond}}

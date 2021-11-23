@@ -163,7 +163,7 @@ class OrdersList extends Component {
 			showL();
 
 			if (inputOrderNum.value.trim()) {
-				localStorage.setItem('orderNum', JSON.stringify(inputOrderNum.value.trim()));
+				localStorage.setItem('orderNum', JSON.stringify(inputOrderNum.value.trim().toUpperCase()));
 
 				const {unp, num, param} = this.getOrdersOptionsFromLS(),
 					orders = await this.getOrderByNum(unp, num, param, checkUser().token);
