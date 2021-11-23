@@ -173,7 +173,6 @@ class OrdersList extends Component {
 
 					tableOrders.innerHTML = OrdersTableTemplate({orders});
 
-					hideL();
 				} else {
 					localStorage.removeItem('orderNum');
 
