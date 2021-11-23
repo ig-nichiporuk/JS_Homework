@@ -63,6 +63,8 @@ class Authorization extends Component {
 			if ((target.id == 'email' || target.id == 'password') && e.keyCode !== 13) {
 				if (target.value != '') {
 					target.classList.remove('error');
+					messangeError.classList.add('hidden');
+					messangeError.innerText = '';
 				}
 			}
 		});

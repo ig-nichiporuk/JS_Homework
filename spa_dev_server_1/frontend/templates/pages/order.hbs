@@ -29,13 +29,15 @@
 		{{> order/orderServicesTable}}
 
 		{{#ifCond @root.auth.status '!==' '0'}}
-			<div class="table__add">
-				<a href="services-list" class="table__add-btn btn-style btn-style_green openTaskModalJS">
-					<svg>
-						<use xlink:href="#plus"></use>
-					</svg>
-				</a>
-			</div>
+			{{#ifCond @root.formatOrderInfo.status_id '!==' 'Отменен'}}
+				<div class="table__add">
+					<a href="services-list" class="table__add-btn btn-style btn-style_green openTaskModalJS">
+						<svg>
+							<use xlink:href="#plus"></use>
+						</svg>
+					</a>
+				</div>
+			{{/ifCond}}
 		{{/ifCond}}
 
 		<div class="table__btns">
