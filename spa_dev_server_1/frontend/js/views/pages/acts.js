@@ -71,10 +71,11 @@ class OrdersList extends Component {
 			showL();
 
 			if (inputActs.value.trim()) {
-				const acts = await this.getActsNum(inputActs.value, checkUser().token);
+				const auth = checkUser(),
+					acts = await this.getActsNum(inputActs.value, checkUser().token);
 
 				if (acts && acts.length) {
-					tableActs.innerHTML = ActsTableTemplate({acts});
+					tableActs.innerHTML = ActsTableTemplate({acts, auth});
 
 					hideL();
 				} else {
@@ -86,9 +87,10 @@ class OrdersList extends Component {
 					});
 				}
 			} else {
-				const acts = await this.getData();
+				const auth = checkUser(),
+					acts = await this.getData();
 
-				tableActs.innerHTML = ActsTableTemplate({acts});
+				tableActs.innerHTML = ActsTableTemplate({acts, auth});
 
 				hideL();
 			}
