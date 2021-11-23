@@ -52,7 +52,7 @@ export const openDropdown = (elem, duration) => {
 };
 
 export const closeDropdown = (elem, duration) => {
-	elem.forEach(function(activeDropdownBtn) {
+	elem.forEach((activeDropdownBtn) => {
 		activeDropdownBtn.classList.remove('open');
 		activeDropdownBtn.nextElementSibling.style.height = '0';
 		setTimeout( () => activeDropdownBtn.nextElementSibling.classList.remove('open'), duration);

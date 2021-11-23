@@ -66,7 +66,7 @@ class OrdersList extends Component {
 	async getOrderByNum(num, sortSelect, token) {
 		const val = num.value.toUpperCase();
 		try {
-			return formatOrders([await this.model.getOrderByNum(val, token)]);
+			return formatOrders(await this.model.getOrderByNum(val, token));
 		} catch {
 			hideL();
 
@@ -174,14 +174,21 @@ class OrdersList extends Component {
 
 				const orders = await this.getOrderByNum(inputOrderNum, sortSelect, checkUser().token);
 
-				if (orders.length) {
+				if (orders && orders.length) {
 					resetOrderNum.disabled = false;
 
 					tableOrders.innerHTML = OrdersTableTemplate({orders});
+
+					hideL();
+				} else {
+					hideL();
+
+					showInfoModal('alert-modal', 'alert', {
+						title : 'Ошибка!',
+						message : 'Не удалось получить заказ-наряд!'
+					});
 				}
 			}
-
-			hideL();
 		});
 
 		orderNumForm.addEventListener('reset', async(e) => {
@@ -214,7 +221,7 @@ class OrdersList extends Component {
 
 					const orders = await this.getOrderByUnp(inputUnpNum, sortSelect,checkUser().token);
 
-					if (orders.length) {
+					if (orders && orders.length) {
 						inputOrderNum.value = '';
 
 						sortSelect.disabled = false;

@@ -123,8 +123,8 @@ class Order extends Component {
 	}
 
 	printOrder(source, orderInfo) {
-		var val = htmlToPdfmake(source);
-		var docDefinition = {
+		const val = htmlToPdfmake(source),
+			docDefinition = {
 			content:val,
 			defaultStyle: {
 				fontSize: 10,

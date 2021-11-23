@@ -38,11 +38,11 @@
 							<div class="dropdown__wrap">
 								<div class="user">
 									{{#ifCond auth.status '===' '0'}}
-										<span>Организация:</span><p>{{auth.name}}</p>
+										<span>Организация:</span><p>{{@root.auth.name}}</p>
 									{{/ifCond}}
 
 									{{#ifCond auth.status '===' '1'}}
-										<span>Пользователь:</span><p>{{auth.name}}</p>
+										<span>Пользователь:</span><p>{{@root.auth.name}}</p>
 									{{/ifCond}}
 								</div>
 

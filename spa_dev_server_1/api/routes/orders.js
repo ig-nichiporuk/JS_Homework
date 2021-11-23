@@ -15,7 +15,7 @@ router.post('/api/orders', auth,(req, res) => {
 			const ordersByUnp = ordersData.filter(order => order.unp == unp);
 
 			if(num) {
-				res.send(ordersByUnp.find(order => order.code_1c == num));
+				res.send(ordersByUnp.filter(order => order.code_1c.startsWith(num)));
 			} else if(param) {
 				res.send(setSort(param, ordersByUnp));
 			} else {
@@ -23,12 +23,12 @@ router.post('/api/orders', auth,(req, res) => {
 			}
 		} else if(param) {
 			if(num) {
-				res.send(ordersData.find(order => order.code_1c == num));
+				res.send(ordersData.filter(order => order.code_1c.startsWith(num)));
 			} else {
 				res.send(setSort(param, ordersData));
 			}
 		} else if(num) {
-			res.send(ordersData.find(order => order.code_1c == num));
+			res.send(ordersData.filter(order => order.code_1c.startsWith(num)));
 		} else {
 			res.send(ordersData);
 		}
@@ -37,12 +37,12 @@ router.post('/api/orders', auth,(req, res) => {
 		const userOrders = ordersData.filter(order => order.login == req.user.login)
 		if(param) {
 			if(num) {
-				res.send(userOrders.find(order => order.code_1c == num));
+				res.send(userOrders.filter(order => order.code_1c.startsWith(num)));
 			} else {
 				res.send(setSort(param, userOrders));
 			}
 		} else if(num) {
-			res.send(ordersData.find(order => order.code_1c == num));
+			res.send(ordersData.filter(order => order.code_1c.startsWith(num)));
 		} else {
 			res.send(userOrders);
 		}
@@ -74,11 +74,11 @@ router.post('/api/orders/num', auth, (req, res) => {
 		{num} = req.body;
 
 	if(req.user.is_manager !== '0') {
-		res.send(ordersData.find(order => order.code_1c == num));
+		res.send(ordersData.filter(order => order.code_1c.startsWith(num)));
 	} else {
 		const userOrders = ordersData.filter(order => order.login == req.user.login);
 
-		res.send(userOrders.find(order => order.code_1c == num));
+		res.send(userOrders.filter(order => order.code_1c.startsWith(num)));
 	}
 });
 
