@@ -48,9 +48,9 @@ class OrdersList extends Component {
 		}
 	}
 
-	async getSortOrdersList(unp, sortOptions, token) {
+	async getSortOrdersList(unp, num, param, token) {
 		try {
-			return formatOrders(await this.model.getSortOrdersList(unp,sortOptions, token));
+			return formatOrders(await this.model.getSortOrdersList(unp, num, param, token));
 		} catch (e) {
 			hideL();
 
@@ -63,10 +63,9 @@ class OrdersList extends Component {
 
 	}
 
-	async getOrderByNum(num, sortSelect, token) {
-		const val = num.value.toUpperCase();
+	async getOrderByNum(unp, num, param, token) {
 		try {
-			return formatOrders(await this.model.getOrderByNum(val, token));
+			return formatOrders(await this.model.getOrderByNum(unp, num, param, token));
 		} catch {
 			hideL();
 
@@ -74,16 +73,13 @@ class OrdersList extends Component {
 				title : 'Ошибка!',
 				message : 'Не удалось получить заказ-наряд!'
 			});
-
-			sortSelect.disabled = false;
-			num.value = '';
 		}
 	}
 
-	async getOrderByUnp(unp, sortSelect, token) {
+	async getOrderByUnp(unp, num, param, sortSelect, token) {
 		const val = unp.value.trim();
 		try {
-			return formatOrders(await this.model.getOrderByUnp(val, token));
+			return formatOrders(await this.model.getOrderByUnp(val, num, param, token));
 		} catch {
 			hideL();
 
@@ -129,7 +125,6 @@ class OrdersList extends Component {
 			resetOrderNum = orderNumForm.getElementsByClassName('resetOrderNumJs')[0];
 
 		resetOrderNum.disabled = !inputOrderNum.value.trim();
-		sortSelect.disabled = !!inputOrderNum.value.trim();
 
 		if (openTaskModal) {
 			openTaskModal.addEventListener('click', async(e) => {
@@ -147,14 +142,14 @@ class OrdersList extends Component {
 
 			showL();
 
-			if (inputUnpNum) {
-				const orders = await this.getSortOrdersList(inputUnpNum.value, sortSelect.value, checkUser().token);
+			const {unp, num, param} = this.getOrdersOptionsFromLS();
 
-				inputOrderNum.value = '';
+			if (inputUnpNum) {
+				const orders = await this.getSortOrdersList(unp, num, param, checkUser().token);
 
 				tableOrders.innerHTML = OrdersTableTemplate({orders});
 			} else {
-				const orders = await this.getSortOrdersList(null, sortSelect.value, checkUser().token);
+				const orders = await this.getSortOrdersList(unp, num, param,  checkUser().token);
 
 				tableOrders.innerHTML = OrdersTableTemplate({orders});
 			}
@@ -170,9 +165,8 @@ class OrdersList extends Component {
 			if (inputOrderNum.value.trim()) {
 				localStorage.setItem('orderNum', JSON.stringify(inputOrderNum.value.trim()));
 
-				sortSelect.disabled = !!inputOrderNum.value;
-
-				const orders = await this.getOrderByNum(inputOrderNum, sortSelect, checkUser().token);
+				const {unp, num, param} = this.getOrdersOptionsFromLS(),
+					orders = await this.getOrderByNum(unp, num, param, checkUser().token);
 
 				if (orders && orders.length) {
 					resetOrderNum.disabled = false;
@@ -187,6 +181,8 @@ class OrdersList extends Component {
 						title : 'Ошибка!',
 						message : 'Не удалось получить заказ-наряд!'
 					});
+
+					inputOrderNum.value = '';
 				}
 			}
 		});
@@ -216,16 +212,12 @@ class OrdersList extends Component {
 				showL();
 
 				if (inputUnpNum.value.trim()) {
-					localStorage.setItem('orderSort', JSON.stringify('up-date'));
 					localStorage.setItem('orderUnp', JSON.stringify(inputUnpNum.value.trim()));
 
-					const orders = await this.getOrderByUnp(inputUnpNum, sortSelect,checkUser().token);
+					const {num, param} = this.getOrdersOptionsFromLS(),
+						orders = await this.getOrderByUnp(inputUnpNum, num, param, sortSelect,checkUser().token);
 
 					if (orders && orders.length) {
-						inputOrderNum.value = '';
-
-						sortSelect.disabled = false;
-						sortSelect.value = 'up-date';
 
 						tableOrders.innerHTML = OrdersTableTemplate({orders});
 					} else {
@@ -238,11 +230,8 @@ class OrdersList extends Component {
 					}
 				} else {
 					localStorage.removeItem('orderUnp');
-					localStorage.setItem('orderSort', JSON.stringify('up-date'));
 
 					const orders = await this.getData();
-
-					sortSelect.value = 'up-date';
 
 					tableOrders.innerHTML = OrdersTableTemplate({orders});
 				}

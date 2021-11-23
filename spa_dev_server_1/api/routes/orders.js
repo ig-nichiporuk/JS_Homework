@@ -15,7 +15,9 @@ router.post('/api/orders', auth,(req, res) => {
 			const ordersByUnp = ordersData.filter(order => order.unp == unp);
 
 			if(num) {
-				res.send(ordersByUnp.filter(order => order.code_1c.startsWith(num)));
+				const ordersByNum = ordersByUnp.filter(order => order.code_1c.startsWith(num));
+
+				res.send(setSort(param, ordersByNum));
 			} else if(param) {
 				res.send(setSort(param, ordersByUnp));
 			} else {
@@ -23,7 +25,9 @@ router.post('/api/orders', auth,(req, res) => {
 			}
 		} else if(param) {
 			if(num) {
-				res.send(ordersData.filter(order => order.code_1c.startsWith(num)));
+				const ordersByNum = ordersData.filter(order => order.code_1c.startsWith(num));
+
+				res.send(setSort(param, ordersByNum));
 			} else {
 				res.send(setSort(param, ordersData));
 			}
@@ -32,17 +36,18 @@ router.post('/api/orders', auth,(req, res) => {
 		} else {
 			res.send(ordersData);
 		}
-
 	} else {
 		const userOrders = ordersData.filter(order => order.login == req.user.login)
 		if(param) {
 			if(num) {
-				res.send(userOrders.filter(order => order.code_1c.startsWith(num)));
+				const ordersByNum = userOrders.filter(order => order.code_1c.startsWith(num));
+
+				res.send(setSort(param, ordersByNum));
 			} else {
 				res.send(setSort(param, userOrders));
 			}
 		} else if(num) {
-			res.send(ordersData.filter(order => order.code_1c.startsWith(num)));
+			res.send(userOrders.filter(order => order.code_1c.startsWith(num)));
 		} else {
 			res.send(userOrders);
 		}
@@ -52,43 +57,87 @@ router.post('/api/orders', auth,(req, res) => {
 // API Orders SORT
 router.post('/api/orders/sort', auth, (req, res) => {
 	const ordersData = getOrdersFromDB(),
-		{unp, param} = req.body;
+		{unp, num, param} = req.body;
 
 	if(req.user.is_manager !== '0') {
 		if(unp) {
-			const ordersDataByUnp = ordersData.filter(order => order.unp == unp)
-			res.send(setSort(param, ordersDataByUnp));
+			const ordersByUnp = ordersData.filter(order => order.unp == unp);
+
+			if(num) {
+				const ordersByNum = ordersByUnp.filter(order => order.code_1c.startsWith(num));
+
+				res.send(setSort(param, ordersByNum));
+			} else {
+				res.send(setSort(param, ordersByUnp));
+			}
+		} else if(num) {
+			const ordersByNum = ordersData.filter(order => order.code_1c.startsWith(num));
+
+			res.send(setSort(param, ordersByNum));
 		} else {
 			res.send(setSort(param, ordersData));
 		}
+
 	} else {
 		const userOrders = ordersData.filter(order => order.login == req.user.login);
 
-		res.send(setSort(param, userOrders));
+		if(num) {
+			const ordersByNum = userOrders.filter(order => order.code_1c.startsWith(num));
+
+			res.send(setSort(param, ordersByNum));
+		} else {
+			res.send(setSort(param, userOrders));
+		}
 	}
 });
 
 // API Orders find NUM
 router.post('/api/orders/num', auth, (req, res) => {
 	const ordersData = getOrdersFromDB(),
-		{num} = req.body;
+		{unp, num, param} = req.body;
 
 	if(req.user.is_manager !== '0') {
-		res.send(ordersData.filter(order => order.code_1c.startsWith(num)));
+		if(unp) {
+			const ordersByUnp = ordersData.filter(order => order.unp == unp),
+				ordersByNum = ordersByUnp.filter(order => order.code_1c.startsWith(num));
+
+			res.send(setSort(param, ordersByNum));
+		} else if(param) {
+			res.send(setSort(param, ordersData.filter(order => order.code_1c.startsWith(num))));
+		} else {
+			res.send(ordersData.filter(order => order.code_1c.startsWith(num)));
+		}
 	} else {
 		const userOrders = ordersData.filter(order => order.login == req.user.login);
 
-		res.send(userOrders.filter(order => order.code_1c.startsWith(num)));
+		if(param) {
+			res.send(setSort(param, userOrders.filter(order => order.code_1c.startsWith(num))));
+		} else {
+			res.send(userOrders.filter(order => order.code_1c.startsWith(num)));
+		}
 	}
 });
 
 // API Orders find UNP
 router.post('/api/orders/unp', auth,  (req, res) => {
 	const ordersData = getOrdersFromDB(),
-		{unp} = req.body;
+		{unp, num, param} = req.body;
 
 	if(req.user.is_manager !== '0') {
-		res.send(ordersData.filter(order => order.unp == unp));
+		const ordersByUnp = ordersData.filter(order => order.unp == unp);
+
+		if(param) {
+			if(num) {
+				const ordersByNum = ordersByUnp.filter(order => order.code_1c.startsWith(num));
+				res.send(setSort(param, ordersByNum));
+			} else {
+				res.send(setSort(param, ordersByUnp));
+			}
+		} else if(num) {
+			res.send(ordersByUnp.filter(order => order.code_1c.startsWith(num)));
+		} else {
+			res.send(ordersByUnp);
+		}
 	} else {
 		res.send('У пользователя нет прав доступа!');
 	}

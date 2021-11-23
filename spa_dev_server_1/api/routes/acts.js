@@ -22,10 +22,10 @@ router.post('/api/acts', auth, (req, res) => {
 		{num} = req.body;
 
 	if(req.user.is_manager !== '0') {
-		res.send(actsData.find(act => act.code_1c == num));
+		res.send(actsData.filter(act => act.code_1c.startsWith(num)));
 	} else {
 		const userActs = actsData.filter(act => act.login == req.user.login);
-		res.send(userActs.find(act => act.code_1c == num));
+		res.send(userActs.filter(act => act.code_1c.startsWith(num)));
 	}
 });
 

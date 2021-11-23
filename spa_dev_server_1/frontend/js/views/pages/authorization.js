@@ -2,7 +2,7 @@ import Component from '../../views/component';
 
 import Auth from '../../models/auth';
 
-import AuthorizationTemplate from '../../../templates/pages/authorization';
+import AuthorizationTemplate from '../../../templates/pages/authorization.hbs';
 
 class Authorization extends Component {
 	constructor() {

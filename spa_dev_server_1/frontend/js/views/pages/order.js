@@ -198,43 +198,45 @@ class Order extends Component {
 			});
 		}
 
-		setStatus.addEventListener('change', () => {
-			const date = new Date(),
-				gYear = date.getFullYear(),
-				gMonth = date.getMonth() + 1,
-				gData = date.getDate(),
-				gHours = date.getHours(),
-				gMin = date.getMinutes(),
-				gSec = date.getSeconds();
+		if (setStatus) {
+			setStatus.addEventListener('change', () => {
+				const date = new Date(),
+					gYear = date.getFullYear(),
+					gMonth = date.getMonth() + 1,
+					gData = date.getDate(),
+					gHours = date.getHours(),
+					gMin = date.getMinutes(),
+					gSec = date.getSeconds();
 
 
-			switch (setStatus.value) {
-				case 'done':
-					setStatus.classList.remove('in-process');
-					setStatus.classList.add('done');
-					orderInfo.status_id = '3';
-					orderInfo.closed_at =`${gYear}-${gMonth}-${gData} ${gHours}:${gMin}:${gSec}`;
-					break;
-				case 'in-process':
-					setStatus.classList.remove('done');
-					setStatus.classList.add('in-process');
-					orderInfo.status_id = '1';
-					orderInfo.closed_at = '—';
-					break;
-				case 'cancel':
-					setStatus.classList.remove('done');
-					setStatus.classList.remove('in-process');
-					orderInfo.status_id = '2';
-					orderInfo.closed_at = `${gYear}-${gMonth}-${gData} ${gHours}:${gMin}:${gSec}`;
-					break;
-			}
+				switch (setStatus.value) {
+					case 'done':
+						setStatus.classList.remove('in-process');
+						setStatus.classList.add('done');
+						orderInfo.status_id = '3';
+						orderInfo.closed_at =`${gYear}-${gMonth}-${gData} ${gHours}:${gMin}:${gSec}`;
+						break;
+					case 'in-process':
+						setStatus.classList.remove('done');
+						setStatus.classList.add('in-process');
+						orderInfo.status_id = '1';
+						orderInfo.closed_at = '—';
+						break;
+					case 'cancel':
+						setStatus.classList.remove('done');
+						setStatus.classList.remove('in-process');
+						orderInfo.status_id = '2';
+						orderInfo.closed_at = `${gYear}-${gMonth}-${gData} ${gHours}:${gMin}:${gSec}`;
+						break;
+				}
 
-			const formatOrderInfo = formatOrders([orderInfo])[0];
+				const formatOrderInfo = formatOrders([orderInfo])[0];
 
-			userInfoBlock.innerHTML = UserInfo({formatOrderInfo, request});
+				userInfoBlock.innerHTML = UserInfo({formatOrderInfo, request});
 
-			saveChanges.removeAttribute('disabled');
-		});
+				saveChanges.removeAttribute('disabled');
+			});
+		}
 
 		tasksTable.addEventListener('click', (e) => {
 			const target = e.target,
@@ -331,7 +333,6 @@ class Order extends Component {
 							for (let total of totalTask) {
 								total.innerText = this.formatTotalPrice(counterTask[0].innerText * priceTask);
 							}
-
 						} else {
 							const newTaskInOrder = {};
 
@@ -351,28 +352,29 @@ class Order extends Component {
 			});
 		}
 
-		saveChanges.addEventListener('click', (e) => {
-			e.preventDefault();
+		if (saveChanges) {
+			saveChanges.addEventListener('click', (e) => {
+				e.preventDefault();
 
-			const href = saveChanges.getAttribute('href');
+				const href = saveChanges.getAttribute('href');
 
-			showInfoModal(href, 'change-service', {});
+				showInfoModal(href, 'change-service', {});
 
-			document.body.addEventListener('click', async(e) => {
-				const target = e.target;
+				document.body.addEventListener('click', async(e) => {
+					const target = e.target;
 
-				if (target.closest('.saveTasksDataJs')) {
-					await this.setOrderChanges(orderInfo, orderTasks, checkUser().token);
+					if (target.closest('.saveTasksDataJs')) {
+						await this.setOrderChanges(orderInfo, orderTasks, checkUser().token);
 
-					saveChanges.setAttribute('disabled', 'true');
+						saveChanges.setAttribute('disabled', 'true');
 
-					printOrder.disabled = !(orderInfo.status_id == 3);
+						printOrder.disabled = !(orderInfo.status_id == 3);
 
-					closeModal();
-				}
+						closeModal();
+					}
+				});
 			});
-		});
-
+		}
 
 		printOrder.addEventListener('click', () => {
 			const auth = checkUser(),

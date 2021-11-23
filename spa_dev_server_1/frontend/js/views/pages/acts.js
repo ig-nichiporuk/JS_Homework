@@ -71,18 +71,27 @@ class OrdersList extends Component {
 			showL();
 
 			if (inputActs.value.trim()) {
-				const acts = [await this.getActsNum(inputActs.value, checkUser().token)];
+				const acts = await this.getActsNum(inputActs.value, checkUser().token);
 
-				if (acts.length) {
+				if (acts && acts.length) {
 					tableActs.innerHTML = ActsTableTemplate({acts});
+
+					hideL();
+				} else {
+					hideL();
+
+					showInfoModal('alert-modal', 'alert', {
+						title : 'Ошибка!',
+						message : 'Не удалось получить акт по номеру!'
+					});
 				}
 			} else {
 				const acts = await this.getData();
 
 				tableActs.innerHTML = ActsTableTemplate({acts});
-			}
 
-			hideL();
+				hideL();
+			}
 		});
 
 
