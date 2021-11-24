@@ -13,7 +13,7 @@
 				{{> userInfoData}}
 			</ul>
 			{{#ifCond auth.status '!==' '0'}}
-				{{#ifCond formatOrderInfo.status_id '!==' 'Отменен'}}
+				{{#ifCond @root.formatOrderInfo.status_id '!==' 'Отменен'}}
 					<a href="edit-data" class="info__data-change openChangeInfoModalJs">
 						<svg>
 							<use xlink:href="#pencil"></use>
