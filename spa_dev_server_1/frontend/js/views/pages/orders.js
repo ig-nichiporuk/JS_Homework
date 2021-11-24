@@ -5,6 +5,7 @@ import Component from '../../views/component';
 import OrdersTemplate from '../../../templates/pages/orders.hbs';
 
 import OrdersTableTemplate from '../../../templates/pages/orders/ordersTable.hbs';
+import OrdersTableNoContent from '../../../templates/pages/orders/ordersTableNoContent.hbs';
 
 
 import Orders from '../../models/orders';
@@ -142,16 +143,13 @@ class OrdersList extends Component {
 
 			showL();
 
-			const {unp, num, param} = this.getOrdersOptionsFromLS();
+			const {unp, num, param} = this.getOrdersOptionsFromLS(),
+				orders = await this.getSortOrdersList(unp, num, param,  checkUser().token);
 
-			if (inputUnpNum) {
-				const orders = await this.getSortOrdersList(unp, num, param, checkUser().token);
-
+			if (orders.length) {
 				tableOrders.innerHTML = OrdersTableTemplate({orders});
 			} else {
-				const orders = await this.getSortOrdersList(unp, num, param,  checkUser().token);
-
-				tableOrders.innerHTML = OrdersTableTemplate({orders});
+				tableOrders.innerHTML = OrdersTableNoContent();
 			}
 
 			hideL();

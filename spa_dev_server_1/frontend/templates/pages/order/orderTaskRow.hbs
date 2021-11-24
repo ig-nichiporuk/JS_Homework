@@ -1,24 +1,36 @@
-{{#each formatOrderTasks}}
-	<tr class="table__row taskRowJs" data-task-id="{{this.id}}">
+{{#each formatOrderTasks as | formatOrderTask |}}
+	<tr class="table__row taskRowJs" data-task-id="{{formatOrderTask.id}}">
 	<td class="cell__order-index">
 		<span>{{array @index}}</span>
 	</td>
 	<td class="cell__order-work">
-		<p>{{this.task_id}}</p>
+		<p>{{formatOrderTask.task_id}}</p>
 	</td>
 	<td class="cell__work-price">
-		<span class="taskPriceJs">{{this.task_price}}</span>
+		<span class="taskPriceJs">{{formatOrderTask.task_price}}</span>
 	</td>
 	<td class="cell__counter">
-		<span class="text_bold {{#ifCond @root.auth.status '!==' '0'}}hidden{{/ifCond}} counterValueJs">{{this.amount}}</span>
-		<div class="counter {{#ifCond @root.auth.status '===' '0'}}hidden{{/ifCond}}">
-			<span class="counter__minus counterMinusJs"></span>
-			<span class="counter__value counterValueJs">{{this.amount}}</span>
-			<span class="counter__plus counterPlusJs"></span>
-		</div>
+		{{#ifCond @root.auth.status '!==' '0'}}
+			{{#ifCond @root.formatOrderInfo.status_id '===' 'Отменен'}}
+				<span class="text_bold  counterValueJs">{{formatOrderTask.amount}}</span>
+			{{/ifCond}}
+		{{/ifCond}}
+		{{#ifCond @root.auth.status '!==' '0'}}
+			{{#ifCond @root.formatOrderInfo.status_id '!==' 'Отменен'}}
+				<div class="counter ">
+					<span class="counter__minus counterMinusJs"></span>
+					<span class="counter__value counterValueJs">{{formatOrderTask.amount}}</span>
+					<span class="counter__plus counterPlusJs"></span>
+				</div>
+			{{/ifCond}}
+		{{/ifCond}}
+		{{#ifCond @root.auth.status '===' '0'}}
+			<span class="text_bold  counterValueJs">{{formatOrderTask.amount}}</span>
+		{{/ifCond}}
 	</td>
+
 	<td class="cell__total {{#ifCond @root.auth.status '!==' '0'}} edited {{/ifCond}}">
-		<span class="text_bold taskTotalPriceJs">{{this.task_total}}</span>
+		<span class="text_bold taskTotalPriceJs">{{formatOrderTask.task_total}}</span>
 		{{#ifCond @root.auth.status '!==' '0'}}
 			{{#ifCond @root.formatOrderInfo.status_id '!==' 'Отменен'}}
 				<a href="delete-service" class="delete-item removeTaskJs" data-status-scroll="0">
@@ -30,22 +42,36 @@
 		{{/ifCond}}
 	</td>
 	<td class="cell-right {{#ifCond @root.formatOrderInfo.status_id '!==' 'Отменен'}} edited {{/ifCond}}">
-		<span>{{this.task_price}}</span>
-		<span class="text_bold {{#ifCond @root.auth.status '!==' '0'}}hidden{{/ifCond}}">{{this.amount}}</span>
-		<div class="counter {{#ifCond @root.auth.status '===' '0'}}hidden{{/ifCond}}">
-			<span class="counter__minus counterMinusJs"></span>
-			<span class="counter__value counterValueJs">{{this.amount}}</span>
-			<span class="counter__plus counterPlusJs"></span>
-		</div>
+		<span>{{formatOrderTask.task_price}}</span>
 
-		<span class="text_bold taskTotalPriceJs">{{this.task_total}}</span>
+		{{#ifCond @root.auth.status '!==' '0'}}
+			{{#ifCond @root.formatOrderInfo.status_id '===' 'Отменен'}}
+				<span class="text_bold  counterValueJs">{{formatOrderTask.amount}}</span>
+			{{/ifCond}}
+		{{/ifCond}}
+		{{#ifCond @root.auth.status '!==' '0'}}
+			{{#ifCond @root.formatOrderInfo.status_id '!==' 'Отменен'}}
+				<div class="counter ">
+					<span class="counter__minus counterMinusJs"></span>
+					<span class="counter__value counterValueJs">{{formatOrderTask.amount}}</span>
+					<span class="counter__plus counterPlusJs"></span>
+				</div>
+			{{/ifCond}}
+		{{/ifCond}}
+		{{#ifCond @root.auth.status '===' '0'}}
+			<span class="text_bold  counterValueJs">{{formatOrderTask.amount}}</span>
+		{{/ifCond}}
 
-		{{#ifCond @root.formatOrderInfo.status_id '!==' 'Отменен'}}
-			<a href="delete-service" class="delete-item removeTaskJs" data-status-scroll="0">
-				<svg>
-					<use xlink:href="#close"></use>
-				</svg>
-			</a>
+		<span class="text_bold taskTotalPriceJs">{{formatOrderTask.task_total}}</span>
+
+		{{#ifCond @root.auth.status '!==' '0'}}
+			{{#ifCond @root.formatOrderInfo.status_id '!==' 'Отменен'}}
+				<a href="delete-service" class="delete-item removeTaskJs" data-status-scroll="0">
+					<svg>
+						<use xlink:href="#close"></use>
+					</svg>
+				</a>
+			{{/ifCond}}
 		{{/ifCond}}
 	</td>
 </tr>
