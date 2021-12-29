@@ -91,7 +91,9 @@ function getTimer() {
 }
 
 function updateTimer(endtime) {
-	var total = +localStorage.getItem('timerMilliseconds');
+	var total = +localStorage.getItem('timerMilliseconds') + 1;
+
+	localStorage.setItem('timerMilliseconds', total)
 
 	getTimer();
 
@@ -103,8 +105,6 @@ function updateTimer(endtime) {
 		timerSave = timer.getElementsByClassName('timerSaveJs')[0];
 		timerSave.remove();
 		timerControl.remove();
-	} else {
-		localStorage.setItem('timerMilliseconds', +localStorage.getItem('timerMilliseconds') + 1);
 	}
 }
 
