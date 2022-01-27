@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="format-detection" content="telephone=no">
+    <title>Contacts-List</title>
+    <link href="fonts/stylesheet.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/contacts.css?v.15">
+    <script src="js/jquery-3.6.0.js"></script>
+    <script src="js/scroll-lock.min.js"></script>
+    <script src="js/global_svg_localstorage.js"></script>
+    <script src="js/script.js"></script>
+</head>
+
+<body>
+    <div class="contacts">
+        <div class="container">
+            <div class="contacts__wrap">
+                <div class="contacts__filter">
+                    <form class="filter js-filter">
+                        <div class="filter__wrap js-filter-wrap">
+                            <div class="filter__label">
+                                <span>Фильтр</span>
+                                <span class="close js-filter-mob-close">Отмена</span>
+                            </div>
+                            <div class="filter__item">
+                                <div class="filter__block">
+                                    <span class="filter__title text-medium">Фамилия</span>
+                                    <div class="filter__input">
+                                        <svg>
+                                            <use xlink:href="#search"></use>
+                                        </svg>
+                                        <input type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter__item">
+                                <div class="filter__block">
+                                    <span class="filter__title text-medium">Имя</span>
+                                    <div class="filter__input">
+                                        <svg>
+                                            <use xlink:href="#search"></use>
+                                        </svg>
+                                        <input type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter__item">
+                                <div class="filter__block">
+                                    <span class="filter__title text-medium">Отчество</span>
+                                    <div class="filter__input">
+                                        <svg>
+                                            <use xlink:href="#search"></use>
+                                        </svg>
+                                        <input type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter__item">
+                                <div class="filter__block">
+                                    <span class="filter__title text-medium">Год рождения</span>
+                                    <div class="filter__range">
+                                        <input type="tel" placeholder="с 1991">
+                                        <span>-</span>
+                                        <input type="tel" placeholder="по 1993">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter__item">
+                                <div class="filter__block">
+                                    <span class="filter__title text-medium">Пол</span>
+                                    <div class="filter__checkboxes">
+                                        <label class="filter__checkbox checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text">Мужской</span>
+                                        </label>
+                                        <label class="filter__checkbox checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text">Женский</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter__item">
+                                <div class="filter__block">
+                                    <span class="filter__title text-medium">Семейное положение</span>
+                                    <div class="filter__checkboxes">
+                                        <label class="filter__checkbox checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text">Замужем / женат</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter__item">
+                                <div class="filter__block">
+                                    <span class="filter__title text-medium">Страна</span>
+                                    <div class="filter__input">
+                                        <svg>
+                                            <use xlink:href="#search"></use>
+                                        </svg>
+                                        <input type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter__item">
+                                <div class="filter__block">
+                                    <span class="filter__title text-medium">Город</span>
+                                    <div class="filter__input">
+                                        <svg>
+                                            <use xlink:href="#search"></use>
+                                        </svg>
+                                        <input type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter__item">
+                                <div class="filter__block">
+                                    <span class="filter__title text-medium">Адрес</span>
+                                    <div class="filter__address">
+                                        <div class="filter__address-item">
+                                            <div class="filter__input">
+                                                <svg>
+                                                    <use xlink:href="#search"></use>
+                                                </svg>
+                                                <input type="text" placeholder="Улица">
+                                            </div>
+                                        </div>
+                                        <div class="filter__address-item">
+                                            <div class="filter__input">
+                                                <svg>
+                                                    <use xlink:href="#search"></use>
+                                                </svg>
+                                                <input type="text" placeholder="Дом">
+                                            </div>
+                                        </div>
+                                        <div class="filter__address-item">
+                                            <div class="filter__input">
+                                                <svg>
+                                                    <use xlink:href="#search"></use>
+                                                </svg>
+                                                <input type="text" placeholder="Квартира">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter__item">
+                                <div class="filter__block">
+                                    <span class="filter__title text-medium">Индекс</span>
+                                    <div class="filter__input">
+                                        <svg>
+                                            <use xlink:href="#search"></use>
+                                        </svg>
+                                        <input type="text">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter__btn js-filter-btns">
+                                <button class="btn-style js-filter-show-btn" disabled>Найти</button>
+                                <span class="btn-style btn-white hidden js-filter-reset">Сбросить</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="contacts__block">
+                    <div class="contacts__block-title">
+                        <div>
+                            <h1 class="text-medium">Контакты</h1>
+                            <a href="" class="add-contact btn-style">
+                                <span>
+                                    <svg class="">
+                                        <use xlink:href="#user-plus"></use>
+                                    </svg> Добавить контакт </span>
+                            </a>
+                        </div>
+                        <p class="hidden">Найдено: 15</p>
+                    </div>
+                    <div class="contacts__block-wrap">
+                        <div class="filter__btn-mob js-filter-mob-btn">
+                            <svg>
+                                <use xlink:href="#settings"></use>
+                            </svg>
+                            <span>Фильтр</span>
+                        </div>
+                        <div class="hashtags hidden">
+                            <div class="hashtags__item">
+                                <span class="btn-style"> Великобритания <svg>
+                                        <use xlink:href="#close"></use>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="hashtags__item">
+                                <span class="btn-style"> Николай II <svg>
+                                        <use xlink:href="#close"></use>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="hashtags__item">
+                                <span class="btn-style"> 18 грош <svg>
+                                        <use xlink:href="#close"></use>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="hashtags__item">
+                                <span class="btn-style"> Золото <svg>
+                                        <use xlink:href="#close"></use>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="hashtags__item">
+                                <span class="btn-style"> Металл <svg>
+                                        <use xlink:href="#close"></use>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="hashtags__cleaner js-filter-reset">
+                                <span class="btn-style btn-gray"> Очистить </span>
+                            </div>
+                        </div>
+                        <div class="table js-table">
+                            <div class="table__row table__header">
+                                <span class="table__cell"></span>
+                                <span class="table__cell">
+                                    <span>ФИО</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Дата рождения</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Адрес</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Компания</span>
+                                </span>
+                            </div>
+                            <a href="#" class="table__row">
+                                <span class="table__cell">
+                                    <span>
+                                        <label class="checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text"></span>
+                                        </label>
+                                    </span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Ничипорук Игорь Александрович</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>22.08.1991</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>г. Брест, ул. Московская 311-36</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>СООО Автосеть</span>
+                                </span>
+                            </a>
+                            <a href="#" class="table__row">
+                                <span class="table__cell">
+                                    <span>
+                                        <label class="checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text"></span>
+                                        </label>
+                                    </span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Ничипорук Игорь Александрович</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>22.08.1991</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>г. Брест, ул. Московская 311-36</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>СООО Автосеть</span>
+                                </span>
+                            </a>
+                            <a href="#" class="table__row">
+                                <span class="table__cell">
+                                    <span>
+                                        <label class="checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text"></span>
+                                        </label>
+                                    </span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Ничипорук Игорь Александрович</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>22.08.1991</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>г. Брест, ул. Московская 311-36</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>СООО Автосеть</span>
+                                </span>
+                            </a>
+                            <a href="#" class="table__row">
+                                <span class="table__cell">
+                                    <span>
+                                        <label class="checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text"></span>
+                                        </label>
+                                    </span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Ничипорук Игорь Александрович</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>22.08.1991</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>г. Брест, ул. Московская 311-36</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>СООО Автосеть</span>
+                                </span>
+                            </a>
+                            <a href="#" class="table__row">
+                                <span class="table__cell">
+                                    <span>
+                                        <label class="checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text"></span>
+                                        </label>
+                                    </span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Ничипорук Игорь Александрович</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>22.08.1991</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>г. Брест, ул. Московская 311-36</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>СООО Автосеть</span>
+                                </span>
+                            </a>
+                            <a href="#" class="table__row">
+                                <span class="table__cell">
+                                    <span>
+                                        <label class="checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text"></span>
+                                        </label>
+                                    </span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Ничипорук Игорь Александрович</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>22.08.1991</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>г. Брест, ул. Московская 311-36</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>СООО Автосеть</span>
+                                </span>
+                            </a>
+                            <a href="#" class="table__row">
+                                <span class="table__cell">
+                                    <span>
+                                        <label class="checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text"></span>
+                                        </label>
+                                    </span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Ничипорук Игорь Александрович</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>22.08.1991</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>г. Брест, ул. Московская 311-36</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>СООО Автосеть</span>
+                                </span>
+                            </a>
+                            <a href="#" class="table__row">
+                                <span class="table__cell">
+                                    <span>
+                                        <label class="checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text"></span>
+                                        </label>
+                                    </span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Ничипорук Игорь Александрович</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>22.08.1991</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>г. Брест, ул. Московская 311-36</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>СООО Автосеть</span>
+                                </span>
+                            </a>
+                            <a href="#" class="table__row">
+                                <span class="table__cell">
+                                    <span>
+                                        <label class="checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text"></span>
+                                        </label>
+                                    </span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Ничипорук Игорь Александрович</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>22.08.1991</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>г. Брест, ул. Московская 311-36</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>СООО Автосеть</span>
+                                </span>
+                            </a>
+                            <a href="#" class="table__row">
+                                <span class="table__cell">
+                                    <span>
+                                        <label class="checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text"></span>
+                                        </label>
+                                    </span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Ничипорук Игорь Александрович</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>22.08.1991</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>г. Брест, ул. Московская 311-36</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>СООО Автосеть</span>
+                                </span>
+                            </a>
+                            <a href="#" class="table__row">
+                                <span class="table__cell">
+                                    <span>
+                                        <label class="checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text"></span>
+                                        </label>
+                                    </span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Ничипорук Игорь Александрович</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>22.08.1991</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>г. Брест, ул. Московская 311-36</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>СООО Автосеть</span>
+                                </span>
+                            </a>
+                            <a href="#" class="table__row">
+                                <span class="table__cell">
+                                    <span>
+                                        <label class="checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text"></span>
+                                        </label>
+                                    </span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Ничипорук Игорь Александрович</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>22.08.1991</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>г. Брест, ул. Московская 311-36</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>СООО Автосеть</span>
+                                </span>
+                            </a>
+                            <a href="#" class="table__row">
+                                <span class="table__cell">
+                                    <span>
+                                        <label class="checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text"></span>
+                                        </label>
+                                    </span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Ничипорук Игорь Александрович</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>22.08.1991</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>г. Брест, ул. Московская 311-36</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>СООО Автосеть</span>
+                                </span>
+                            </a>
+                            <a href="#" class="table__row">
+                                <span class="table__cell">
+                                    <span>
+                                        <label class="checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text"></span>
+                                        </label>
+                                    </span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Ничипорук Игорь Александрович</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>22.08.1991</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>г. Брест, ул. Московская 311-36</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>СООО Автосеть</span>
+                                </span>
+                            </a>
+                            <a href="#" class="table__row">
+                                <span class="table__cell">
+                                    <span>
+                                        <label class="checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text"></span>
+                                        </label>
+                                    </span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Ничипорук Игорь Александрович</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>22.08.1991</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>г. Брест, ул. Московская 311-36</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>СООО Автосеть</span>
+                                </span>
+                            </a>
+                            <a href="#" class="table__row">
+                                <span class="table__cell">
+                                    <span>
+                                        <label class="checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text"></span>
+                                        </label>
+                                    </span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Ничипорук Игорь Александрович</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>22.08.1991</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>г. Брест, ул. Московская 311-36</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>СООО Автосеть</span>
+                                </span>
+                            </a>
+                            <a href="#" class="table__row">
+                                <span class="table__cell">
+                                    <span>
+                                        <label class="checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text"></span>
+                                        </label>
+                                    </span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Ничипорук Игорь Александрович</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>22.08.1991</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>г. Брест, ул. Московская 311-36</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>СООО Автосеть</span>
+                                </span>
+                            </a>
+                            <a href="#" class="table__row">
+                                <span class="table__cell">
+                                    <span>
+                                        <label class="checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text"></span>
+                                        </label>
+                                    </span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Ничипорук Игорь Александрович</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>22.08.1991</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>г. Брест, ул. Московская 311-36</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>СООО Автосеть</span>
+                                </span>
+                            </a>
+                            <a href="#" class="table__row">
+                                <span class="table__cell">
+                                    <span>
+                                        <label class="checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text"></span>
+                                        </label>
+                                    </span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Ничипорук Игорь Александрович</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>22.08.1991</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>г. Брест, ул. Московская 311-36</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>СООО Автосеть</span>
+                                </span>
+                            </a>
+                            <a href="#" class="table__row">
+                                <span class="table__cell">
+                                    <span>
+                                        <label class="checkbox__label">
+                                            <input type="checkbox" class="checkbox__label-check">
+                                            <span class="checkbox__label-text"></span>
+                                        </label>
+                                    </span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>Ничипорук Игорь Александрович</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>22.08.1991</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>г. Брест, ул. Московская 311-36</span>
+                                </span>
+                                <span class="table__cell">
+                                    <span>СООО Автосеть</span>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="contacts__controls">
+                            <span class="total">Выбрано: 2 / 20</span>
+                            <span class="edit">
+                                <svg>
+                                    <use xlink:href="#edit"></use>
+                                </svg> Редактировать </span>
+                            <span class="delete">
+                                <svg>
+                                    <use xlink:href="#trash-can"></use>
+                                </svg> Удалить </span>
+                        </div>
+                    </div>
+                    <div class="pagination">
+                        <div class="pagination__prev">
+                            <svg class="">
+                                <use xlink:href="#arrow-down"></use>
+                            </svg>
+                        </div>
+                        <div class="pagination__pages">
+                            <a href="#" class="page-num">1</a>
+                            <span class="page-empty">...</span>
+                            <a href="#" class="page-num active">6</a>
+                            <a href="#" class="page-num">7</a>
+                            <a href="#" class="page-num">8</a>
+                            <span class="page-empty">...</span>
+                            <a href="#" class="page-num">100</a>
+                        </div>
+                        <div class="pagination__next">
+                            <svg class="">
+                                <use xlink:href="#arrow-down"></use>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('.js-filter-mob-btn').on('click', function() {
+            $('.js-filter').show();
+        });
+        $('.js-filter-mob-close').on('click', function() {
+            $('.js-filter').hide();
+        });
+        // Изменение чекбоксов в фильтре
+        $(".js-filter .checkbox__label-check").each(function() {
+            $(this).change(function() {
+                if ($(".checkbox__label-check").filter(":checked").length > 0) {
+                    $('.hashtags').removeClass('hidden');
+                    $('.js-filter-reset').removeClass('hidden');
+                    $('.js-filter-show-btn').removeAttr('disabled');
+                    $('.js-filter-wrap').addClass('checked');
+                    if ($(window).height() + $(document).scrollTop() < $('.js-filter').offset().top + $('.js-filter').height() - 100) {
+                        $('.js-filter-btns').addClass('fix');
+                    } else {
+                        if ($('.js-filter').scrollTop() < $('.js-filter-wrap').height() - $(window).height() - 100 && $('.js-filter-wrap').height() > $('.js-filter').height()) {
+                            $('.js-filter-btns').addClass('fix');
+                        } else {
+                            $('.js-filter-btns').removeClass('fix');
+                        }
+                    }
+                } else {
+                    $('.js-filter-reset').addClass('hidden');
+                    $('.js-filter-show-btn').attr('disabled', true);
+                    $('.js-filter-btns').removeClass('fix');
+                    $('.js-filter-wrap').removeClass('checked');
+                }
+            });
+        });
+        // Изменение чекбоксов в таблице
+        $(".js-table .checkbox__label-check").each(function() {
+            $(this).change(function() {
+                if ($(".checkbox__label-check").filter(":checked").length > 0) {
+                    if ($(window).height() + $(document).scrollTop() < $('.js-table').offset().top + $('.js-table').height() - 100) {
+                        $('.contacts__controls').addClass('fix');
+                    }
+                } else {
+                    $('.contacts__controls').removeClass('fix');
+                }
+            });
+        });
+        $(document).scroll(function() {
+            // Кнопки снизу фильтра, когда выбран чекбокс фиксируются к низу
+            if ($(".js-filter .checkbox__label-check").filter(":checked").length > 0 && $(document).scrollTop() > $('.js-filter').offset().top - $(window).height() && $(window).height() + $(document).scrollTop() < $('.js-filter').offset().top + $('.js-filter').height()) {
+                $('.js-filter-btns').addClass('fix');
+            } else {
+                $('.js-filter-btns').removeClass('fix');
+            }
+            // Кнопки снизу таблицы, когда выбран чекбокс фиксируются к низу
+            if ($(".js-table .checkbox__label-check").filter(":checked").length > 0 && $(document).scrollTop() > $('.js-table').offset().top - $(window).height() && $(window).height() + $(document).scrollTop() < $('.js-table').offset().top + $('.js-table').height()) {
+                $('.contacts__controls').addClass('fix');
+            } else {
+                $('.contacts__controls').removeClass('fix');
+            }
+        });
+        $('.js-filter').scroll(function() {
+            if (($(".checkbox__label-check").filter(":checked").length > 0 && $('.js-filter').scrollTop() < $('.js-filter-wrap').height() - $(window).height() - 100)) {
+                $('.js-filter-btns').addClass('fix');
+            } else {
+                $('.js-filter-btns').removeClass('fix');
+            }
+        });
+        $('.js-filter-reset').on('click', function() {
+            $(this).addClass('hidden');
+            $('.hashtags').addClass('hidden');
+            $('.js-filter-btns').removeClass('fix');
+            $('.js-filter-wrap').removeClass('checked');
+            $(".checkbox__label-check").prop('checked', false);
+            $('.js-filter-show-btn').text('Найти').attr('disabled', true);
+        })
+        $(window).resize(function() {
+            if ($(window).width() >= 960) {
+                $('.js-filter').removeAttr('style');
+            }
+        });
+        $('.js-result-view').on('click', function() {
+            if (!$(this).hasClass('active')) {
+                $('.js-result-body').addClass('hidden');
+                $('.js-result-view').removeClass('active');
+                $(this).addClass('active');
+                $('.js-result-content').find("div[data-block='" + $(this).attr('data-info') + "']").removeClass('hidden');
+            }
+        });
+    </script>
+</body>
+
+</html>

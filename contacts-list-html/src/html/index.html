@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="format-detection" content="telephone=no">
+	<title>Contacts-List</title>
+
+	<link href="fonts/stylesheet.css" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="css/contacts.css?v.15">
+
+	<script src="js/jquery-3.6.0.js"></script>
+	<script src="js/scroll-lock.min.js"></script>
+	<script src="js/global_svg_localstorage.js"></script>
+	<script src="js/script.js"></script>
+</head>
+<body>
+
+<div class="contacts">
+	<div class="container">
+		<div class="contacts__wrap">
+			<div class="contacts__filter">
+				@@include('../components/filter.html')
+			</div>
+			<div class="contacts__block">
+				<div class="contacts__block-title">
+					<div>
+						<h1 class="text-medium">Контакты</h1>
+						<a href="" class="add-contact btn-style">
+							<span>
+								<svg class="">
+									<use xlink:href="#user-plus"></use>
+								</svg>
+								Добавить контакт
+							</span>
+						</a>
+					</div>
+
+					<p class="hidden">Найдено: 15</p>
+				</div>
+				<div class="contacts__block-wrap">
+					<div class="filter__btn-mob js-filter-mob-btn">
+						<svg>
+							<use xlink:href="#settings"></use>
+						</svg>
+						<span>Фильтр</span>
+					</div>
+					@@include('../components/filter-hashtags.html')
+					@@include('../components/contacts-table.html')
+					<div class="contacts__controls">
+						<span class="total">Выбрано: 2 / 20</span>
+						<span class="edit">
+							<svg>
+							    <use xlink:href="#edit"></use>
+							</svg>
+							Редактировать
+						</span>
+						<span class="delete">
+							<svg>
+							    <use xlink:href="#trash-can"></use>
+							</svg>
+							Удалить
+						</span>
+					</div>
+
+				</div>
+				@@include('../components/pagination.html')
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+
+	$('.js-filter-mob-btn').on('click', function () {
+		$('.js-filter').show();
+	});
+	$('.js-filter-mob-close').on('click', function () {
+		$('.js-filter').hide();
+	});
+
+
+	// Изменение чекбоксов в фильтре
+	$(".js-filter .checkbox__label-check").each(function () {
+		$(this).change(function () {
+			if($(".checkbox__label-check").filter(":checked").length > 0) {
+				$('.hashtags').removeClass('hidden');
+				$('.js-filter-reset').removeClass('hidden');
+				$('.js-filter-show-btn').removeAttr('disabled');
+				$('.js-filter-wrap').addClass('checked');
+
+				if($(window).height() + $(document).scrollTop() < $('.js-filter').offset().top + $('.js-filter').height() - 100) {
+					$('.js-filter-btns').addClass('fix');
+				}
+				else {
+					if($('.js-filter').scrollTop() < $('.js-filter-wrap').height() - $(window).height() - 100 && $('.js-filter-wrap').height() > $('.js-filter').height()) {
+						$('.js-filter-btns').addClass('fix');
+					}
+					else {
+						$('.js-filter-btns').removeClass('fix');
+					}
+				}
+			}
+			else {
+				$('.js-filter-reset').addClass('hidden');
+				$('.js-filter-show-btn').attr('disabled', true);
+				$('.js-filter-btns').removeClass('fix');
+				$('.js-filter-wrap').removeClass('checked');
+			}
+		});
+	});
+
+	// Изменение чекбоксов в таблице
+	$(".js-table .checkbox__label-check").each(function () {
+		$(this).change(function () {
+			if($(".checkbox__label-check").filter(":checked").length > 0) {
+				if($(window).height() + $(document).scrollTop() < $('.js-table').offset().top + $('.js-table').height() - 100) {
+					$('.contacts__controls').addClass('fix');
+				}
+			}
+			else {
+				$('.contacts__controls').removeClass('fix');
+			}
+		});
+	});
+
+
+	$(document).scroll(function () {
+		// Кнопки снизу фильтра, когда выбран чекбокс фиксируются к низу
+		if($(".js-filter .checkbox__label-check").filter(":checked").length > 0 && $(document).scrollTop() > $('.js-filter').offset().top - $(window).height() && $(window).height() + $(document).scrollTop() <  $('.js-filter').offset().top + $('.js-filter').height()) {
+			$('.js-filter-btns').addClass('fix');
+		}
+		else {
+			$('.js-filter-btns').removeClass('fix');
+		}
+
+
+		// Кнопки снизу таблицы, когда выбран чекбокс фиксируются к низу
+		if($(".js-table .checkbox__label-check").filter(":checked").length > 0 && $(document).scrollTop() > $('.js-table').offset().top - $(window).height() && $(window).height() + $(document).scrollTop() <  $('.js-table').offset().top + $('.js-table').height()) {
+			$('.contacts__controls').addClass('fix');
+		}
+		else {
+			$('.contacts__controls').removeClass('fix');
+		}
+
+
+	});
+	$('.js-filter').scroll(function () {
+		if(($(".checkbox__label-check").filter(":checked").length > 0 && $('.js-filter').scrollTop() < $('.js-filter-wrap').height() - $(window).height() - 100)) {
+			$('.js-filter-btns').addClass('fix');
+		}
+		else {
+			$('.js-filter-btns').removeClass('fix');
+		}
+	});
+
+	$('.js-filter-reset').on('click', function () {
+		$(this).addClass('hidden');
+		$('.hashtags').addClass('hidden');
+		$('.js-filter-btns').removeClass('fix');
+		$('.js-filter-wrap').removeClass('checked');
+		$(".checkbox__label-check").prop('checked', false);
+		$('.js-filter-show-btn').text('Найти').attr('disabled', true);
+	})
+
+
+
+
+	$( window ).resize(function() {
+		if($(window).width() >= 960) {
+			$('.js-filter').removeAttr('style');
+		}
+	});
+
+	$('.js-result-view').on('click', function () {
+		if(!$(this).hasClass('active')){
+			$('.js-result-body').addClass('hidden');
+			$('.js-result-view').removeClass('active');
+			$(this).addClass('active');
+			$('.js-result-content').find("div[data-block='" + $(this).attr('data-info') +"']").removeClass('hidden');
+		}
+	});
+
+</script>
+</body>
+</html>

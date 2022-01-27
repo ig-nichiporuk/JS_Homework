@@ -1,0 +1,58 @@
+<div class="toolbar">
+	<div class="toolbar__btns">
+		<div class="container">
+			<div class="toolbar__wrap">
+				<div class="toolbar__icon js-toolbar-btn" data-info="categories">
+					<svg>
+						<use xlink:href="#book"></use>
+					</svg>
+					<span>Категории</span>
+				</div>
+				<div class="toolbar__icon js-toolbar-btn" data-info="years">
+					<svg>
+						<use xlink:href="#calendar"></use>
+					</svg>
+					<span>Года</span>
+				</div>
+				<div class="toolbar__icon js-finder-open-input">
+					<svg>
+						<use xlink:href="#search"></use>
+					</svg>
+					<span>Поиск</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<script>
+	$('body').addClass('toolbar-show');
+	$('.js-toolbar-btn').on('click', function () {
+		close_finder_body();
+		$('.js-finder-open-input').removeClass('active');
+		$('.js-finder-animate-block').removeClass('open');
+		$('body').removeClass('overlay-open mob-finder-open');
+		if(!$(this).hasClass('active')){
+			$('.js-toolbar-block').addClass('hidden');
+			$('.js-toolbar-btn').removeClass('active');
+			$('.js-toolbar-content').addClass('open');
+			$(this).addClass('active');
+			$('.js-toolbar-content').find("div[data-block='" + $(this).attr('data-info') +"']").removeClass('hidden');
+			disableScroll();
+		}
+		else {
+			$('.js-toolbar-content').removeClass('open');
+			$('.js-toolbar-block').addClass('hidden');
+			$('.js-toolbar-btn').removeClass('active');
+			enableScroll();
+		}
+	});
+	$('.js-toolbar-close').on('click', function () {
+		$('.js-toolbar-content').removeClass('open');
+		$('.js-toolbar-block').addClass('hidden');
+		$('.js-toolbar-btn').removeClass('active');
+		enableScroll();
+	});
+</script>

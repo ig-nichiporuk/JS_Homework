@@ -1,0 +1,97 @@
+.table {
+	position: relative;
+	display: table;
+	width: 100%;
+	&__row {
+		display: table-row;
+	}
+	&__row:not(.table__header) {
+		&:not(:first-of-type){
+			.table__cell {
+				border-top: 1px solid #EDEDED;
+			}
+		}
+		&:last-of-type{
+			.table__cell {
+				border-top: 1px solid #EDEDED;
+				border-bottom: 1px solid #EDEDED;
+			}
+		}
+	}
+	&__row:not(.table__header):hover + &__row:not(.table__header) .table__cell {
+		border-top: 1px solid transparent;
+	}
+	&__row:not(.table__header):hover &__cell,
+	&__row:not(.table__header):hover &__cell .text-gray{
+		color: $active-color;
+		&:first-of-type{
+			color: $active-color;
+		}
+	}
+	&__row:not(.table__header):hover &__cell{
+		@include hover-bgc;
+		&:first-of-type{
+			border-top-left-radius: $bdrs-6;
+			border-bottom-left-radius: $bdrs-6;
+		}
+		&:last-of-type{
+			border-top-right-radius: $bdrs-6;
+			border-bottom-right-radius: $bdrs-6;
+		}
+		&:not(:last-of-type):before {
+			background-color: #F6F6F6;
+		}
+	}
+	&__cell {
+		display: table-cell;
+		vertical-align: middle;
+		font-size: 15px;
+		line-height: 21px;
+		color: $main-color;
+		& > * {
+			display: flex;
+			align-items: center;
+			padding: 0 20px;
+			justify-content: center;
+		}
+		.checkbox__label-text {
+			padding: 0;
+			&:before {
+				position: relative;
+			}
+		}
+	}
+
+	&__row:not(.table__header) &__cell{
+		position: relative;
+		padding: 16px 0;
+		&:not(:only-child):first-of-type {
+			color: $dark-color;
+			font-size: 20px;
+			line-height: 24px;
+			letter-spacing: 0.2px;
+			font-weight: 600;
+		}
+		&:not(:last-of-type):before {
+			content: '';
+			position: absolute;
+			top: 50%;
+			right: 0;
+			transform: translateY(-50%);
+			width: 1px;
+			height: calc(100% - 24px);
+			background-color: #EDEDED;
+		}
+	}
+	&__header &__cell{
+		position: relative;
+		line-height: 18px;
+		font-weight: 600;
+		letter-spacing: -0.2px;
+		color: $dark-color;
+		border-bottom: 1px solid $active-color;
+		& > * {
+			height: 40px;
+		}
+	}
+}

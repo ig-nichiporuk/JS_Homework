@@ -1,0 +1,53 @@
+<div class="contacts">
+	<div class="container">
+		<div class="contacts__wrap">
+			<div class="contacts__filter">
+				{{> filter }}
+			</div>
+			<div class="contacts__block">
+				<div class="contacts__block-title">
+					<div>
+						<h1 class="text-medium">Контакты</h1>
+						<a href="" class="add-contact btn-style">
+							<span>
+								<svg class="">
+									<use xlink:href="#user-plus"></use>
+								</svg>
+								Добавить контакт
+							</span>
+						</a>
+					</div>
+
+					<p class="hidden">Найдено: 15</p>
+				</div>
+				<div class="contacts__block-wrap">
+					<div class="filter__btn-mob js-filter-mob-btn">
+						<svg>
+							<use xlink:href="#settings"></use>
+						</svg>
+						<span>Фильтр</span>
+					</div>
+					{{> filterHashtags }}
+					{{> contactsTable }}
+					<div class="contacts__controls">
+						<span class="total">Выбрано: 2 / 20</span>
+						<span class="edit">
+							<svg>
+							    <use xlink:href="#edit"></use>
+							</svg>
+							Редактировать
+						</span>
+						<span class="delete">
+							<svg>
+							    <use xlink:href="#trash-can"></use>
+							</svg>
+							Удалить
+						</span>
+					</div>
+
+				</div>
+				{{> pagination }}
+			</div>
+		</div>
+	</div>
+</div>
