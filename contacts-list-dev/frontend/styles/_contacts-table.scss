@@ -4,6 +4,9 @@
 	width: 100%;
 	&__row {
 		display: table-row;
+        &-group {
+            display: table-row-group;
+        }
 	}
 	&__row:not(.table__header) {
 		&:not(:first-of-type){
@@ -54,6 +57,9 @@
 			padding: 0 20px;
 			justify-content: center;
 		}
+        .checkbox__label {
+            padding: 16px;
+        }
 		.checkbox__label-text {
 			padding: 0;
 			&:before {
@@ -64,7 +70,7 @@
 
 	&__row:not(.table__header) &__cell{
 		position: relative;
-		padding: 16px 0;
+		padding: 4px 0;
 		&:not(:only-child):first-of-type {
 			color: $dark-color;
 			font-size: 20px;

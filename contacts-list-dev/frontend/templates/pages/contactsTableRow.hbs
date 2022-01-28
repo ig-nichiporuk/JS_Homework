@@ -1,0 +1,24 @@
+{{#each showContacts}}
+	<a href="#" class="table__row" id="{{this.id}}">
+		<span class="table__cell">
+			<span>
+				<label class="checkbox__label">
+					<input type="checkbox" class="checkbox__label-check js-contact-check">
+					<span class="checkbox__label-text"></span>
+				</label>
+			</span>
+		</span>
+		<span class="table__cell">
+			<span>{{this.surname}} {{this.name}} {{this.patronymic}}</span>
+		</span>
+		<span class="table__cell">
+			<span>{{this.birthdate}}</span>
+		</span>
+		<span class="table__cell">
+			<span>{{this.city}}, {{this.street}} {{this.house}}-{{this.apartment}}</span>
+		</span>
+		<span class="table__cell">
+			<span>{{this.company}}</span>
+		</span>
+	</a>
+{{/each}}

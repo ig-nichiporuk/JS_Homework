@@ -1,0 +1,72 @@
+[
+	{
+		"id": "1",
+		"surname": "Ничипорук",
+		"name": "Игорь",
+		"patronymic": "Александрович",
+		"birthdate": "22.08.1991",
+		"company": "СООО Автосеть",
+		"country": "Беларусь",
+		"city": "Брест",
+		"street": "Московская",
+		"house": "311",
+		"apartment": "36",
+		"postcode": "223000"
+	},
+	{
+		"id": "2",
+		"surname": "Петров",
+		"name": "Петр",
+		"patronymic": "Петрович",
+		"birthdate": "15.07.1989",
+		"company": "Савушкин продукт",
+		"country": "Беларусь",
+		"city": "Минск",
+		"street": "Якуба Колоса",
+		"house": "256",
+		"apartment": "89",
+		"postcode": "223017"
+	},
+	{
+		"id": "3",
+		"surname": "Абрамович",
+		"name": "Абрам",
+		"patronymic": "Абрамович",
+		"birthdate": "09.11.1966",
+		"company": "iTechArt",
+		"country": "Беларусь",
+		"city": "Минск",
+		"street": "Машерова",
+		"house": "107",
+		"apartment": "5",
+		"postcode": "223017"
+	},
+	{
+		"id": "4",
+		"surname": "Яковлев",
+		"name": "Якуб",
+		"patronymic": "Якубович",
+		"birthdate": "16.01.1978",
+		"company": "СтройДом",
+		"country": "Беларусь",
+		"city": "Витебск",
+		"street": "Комсомольская",
+		"house": "13",
+		"apartment": "25",
+		"postcode": "223012"
+	},
+	{
+		"id": "5",
+		"surname": "Лазинский",
+		"name": "Егор",
+		"patronymic": "Егорович",
+		"birthdate": "25.01.1991",
+		"company": "Почта",
+		"country": "Беларусь",
+		"city": "Брест",
+		"street": "Гродненская",
+		"house": "56",
+		"apartment": "9",
+		"postcode": "223017"
+	}
+]

@@ -1,5 +1,4 @@
-<div class="contacts">
-	<div class="container">
+<div class="container">
 		<div class="contacts__wrap">
 			<div class="contacts__filter">
 				{{> filter }}
@@ -8,7 +7,7 @@
 				<div class="contacts__block-title">
 					<div>
 						<h1 class="text-medium">Контакты</h1>
-						<a href="" class="add-contact btn-style">
+						<a href="" class="add-contact btn-style btn-style__blue">
 							<span>
 								<svg class="">
 									<use xlink:href="#user-plus"></use>
@@ -30,19 +29,30 @@
 					{{> filterHashtags }}
 					{{> contactsTable }}
 					<div class="contacts__controls">
-						<span class="total">Выбрано: 2 / 20</span>
-						<span class="edit">
-							<svg>
-							    <use xlink:href="#edit"></use>
-							</svg>
-							Редактировать
-						</span>
-						<span class="delete">
-							<svg>
-							    <use xlink:href="#trash-can"></use>
-							</svg>
-							Удалить
-						</span>
+						<span class="contacts__controls-total js-contacts-counter">Выбрано: 0 / 0</span>
+						<div class="contacts__controls-btns js-contacts-controls hidden">
+							<span class="edit">
+								<svg>
+								    <use xlink:href="#edit"></use>
+								</svg>
+								Редактировать
+							</span>
+								<span class="delete">
+								<svg>
+								    <use xlink:href="#trash-can"></use>
+								</svg>
+								Удалить
+							</span>
+
+							<span class="btn-style btn-style__blue">Сохранить</span>
+							<span class="btn-style btn-style__blue">Удалить</span>
+							<span class="btn-style btn-style__gray">Отменить</span>
+						</div>
+						<div class="contacts__controls-items js-show-items">
+							<span>Показать по:</span>
+							<span class="items-count js-show-option {{#ifCond showContactsCount '==' '2'}} active {{/ifCond}}" data-show="2">2</span>
+							<span class="items-count js-show-option {{#ifCond showContactsCount '==' '5'}} active {{/ifCond}}" data-show="5">5</span>
+						</div>
 					</div>
 
 				</div>
@@ -50,4 +60,3 @@
 			</div>
 		</div>
 	</div>
-</div>

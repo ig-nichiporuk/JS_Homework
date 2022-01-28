@@ -75,10 +75,20 @@
 		margin-top: 8px;
 		padding: 16px 0;
 		background-color: #fff;
-		.total {
+        &-total,
+        &-items{
+            font-size: 16px;
+            line-height: 40px;
+        }
+        &-counter {
 			font-size: 18px;
-			line-height: 21px;
+			line-height: 25px;
 		}
+        &-btns {
+            display: flex;
+            align-items: center;
+            margin-left: 40px;
+        }
 		.edit, .delete {
 			display: flex;
 			align-items: center;
@@ -96,9 +106,6 @@
 				}
 			}
 		}
-		.edit {
-			margin-left: 40px;
-		}
 		.delete {
 			margin-left: 16px;
 		}
@@ -112,7 +119,30 @@
 			background-color: #fff;
 			transition: bottom .15s linear;
 		}
+        &-items {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
 
+            .items-count {
+                width: 32px;
+                line-height: 32px;
+                margin-left: 8px;
+                font-weight: 500;
+                border-radius: 4px;
+                text-align: center;
+                &.active {
+                    color: #fff;
+                    background-color: $active-color;
+                }
+                &:hover{
+                    &:not(.active){
+                        cursor: pointer;
+                        @include hover-bgc;
+                    }
+                }
+            }
+        }
 	}
 }
 

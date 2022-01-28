@@ -314,30 +314,27 @@ input[type=number] {
 
 .btn-style {
     display: block;
-    background-color: $dark-color;
     border-radius: $bdrs-4;
 	padding: 0 16px;
     text-align: center;
     font-size: 14px;
-    line-height: 45px;
+    line-height: 40px;
     font-weight: 500;
     letter-spacing: 0.1px;
     color: #fff;
     cursor: pointer;
-    transition: background-color .1s linear, color .1s linear;
-    &.btn-gray {
+    &__blue {
+        background-color: $dark-color;
+        &:hover, &:active {
+            background-color: $active-color;
+        }
+    }
+    &__gray {
         background-color: #ededed;
         color: $dark-color;
-    }
-    &.btn-white {
-        background-color: #fff;
-        color: $gray-text;
-    }
-    &:not([disabled]):not(.btn-white):hover,
-    &:not([disabled]):not(.btn-white):active {
-        color: #fff;
-        background-color: $active-color;
-        transition: background-color .1s linear;
+        &:hover, &:active {
+            background-color: #dbdbdb;
+        }
     }
     &[disabled] {
         pointer-events: none;
