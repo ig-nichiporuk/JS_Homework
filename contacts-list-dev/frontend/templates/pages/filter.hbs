@@ -1,111 +1,111 @@
 <form class="filter js-filter">
-	<div class="filter__wrap js-filter-wrap">
+	<div class="filter__wrap">
 		<div class="filter__label">
 			<span>Фильтр</span>
 			<span class="close js-filter-mob-close">Отмена</span>
 		</div>
 		<div class="filter__item">
 			<div class="filter__block">
-				<span class="filter__title text-medium">Фамилия</span>
+				<span class="filter__title">Фамилия</span>
 				<div class="filter__input">
 					<svg>
 						<use xlink:href="#search"></use>
 					</svg>
-					<input type="text">
+					<input type="text" id="surname">
 				</div>
 			</div>
 		</div>
 		<div class="filter__item">
 			<div class="filter__block">
-				<span class="filter__title text-medium">Имя</span>
+				<span class="filter__title">Имя</span>
 				<div class="filter__input">
 					<svg>
 						<use xlink:href="#search"></use>
 					</svg>
-					<input type="text">
+					<input type="text" id="name">
 				</div>
 			</div>
 		</div>
 		<div class="filter__item">
 			<div class="filter__block">
-				<span class="filter__title text-medium">Отчество</span>
+				<span class="filter__title">Отчество</span>
 				<div class="filter__input">
 					<svg>
 						<use xlink:href="#search"></use>
 					</svg>
-					<input type="text">
+					<input type="text" id="patronymic">
 				</div>
 			</div>
 		</div>
 		<div class="filter__item">
 			<div class="filter__block">
-				<span class="filter__title text-medium">Год рождения</span>
+				<span class="filter__title">Год рождения</span>
 				<div class="filter__range">
-					<input type="tel" placeholder="с 1991">
+					<input type="tel" placeholder="с 1991" id="year-min">
 					<span>-</span>
-					<input type="tel" placeholder="по 1993">
+					<input type="tel" placeholder="по 1993" id="year-max">
 				</div>
 			</div>
 		</div>
 		<div class="filter__item">
 			<div class="filter__block">
-				<span class="filter__title text-medium">Пол</span>
+				<span class="filter__title">Пол</span>
 				<div class="filter__checkboxes">
-					<label class="filter__checkbox checkbox__label">
-						<input type="checkbox" class="checkbox__label-check">
-						<span class="checkbox__label-text">Мужской</span>
+					<label class="filter__checkbox radio">
+						<input type="radio" name="gender" class="radio__input js-choose-option" id="gender-man" data-value="Мужской">
+						<span class="radio__text">Мужской</span>
 					</label>
-					<label class="filter__checkbox checkbox__label">
-						<input type="checkbox" class="checkbox__label-check">
-						<span class="checkbox__label-text">Женский</span>
+					<label class="filter__checkbox radio">
+						<input type="radio" name="gender" class="radio__input js-choose-option" id="gender-woman" data-value="Женский">
+						<span class="radio__text">Женский</span>
 					</label>
 				</div>
 			</div>
 		</div>
 		<div class="filter__item">
 			<div class="filter__block">
-				<span class="filter__title text-medium">Семейное положение</span>
+				<span class="filter__title">Семейное положение</span>
 				<div class="filter__checkboxes">
-					<label class="filter__checkbox checkbox__label">
-						<input type="checkbox" class="checkbox__label-check">
-						<span class="checkbox__label-text">Замужем / женат</span>
+					<label class="filter__checkbox checkbox">
+						<input type="checkbox" class="checkbox__input js-choose-option" id="family" data-value="Замужем / женат">
+						<span class="checkbox__text">Замужем / женат</span>
 					</label>
 				</div>
 			</div>
 		</div>
 		<div class="filter__item">
 			<div class="filter__block">
-				<span class="filter__title text-medium">Страна</span>
+				<span class="filter__title">Страна</span>
 				<div class="filter__input">
 					<svg>
 						<use xlink:href="#search"></use>
 					</svg>
-					<input type="text">
+					<input type="text" id="country">
 				</div>
 			</div>
 		</div>
 
 		<div class="filter__item">
 			<div class="filter__block">
-				<span class="filter__title text-medium">Город</span>
+				<span class="filter__title">Город</span>
 				<div class="filter__input">
 					<svg>
 						<use xlink:href="#search"></use>
 					</svg>
-					<input type="text">
+					<input type="text" id="city">
 				</div>
 			</div>
 		</div>
 		<div class="filter__item">
 			<div class="filter__block">
-				<span class="filter__title text-medium">Адрес</span>
+				<span class="filter__title">Адрес</span>
 				<div class="filter__address">
 					<div class="filter__address-item">
 						<div class="filter__input">
 							<svg>
 								<use xlink:href="#search"></use>
 							</svg>
-							<input type="text" placeholder="Улица">
+							<input type="text" placeholder="Улица" id="street">
 						</div>
 					</div>
 					<div class="filter__address-item">
@@ -113,7 +113,7 @@
 							<svg>
 								<use xlink:href="#search"></use>
 							</svg>
-							<input type="text" placeholder="Дом">
+							<input type="text" placeholder="Дом" id="house">
 						</div>
 					</div>
 					<div class="filter__address-item">
@@ -121,7 +121,7 @@
 							<svg>
 								<use xlink:href="#search"></use>
 							</svg>
-							<input type="text" placeholder="Квартира">
+							<input type="text" placeholder="Квартира" id="apartment">
 						</div>
 					</div>
 				</div>
@@ -129,18 +129,18 @@
 		</div>
 		<div class="filter__item">
 			<div class="filter__block">
-				<span class="filter__title text-medium">Индекс</span>
+				<span class="filter__title">Индекс</span>
 				<div class="filter__input">
 					<svg>
 						<use xlink:href="#search"></use>
 					</svg>
-					<input type="text">
+					<input type="text" id="postcode">
 				</div>
 			</div>
 		</div>
 		<div class="filter__btn js-filter-btns">
-			<button class="btn-style js-filter-show-btn" disabled>Найти</button>
-			<span class="btn-style btn-white hidden js-filter-reset">Сбросить</span>
+			<button class="btn-style btn-style_blue js-filter-show-btn" disabled>Найти</button>
+			<span class="btn-style btn-style_white hidden js-filter-reset">Сбросить</span>
 		</div>
 	</div>
 </form>

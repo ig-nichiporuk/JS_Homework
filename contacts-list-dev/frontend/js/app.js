@@ -10,6 +10,7 @@ import Orders from './views/pages/orders';
 import Order from './views/pages/order';
 import Acts from './views/pages/acts';
 import Contacts from './views/pages/contacts';
+import Contact from './views/pages/contact';
 
 const Routes = {
     // '/': About,
@@ -17,7 +18,9 @@ const Routes = {
     '/orders': Orders,
     '/order/:id': Order,
     '/acts': Acts,
-    '/': Contacts
+    '/': Contacts,
+	'/contact/:id': Contact,
+	'/contact-add': Contact
 };
 
 async function router() {

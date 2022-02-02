@@ -1,0 +1,179 @@
+<div class="container">
+	<div class="contacts__wrap">
+		<div class="contacts__block">
+			{{#if contact}}
+				<div class="contacts__block-title">
+					<div>
+						<h1 class="text-medium js-contact-name">{{contact.surname}} {{contact.name}}</h1>
+					</div>
+				</div>
+			{{/if}}
+			<div class="contacts__block-wrap">
+				<div class="contact">
+					<div class="contact__data">
+						<div class="contact__item">
+							<label>Имя</label>
+							<input
+									type="text"
+									class="js-contact-input {{#if contact}} edit {{/if}}"
+									id="name"
+									{{#if contact}}
+										value="{{contact.name}}"
+										readonly
+									{{/if}}>
+						</div>
+						<div class="contact__item">
+							<label>Фамилия</label>
+							<input
+									type="text"
+									class="js-contact-input {{#if contact}} edit {{/if}}"
+									id="surname"
+									{{#if contact}}
+										value="{{contact.surname}}"
+										readonly
+									{{/if}}>
+						</div>
+						<div class="contact__item">
+							<label>Отчество</label>
+							<input
+									type="text"
+									class="js-contact-input {{#if contact}} edit {{/if}}"
+									id="patronymic"
+									{{#if contact}}
+										value="{{contact.patronymic}}"
+										readonly
+									{{/if}}>
+						</div>
+						<div class="contact__item">
+							<label>Дата рождения</label>
+							<input
+									type="text"
+									class="js-contact-input {{#if contact}} edit {{/if}}"
+									id="birthdate"
+									{{#if contact}}
+										value="{{contact.birthdate}}"
+										readonly
+									{{/if}}>
+						</div>
+						<div class="contact__item">
+							<label>Пол</label>
+							<input
+									type="text"
+									class="js-contact-input {{#if contact}} edit {{/if}}"
+									id="gender"
+									{{#if contact}}
+										value="{{contact.gender}}"
+										readonly
+									{{/if}}>
+						</div>
+						<div class="contact__item">
+							<label>Семейное положение</label>
+							<input
+									type="text"
+									class="js-contact-input {{#if contact}} edit {{/if}}"
+									id="family"
+									{{#if contact}}
+										value="{{contact.family}}"
+										readonly
+									{{/if}}>
+						</div>
+						<div class="contact__item">
+							<label>Веб-сайт</label>
+							<input
+									type="text"
+									class="js-contact-input {{#if contact}} edit {{/if}}"
+									id="site"
+									{{#if contact}}
+										value="{{contact.site}}"
+										readonly
+									{{/if}}>
+						</div>
+						<div class="contact__item">
+							<label>Место работы</label>
+							<input
+									type="text"
+									class="js-contact-input {{#if contact}} edit {{/if}}"
+									id="company"
+									{{#if contact}}
+										value="{{contact.company}}"
+										readonly
+									{{/if}} >
+						</div>
+						<div class="contact__item">
+							<label>Страна</label>
+							<input
+									type="text"
+									class="js-contact-input {{#if contact}} edit {{/if}}"
+									id="country"
+									{{#if contact}}
+										value="{{contact.country}}"
+										readonly
+									{{/if}}>
+						</div>
+						<div class="contact__item">
+							<label>Город</label>
+							<input
+									type="text"
+									class="js-contact-input {{#if contact}} edit {{/if}}"
+									id="city"
+									{{#if contact}}
+										value="{{contact.city}}"
+										readonly
+									{{/if}}>
+						</div>
+						<div class="contact__item">
+							<label>Улица</label>
+							<input
+									type="text"
+									class="js-contact-input {{#if contact}} edit {{/if}}"
+									id="street"
+									{{#if contact}}
+										value="{{contact.street}}"
+										readonly
+									{{/if}}>
+						</div>
+						<div class="contact__item">
+							<label>Дом</label>
+							<input
+									type="text"
+									class="js-contact-input {{#if contact}} edit {{/if}}"
+									id="house"
+									{{#if contact}}
+										value="{{contact.house}}"
+										readonly
+									{{/if}}>
+						</div>
+						<div class="contact__item">
+							<label>Квартира</label>
+							<input
+									type="text"
+									class="js-contact-input {{#if contact}} edit {{/if}}"
+									id="apartment"
+									{{#if contact}}
+										value="{{contact.apartment}}"
+										readonly
+									{{/if}}>
+						</div>
+						<div class="contact__item">
+							<label>Индекс</label>
+							<input
+									type="text"
+									class="js-contact-input {{#if contact}} edit {{/if}}"
+									id="postcode"
+									{{#if contact}}
+										value="{{contact.postcode}}"
+										readonly
+									{{/if}}>
+						</div>
+					</div>
+				</div>
+
+				<a href="#/" class="btn-style btn-style_blue">Назад</a>
+				{{#if contact}}
+					<span class="btn-style btn-style_blue js-contact-edit">Редактировать</span>
+				{{/if}}
+				<span class="btn-style btn-style_blue js-contact-save">Сохранить</span>
+			</div>
+		</div>
+	</div>
+</div>

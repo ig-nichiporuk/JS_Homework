@@ -3,13 +3,10 @@
     position: relative;
     padding: 12px 0 0;
     background-color: #fff;
-    &__wrap {
+    /*&__wrap {
         position: relative;
-        padding: 0 0 90px 0;
-        &.checked {
-            padding: 0 0 105px 0;
-        }
-    }
+        padding: 0 0 95px 0;
+    }*/
 	&__label,
 	&__block,
 	&__see,
@@ -47,15 +44,20 @@
         padding-top: 16px;
         padding-bottom: 16px;
     }
+    &__checkboxes {
+        flex-direction: row;
+        align-items: center;
+    }
     &__title {
         font-size: 14px;
         line-height: 17px;
         letter-spacing: -0.2px;
+        font-weight: 300;
     }
     &__input,
 	&__range,
 	&__title + &__checkboxes{
-        margin: 16px 0 0;
+        margin: 8px 0 0;
     }
     &__input {
 		display: flex;
@@ -80,7 +82,7 @@
         }
     }
     &__checkbox + &__checkbox {
-        margin: 8px 0 0;
+        margin: 0 0 0 16px;
     }
 	&__address {
 		display: flex;
@@ -123,10 +125,6 @@
         }
     }
     &__btn {
-        position: absolute;
-        width: 100%;
-        bottom: 0;
-        left: 0;
         padding-top: 15px;
         padding-bottom: 30px;
         &.fix {

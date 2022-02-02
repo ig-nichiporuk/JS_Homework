@@ -5,6 +5,7 @@
 @import "filter";
 @import "filter-hashtags";
 @import "contacts-table";
+@import "contact-data";
 
 .contacts{
 	padding: 40px 0;
@@ -24,6 +25,7 @@
 	&__block {
 		padding: 0 0 0 40px;
 		&-title {
+            margin-bottom: 32px;
 			& > * {
 				display: block;
 			}
@@ -64,7 +66,6 @@
 			}
 		}
 		&-wrap {
-			margin-top: 32px;
 			background-color: #fff;
 			padding: 24px 40px 80px;
 		}
