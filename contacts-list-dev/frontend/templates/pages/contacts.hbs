@@ -26,33 +26,33 @@
 						</svg>
 						<span>Фильтр</span>
 					</div>
-					{{> filterHashtags }}
+					<div class="hashtags js-filter-hashtags"></div>
 					{{> contactsTable }}
-					<div class="contacts__controls">
+					<div class="contacts__controls js-contacts-control">
 						<span class="contacts__controls-total js-contacts-counter">Выбрано: 0 / 0</span>
 						<div class="contacts__controls-btns js-contacts-controls hidden">
-							<span class="edit">
+							<!--<span class="edit">
 								<svg>
 								    <use xlink:href="#edit"></use>
 								</svg>
 								Редактировать
-							</span>
-								<span class="delete">
+							</span>-->
+							<span class="delete">
 								<svg>
 								    <use xlink:href="#trash-can"></use>
 								</svg>
 								Удалить
 							</span>
-
-							<span class="btn-style btn-style_blue">Сохранить</span>
+						</div>
+						<div class="contacts__controls-options">
 							<span class="btn-style btn-style_blue">Удалить</span>
 							<span class="btn-style btn-style_gray">Отменить</span>
 						</div>
-						<div class="contacts__controls-items js-show-items">
-							<span>Показать по:</span>
-							<span class="items-count js-show-option {{#ifCond showContactsCount '==' '2'}} active {{/ifCond}}" data-show="2">2</span>
-							<span class="items-count js-show-option {{#ifCond showContactsCount '==' '5'}} active {{/ifCond}}" data-show="5">5</span>
-						</div>
+					</div>
+					<div class="contacts__show js-show-items">
+						<span>Показать по:</span>
+						<span class="items-count js-show-option {{#ifCond showContactsCount '==' '2'}} active {{/ifCond}}" data-show="2">2</span>
+						<span class="items-count js-show-option {{#ifCond showContactsCount '==' '5'}} active {{/ifCond}}" data-show="5">5</span>
 					</div>
 
 				</div>

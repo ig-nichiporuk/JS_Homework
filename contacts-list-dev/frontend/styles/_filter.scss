@@ -3,10 +3,10 @@
     position: relative;
     padding: 12px 0 0;
     background-color: #fff;
-    /*&__wrap {
+    &__wrap {
         position: relative;
-        padding: 0 0 95px 0;
-    }*/
+        padding: 0 0 85px 0;
+    }
 	&__label,
 	&__block,
 	&__see,
@@ -125,6 +125,10 @@
         }
     }
     &__btn {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        left: 0;
         padding-top: 15px;
         padding-bottom: 30px;
         &.fix {
@@ -135,7 +139,6 @@
             width: 320px;
             border-top: 1px solid #e1e1e1;
             background-color: #fff;
-            padding-bottom: 0;
             transition: bottom .15s linear;
         }
         .btn-style {

@@ -85,12 +85,13 @@
 			font-size: 18px;
 			line-height: 25px;
 		}
-        &-btns {
+        &-btns,
+        &-options{
             display: flex;
             align-items: center;
             margin-left: 40px;
         }
-		.edit, .delete {
+		.delete {
 			display: flex;
 			align-items: center;
 			svg	 {
@@ -107,9 +108,6 @@
 				}
 			}
 		}
-		.delete {
-			margin-left: 16px;
-		}
 		&.fix {
 			position: fixed;
 			width: 100%;
@@ -120,31 +118,30 @@
 			background-color: #fff;
 			transition: bottom .15s linear;
 		}
-        &-items {
-            display: flex;
-            align-items: center;
-            margin-left: auto;
-
-            .items-count {
-                width: 32px;
-                line-height: 32px;
-                margin-left: 8px;
-                font-weight: 500;
-                border-radius: 4px;
-                text-align: center;
-                &.active {
-                    color: #fff;
-                    background-color: $active-color;
-                }
-                &:hover{
-                    &:not(.active){
-                        cursor: pointer;
-                        @include hover-bgc;
-                    }
+	}
+    &__show {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        .items-count {
+            width: 32px;
+            line-height: 32px;
+            margin-left: 8px;
+            font-weight: 500;
+            border-radius: 4px;
+            text-align: center;
+            &.active {
+                color: #fff;
+                background-color: $active-color;
+            }
+            &:hover{
+                &:not(.active){
+                    cursor: pointer;
+                    @include hover-bgc;
                 }
             }
         }
-	}
+    }
 }
 
 @media (max-width: 1539px) {

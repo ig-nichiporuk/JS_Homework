@@ -45,8 +45,6 @@ router.put('/api/contact/changes',  (req, res) => {
 
 	}
 
-
-
 	res.sendStatus(204);
 });
 
@@ -59,8 +57,5 @@ function getContactsFromDB() {
 function setContactToDB(contactsData) {
 	fs.writeFileSync(config.get('database.contacts'), JSON.stringify(contactsData));
 }
-function generateID() {
-	return Math.random().toString(36).substr(2, 10);
-};
 
 module.exports = router;
