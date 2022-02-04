@@ -5,7 +5,7 @@
 			</div>
 			<div class="contacts__block">
 				<div class="contacts__block-title">
-					<div>
+					<div class="js-title-wrap">
 						<h1 class="text-medium">Контакты</h1>
 						<a href="#/contact-add/" class="add-contact btn-style btn-style_blue">
 							<span>
@@ -16,8 +16,6 @@
 							</span>
 						</a>
 					</div>
-
-					<p class="hidden">Найдено: 15</p>
 				</div>
 				<div class="contacts__block-wrap">
 					<div class="filter__btn-mob js-filter-mob-btn">
@@ -37,16 +35,16 @@
 								</svg>
 								Редактировать
 							</span>-->
-							<span class="delete">
+							<span class="delete js-delete-contact">
 								<svg>
 								    <use xlink:href="#trash-can"></use>
 								</svg>
 								Удалить
 							</span>
-						</div>
-						<div class="contacts__controls-options">
-							<span class="btn-style btn-style_blue">Удалить</span>
-							<span class="btn-style btn-style_gray">Отменить</span>
+							<div class="options hidden js-controls-options">
+								<span class="btn-style btn-style_blue js-delete-ok">Удалить</span>
+								<span class="btn-style btn-style_gray js-delete-cancel">Отменить</span>
+							</div>
 						</div>
 					</div>
 					<div class="contacts__show js-show-items">

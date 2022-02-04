@@ -85,8 +85,7 @@
 			font-size: 18px;
 			line-height: 25px;
 		}
-        &-btns,
-        &-options{
+        &-btns{
             display: flex;
             align-items: center;
             margin-left: 40px;
@@ -108,13 +107,23 @@
 				}
 			}
 		}
+        .options {
+            display: flex;
+            align-items: center;
+            .btn-style {
+                width: 120px;
+                line-height: 36px;
+                & + .btn-style {
+                    margin-left: 8px;
+                }
+            }
+        }
 		&.fix {
 			position: fixed;
 			width: 100%;
 			z-index: 5;
 			bottom: 0;
 			left: initial;
-			border-top: 1px solid #e1e1e1;
 			background-color: #fff;
 			transition: bottom .15s linear;
 		}

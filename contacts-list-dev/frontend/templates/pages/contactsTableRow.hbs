@@ -1,9 +1,9 @@
 {{#each showContacts}}
-	<a href="#/contact/{{this.id}}" class="table__row" id="{{this.id}}">
+	<a href="#/contact/{{this.id}}" class="table__row">
 		<span class="table__cell">
 			<span>
 				<label class="checkbox">
-					<input type="checkbox" class="checkbox__input js-contact-check">
+					<input type="checkbox" class="checkbox__input js-contact-check" data-id="{{this.id}}">
 					<span class="checkbox__text"></span>
 				</label>
 			</span>

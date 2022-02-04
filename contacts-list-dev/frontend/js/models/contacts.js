@@ -18,6 +18,14 @@ class Contacts {
 			body: JSON.stringify({id, data})
 		});
 	}
+
+	async deleteContacts(id) {
+		await fetch('http://localhost:4000/api/contact/delete', {
+			method: 'DELETE',
+			headers: {'Content-Type' : 'application/json'},
+			body: JSON.stringify(id)
+		});
+	}
 }
 
 export default Contacts;

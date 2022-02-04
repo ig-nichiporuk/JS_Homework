@@ -14,9 +14,9 @@ class ContactsList extends Component {
 	}
 
 	divideContactsArr(arr, size = 10) {
-		var outputArr = [];
+		const outputArr = [];
 
-		for (var i = 0; i < arr.length; i += size) {
+		for (let i = 0; i < arr.length; i += size) {
 			outputArr.push(arr.slice(i, i + size));
 		}
 
@@ -29,19 +29,16 @@ class ContactsList extends Component {
 		return contactsTableRow({showContacts});
 	}
 
-
-
-
-
-
-
+	async deleteContacts(id) {
+		return await this.model.deleteContacts(id);
+	}
 
 	async getData() {
 		return await this.model.getContactsList();
 	}
 
-	async render(contacts) {
-		const showContacts = this.divideContactsArr(contacts)[0],
+	async render(data) {
+		const showContacts = this.divideContactsArr(data)[0],
 			showContactsCount = JSON.parse(localStorage.getItem('showContactsCount') || '2');
 
 		return contactsTemplate({showContacts, showContactsCount});
@@ -52,22 +49,32 @@ class ContactsList extends Component {
 		this.setActions();
 	}
 
-	fixedFilterBtn(filter, filterInputs, filterBtns, filterFindBtn) {
-		for (const input of filterInputs) {
+	showContactsAmount(checked, total) {
+		return `Выбрано: ${checked} / ${total}`;
+	}
+
+	displayContsctsControlBtns(btnWrap, deleteBtn, deleteoptions) {
+		btnWrap.classList.add('hidden');
+		deleteoptions.classList.add('hidden');
+		deleteBtn.classList.remove('hidden');
+	}
+
+	fixedBlock(parent, inputs, fixedBlock, filterFindBtn) {
+		for (const input of inputs) {
 			if ((input.value && input.value != 'on') || input.checked) {
 				if (filterFindBtn) filterFindBtn.disabled = false;
 
-				if (window.innerHeight + window.pageYOffset < filter.offsetTop + filter.offsetHeight) {
-					filterBtns.classList.add('fix');
+				if (window.innerHeight + window.pageYOffset < parent.offsetTop + parent.offsetHeight) {
+					fixedBlock.classList.add('fix');
 				} else {
-					filterBtns.classList.remove('fix');
+					fixedBlock.classList.remove('fix');
 				}
 				return;
 			}
 		}
 
 		if (filterFindBtn) filterFindBtn.disabled = true;
-		filterBtns.classList.remove('fix');
+		fixedBlock.classList.remove('fix');
 	}
 
 	listenChangesInFilter(filterInputs) {
@@ -87,7 +94,7 @@ class ContactsList extends Component {
 		};
 	}
 
-	setFilterOptions(contacts, contactsTableBody, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn) {
+	setFilterOptions(contacts, contactsTableBody, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap) {
 		const options = this.listenChangesInFilter(filterInputs),
 			optionsArr = Object.values(options).filter(item => !!item).map(val => {
 				if (val === true) {
@@ -189,7 +196,11 @@ class ContactsList extends Component {
 
 		filterHashtags.innerHTML = optionsArr.length ? filterHashtagsTemplate({optionsArr}) : '';
 
-		this.fixedFilterBtn(filter, filterInputs, filterBtns, filterFindBtn);
+		titleWrap.nextElementSibling && titleWrap.nextElementSibling.remove();
+
+		optionsArr.length && titleWrap.insertAdjacentHTML('afterend', `<p>Найдено: ${contactsResult.length}</p>`);
+
+		this.fixedBlock(filter, filterInputs, filterBtns, filterFindBtn);
 	}
 
 	async setActions() {
@@ -199,34 +210,44 @@ class ContactsList extends Component {
 			changeShowItem = document.getElementsByClassName('js-show-items')[0],
 			contactsTable = document.getElementsByClassName('js-table')[0],
 			contactsTableBody = contactsTable.getElementsByClassName('js-table-body')[0],
+			contactsInputs = contactsTable.getElementsByTagName('input'),
 			contactsControls = document.getElementsByClassName('js-contacts-control')[0],
+			contactDelete = contactsControls.getElementsByClassName('js-delete-contact')[0],
+			contactDeleteOptions = contactsControls.getElementsByClassName('js-controls-options')[0],
+			titleWrap = document.getElementsByClassName('js-title-wrap')[0],
 			filter = document.querySelector('.js-filter'),
 			filterInputs = filter.getElementsByTagName('input'),
 			filterBtns = filter.querySelector('.js-filter-btns'),
 			filterFindBtn = filterBtns.querySelector('.js-filter-show-btn'),
 			filterHashtags = document.querySelector('.js-filter-hashtags');
 
-		counter.textContent = `Выбрано: 0 / ${contacts.length}`;
+		counter.textContent = this.showContactsAmount(0, contacts.length);
 
-		document.body.addEventListener('change', (e) => {
-			const target = e.target;
+		document.body.addEventListener('change', async(e) => {
+			const target = e.target,
+				contacts = await this.getData();
 
 			/*Изменение чекбоксов в таблице контактов*/
 			if (target.classList.contains('js-contact-check')) {
 				const contactChecked = contactsTableBody.querySelectorAll('.js-contact-check:checked');
 
-				counter.textContent = `Выбрано: ${contactChecked.length} / ${contacts.length}`;
+
+				counter.textContent = this.showContactsAmount(contactChecked.length, contacts.length);
 
 				if (contactChecked.length  > 0) {
 					controlsBtn.classList.remove('hidden');
+				} else {
+					this.displayContsctsControlBtns(controlsBtn, contactDelete, contactDeleteOptions);
 				}
 
-				this.fixedFilterBtn(contactsTable, contactChecked, contactsControls, null);
+				contactsControls.style.width = `${contactsTable.clientWidth}px`;
+
+				this.fixedBlock(contactsTable, contactsInputs, contactsControls, null);
 			}
 
 			/*Изменение чекбоксов в фильтре контактов*/
 			if (target.classList.contains('js-choose-option')) {
-				this.fixedFilterBtn(filter, filterInputs, filterBtns, filterFindBtn);
+				this.fixedBlock(filter, filterInputs, filterBtns, filterFindBtn);
 			}
 		});
 
@@ -235,40 +256,93 @@ class ContactsList extends Component {
 			const target = e.target;
 
 			if (target.closest('.js-filter')) {
-				this.fixedFilterBtn(filter, filterInputs, filterBtns, filterFindBtn);
+				this.fixedBlock(filter, filterInputs, filterBtns, filterFindBtn);
 			}
 		});
 
 		window.addEventListener('scroll', () => {
-			this.fixedFilterBtn(filter, filterInputs, filterBtns, filterFindBtn);
+			this.fixedBlock(filter, filterInputs, filterBtns, filterFindBtn);
+			this.fixedBlock(contactsTable, contactsInputs, contactsControls, null);
 		});
 
-		document.body.addEventListener('click', (e) => {
-			const target = e.target;
+		window.addEventListener('resize', function() {
+			contactsControls.style.width = `${contactsTable.clientWidth}px`;
+		});
+
+		document.body.addEventListener('click', async(e) => {
+			const target = e.target,
+				contacts = await this.getData();
 
 			/*Сброс фильтра*/
 			if (target.classList.contains('js-filter-reset')) {
+				const contacts = await this.getData();
+
 				for (const input of filterInputs) {
 					input.value = '';
 					input.checked = false;
 				}
 
-				this.fixedFilterBtn(filter, filterInputs, filterBtns, filterFindBtn);
+				this.fixedBlock(filter, filterInputs, filterBtns, filterFindBtn);
 
 				filterHashtags.innerHTML = '';
+				titleWrap.nextElementSibling && titleWrap.nextElementSibling.remove();
 
 				contactsTableBody.innerHTML = this.renderTable(contacts, contactsTableBody, target.dataset.show);
 			}
 
 			/*Удаление одной опции фильтра*/
 			if (target.classList.contains('js-filter-delete-option')) {
+				const contacts = await this.getData();
+
 				for (const input of filterInputs) {
 					if (input.value === target.innerText || input.dataset.value === target.innerText) {
 						input.value = '';
 						input.checked = false;
 					}
 				}
-				this.setFilterOptions(contacts, contactsTableBody, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn);
+				this.setFilterOptions(contacts, contactsTableBody, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap);
+			}
+
+			/*Удалить контакт*/
+			if (target.closest('.js-delete-contact')) {
+				target.classList.add('hidden');
+				contactDeleteOptions.classList.remove('hidden');
+			}
+
+			/*Удалить контакт Отмена*/
+			if (target.classList.contains('js-delete-cancel')){
+				for (const input of contactsInputs) {
+					input.checked = false;
+				}
+
+				counter.textContent = this.showContactsAmount(0, contacts.length);
+
+				controlsBtn.classList.add('hidden');
+				contactDeleteOptions.classList.add('hidden');
+				contactDelete.classList.remove('hidden');
+			}
+
+			/*Удалить контакт Удалить*/
+			if (target.classList.contains('js-delete-ok')){
+				const contactsTable = document.getElementsByClassName('js-table')[0],
+					contactsInputs = contactsTable.getElementsByTagName('input'),
+					contactsIds = [];
+
+				for (const input of contactsInputs) {
+					if (input.checked) {
+						contactsIds.push(input.dataset.id);
+					}
+				}
+
+				await this.deleteContacts(contactsIds);
+
+				this.displayContsctsControlBtns(controlsBtn, contactDelete, contactDeleteOptions);
+
+				const contacts = await this.getData();
+
+				counter.textContent = this.showContactsAmount(0, contacts.length);
+
+				contactsTableBody.innerHTML = this.renderTable(contacts, contactsTableBody);
 			}
 		});
 
@@ -287,10 +361,12 @@ class ContactsList extends Component {
 			}
 		});
 
-		filterFindBtn.addEventListener('click', (e) => {
+		filterFindBtn.addEventListener('click', async(e) => {
 			e.preventDefault();
 
-			this.setFilterOptions(contacts, contactsTableBody, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn);
+			const contacts = await this.getData();
+
+			this.setFilterOptions(contacts, contactsTableBody, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap);
 		});
 	}
 }

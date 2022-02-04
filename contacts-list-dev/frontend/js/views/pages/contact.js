@@ -23,7 +23,8 @@ class Contact extends Component {
 	}
 
 
-	async render(contact) {
+	async render(data) {
+		const contact = data;
 		return contactTemplate({contact});
 	}
 
@@ -49,7 +50,7 @@ class Contact extends Component {
 		}
 
 
-		saveBtn.addEventListener('click', () => {
+		saveBtn.addEventListener('click', async () => {
 			changes.id = generateID();
 			changes.surname = contactOptions.surname.value;
 			changes.name = contactOptions.name.value;
@@ -67,7 +68,7 @@ class Contact extends Component {
 			changes.postcode = contactOptions.postcode.value;
 
 			if (this.request.id) {
-				this.setData(this.request.id, changes);
+				await this.setData(this.request.id, changes);
 
 				contactName.innerText = `${contactOptions.surname.value} ${contactOptions.name.value}`;
 
@@ -76,7 +77,7 @@ class Contact extends Component {
 					contactOption.classList.add('edit');
 				}
 			} else {
-				this.setData(null, changes);
+				await this.setData(null, changes);
 
 				location.hash = '#/';
 			}

@@ -24,22 +24,18 @@ const Routes = {
 };
 
 async function router() {
-	const contentContainer = document.getElementsByClassName('contacts')[0];
-
-	showL();
-
-	const request = parseRequestURL(),
+	const contentContainer = document.getElementsByClassName('contacts')[0],
+		request = parseRequestURL(),
 		parsedURL = `/${request.resource || ''}${request.id ? '/:id' : ''}${request.action ? `/${request.action}` : ''}`,
 		page = Routes[parsedURL] ? new Routes[parsedURL]() : new Error404();
 
-	page.getData().then(data => {
-		page.render(data).then(html => {
-			contentContainer.innerHTML = html;
-			page.afterRender();
-		});
-	});
 
-	hideL();
+	const data = await page.getData(),
+		html = await page.render(data);
+
+	contentContainer.innerHTML = html;
+
+	page.afterRender();
 }
 
 module.hot ? module.hot.accept(router()) : window.addEventListener('load', router);
