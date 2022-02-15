@@ -146,6 +146,11 @@
             position: relative;
             bottom: 0;
             transition: bottom 0s linear;
+            &.disabled {
+                pointer-events: none;
+                cursor: default;
+                background-color: #C2C2CF;
+            }
         }
         &-mob {
             display: none;

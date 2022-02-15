@@ -3,7 +3,7 @@
 			<div class="contacts__filter">
 				{{> filter }}
 			</div>
-			<div class="contacts__block">
+			<div class="contacts__block js-contacts-block">
 				<div class="contacts__block-title">
 					<div class="js-title-wrap">
 						<h1 class="text-medium">Контакты</h1>
@@ -49,8 +49,13 @@
 					</div>
 					<div class="contacts__show js-show-items">
 						<span>Показать по:</span>
-						<span class="items-count js-show-option {{#ifCond showContactsCount '==' '2'}} active {{/ifCond}}" data-show="2">2</span>
-						<span class="items-count js-show-option {{#ifCond showContactsCount '==' '5'}} active {{/ifCond}}" data-show="5">5</span>
+						{{#if showContactsCount}}
+							<span class="items-count js-show-option {{#ifCond showContactsCount '==' '10'}} active {{/ifCond}}" data-show="10">10</span>
+							<span class="items-count js-show-option {{#ifCond showContactsCount '==' '20'}} active {{/ifCond}}" data-show="20">20</span>
+						{{else}}
+							<span class="items-count js-show-option active" data-show="10">10</span>
+							<span class="items-count js-show-option" data-show="20">20</span>
+						{{/if}}
 					</div>
 
 				</div>

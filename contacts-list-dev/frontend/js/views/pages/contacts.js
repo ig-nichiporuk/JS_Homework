@@ -3,6 +3,7 @@ import Component from '../../views/component';
 import contactsTemplate from '../../../templates/pages/contacts.hbs';
 import contactsTableRow from '../../../templates/pages/contactsTableRow.hbs';
 import filterHashtagsTemplate from '../../../templates/pages/filterHashtags.hbs';
+import paginationTemplate from '../../../templates/pages/pagination.hbs';
 
 import Contacts from '../../models/contacts';
 
@@ -13,8 +14,9 @@ class ContactsList extends Component {
 		this.model = new Contacts();
 	}
 
-	divideContactsArr(arr, size = 10) {
-		const outputArr = [];
+	divideContactsArr(arr) {
+		const outputArr = [],
+			size = +JSON.parse(localStorage.getItem('showContactsCount')) || 10;
 
 		for (let i = 0; i < arr.length; i += size) {
 			outputArr.push(arr.slice(i, i + size));
@@ -23,8 +25,22 @@ class ContactsList extends Component {
 		return outputArr;
 	}
 
-	renderTable(contacts, table, count = 10) {
-		const showContacts = this.divideContactsArr(contacts, count)[0];
+	createPagination(contacts, indexPage) {
+		const contactsDivide = this.divideContactsArr(contacts),
+			contactsDivideLength = contactsDivide.length,
+			indexPageNumber = indexPage + 1;
+
+		return paginationTemplate({indexPage, indexPageNumber, contactsDivide, contactsDivideLength});
+	}
+
+	renderPagination(contactsBlock, pagination, contacts, indexPage = 0) {
+		if (pagination) pagination.remove();
+
+		contactsBlock.insertAdjacentHTML('beforeend', this.createPagination(contacts, indexPage));
+	}
+
+	renderTable(contacts, index = 0) {
+		const showContacts = this.divideContactsArr(contacts)[index];
 
 		return contactsTableRow({showContacts});
 	}
@@ -33,27 +49,11 @@ class ContactsList extends Component {
 		return await this.model.deleteContacts(id);
 	}
 
-	async getData() {
-		return await this.model.getContactsList();
-	}
-
-	async render(data) {
-		const showContacts = this.divideContactsArr(data)[0],
-			showContactsCount = JSON.parse(localStorage.getItem('showContactsCount') || '2');
-
-		return contactsTemplate({showContacts, showContactsCount});
-	}
-
-	afterRender() {
-		// super.afterRender();
-		this.setActions();
-	}
-
 	showContactsAmount(checked, total) {
 		return `Выбрано: ${checked} / ${total}`;
 	}
 
-	displayContsctsControlBtns(btnWrap, deleteBtn, deleteoptions) {
+	displayContactsControlBtns(btnWrap, deleteBtn, deleteoptions) {
 		btnWrap.classList.add('hidden');
 		deleteoptions.classList.add('hidden');
 		deleteBtn.classList.remove('hidden');
@@ -62,7 +62,7 @@ class ContactsList extends Component {
 	fixedBlock(parent, inputs, fixedBlock, filterFindBtn) {
 		for (const input of inputs) {
 			if ((input.value && input.value != 'on') || input.checked) {
-				if (filterFindBtn) filterFindBtn.disabled = false;
+				if (filterFindBtn) filterFindBtn.classList.remove('disabled');
 
 				if (window.innerHeight + window.pageYOffset < parent.offsetTop + parent.offsetHeight) {
 					fixedBlock.classList.add('fix');
@@ -79,29 +79,24 @@ class ContactsList extends Component {
 
 	listenChangesInFilter(filterInputs) {
 		return {
-			'name' : filterInputs.name.value || '',
-			'surname' : filterInputs.surname.value || '',
-			'patronymic' : filterInputs.patronymic.value || '',
-			'birthdateMin' : filterInputs['year-min'].value || '',
-			'birthdateMax' : filterInputs['year-max'].value || '',
-			'gender' : filterInputs['gender-man'].checked ? filterInputs['gender-man'].dataset.value : filterInputs['gender-woman'].checked ? filterInputs['gender-woman'].dataset.value : '',
-			'family' : filterInputs.family.checked ? true : false,
-			'country' : filterInputs.country.value || '',
-			'city' : filterInputs.city.value || '',
-			'street' : filterInputs.street.value || '',
-			'house' : filterInputs.house.value || '',
-			'apartment' : filterInputs.apartment.value || ''
+			'name': filterInputs.name.value || '',
+			'surname': filterInputs.surname.value || '',
+			'patronymic': filterInputs.patronymic.value || '',
+			'birthdateMin': filterInputs['year-min'].value || '',
+			'birthdateMax': filterInputs['year-max'].value || '',
+			'gender': filterInputs['gender-man'].checked ? filterInputs['gender-man'].dataset.value : filterInputs['gender-woman'].checked ? filterInputs['gender-woman'].dataset.value : '',
+			'family': filterInputs.family.checked ? true : false,
+			'country': filterInputs.country.value || '',
+			'city': filterInputs.city.value || '',
+			'street': filterInputs.street.value || '',
+			'house': filterInputs.house.value || '',
+			'apartment': filterInputs.apartment.value || ''
 		};
 	}
 
-	setFilterOptions(contacts, contactsTableBody, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap) {
-		const options = this.listenChangesInFilter(filterInputs),
-			optionsArr = Object.values(options).filter(item => !!item).map(val => {
-				if (val === true) {
-					val = 'Замужем / женат';
-				}
-				return val;
-			});
+	filterContacts(contacts, filterInputs) {
+		const options = this.listenChangesInFilter(filterInputs);
+
 		let contactsResult = [];
 
 		if (options.surname) {
@@ -192,22 +187,51 @@ class ContactsList extends Component {
 			contactsResult = result.filter(item => item.apartment === options.apartment ? item : '');
 		}
 
-		contactsTableBody.innerHTML = contactsResult.length ? this.renderTable(contactsResult, contactsTableBody) : this.renderTable(contacts, contactsTableBody);
+		return contactsResult;
+	}
+
+	showContacts(contacts, contactsTableBody, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap) {
+		const contactsResult = this.filterContacts(contacts, filterInputs).length ? this.filterContacts(contacts, filterInputs) : contacts,
+			options = this.listenChangesInFilter(filterInputs),
+			optionsArr = Object.values(options).filter(item => !!item).map(val => {
+				if (val === true) {
+					val = 'Замужем / женат';
+				}
+				return val;
+			});
+
+		contactsTableBody.innerHTML = contactsResult.length ? this.renderTable(contactsResult) : this.renderTable(contacts);
 
 		filterHashtags.innerHTML = optionsArr.length ? filterHashtagsTemplate({optionsArr}) : '';
 
 		titleWrap.nextElementSibling && titleWrap.nextElementSibling.remove();
 
 		optionsArr.length && titleWrap.insertAdjacentHTML('afterend', `<p>Найдено: ${contactsResult.length}</p>`);
+	}
 
-		this.fixedBlock(filter, filterInputs, filterBtns, filterFindBtn);
+	async getData() {
+		return await this.model.getContactsList();
+	}
+
+	async render(data) {
+		const showContactsCount = JSON.parse(localStorage.getItem('showContactsCount')),
+			contactsDivide = this.divideContactsArr(data),
+			contactsDivideLength = contactsDivide.length,
+			showContacts = contactsDivide[0],
+			indexPage = 0;
+
+		return contactsTemplate({indexPage, contactsDivide, contactsDivideLength, showContacts, showContactsCount});
+	}
+
+	afterRender() {
+		this.setActions();
 	}
 
 	async setActions() {
 		const contacts = await this.getData(),
+			contactsBlock = document.getElementsByClassName('js-contacts-block')[0],
 			counter = document.getElementsByClassName('js-contacts-counter')[0],
 			controlsBtn = document.getElementsByClassName('js-contacts-controls')[0],
-			changeShowItem = document.getElementsByClassName('js-show-items')[0],
 			contactsTable = document.getElementsByClassName('js-table')[0],
 			contactsTableBody = contactsTable.getElementsByClassName('js-table-body')[0],
 			contactsInputs = contactsTable.getElementsByTagName('input'),
@@ -219,25 +243,28 @@ class ContactsList extends Component {
 			filterInputs = filter.getElementsByTagName('input'),
 			filterBtns = filter.querySelector('.js-filter-btns'),
 			filterFindBtn = filterBtns.querySelector('.js-filter-show-btn'),
-			filterHashtags = document.querySelector('.js-filter-hashtags');
+			filterHashtags = document.querySelector('.js-filter-hashtags'),
+			contactsResult = this.filterContacts(contacts, filterInputs);
 
-		counter.textContent = this.showContactsAmount(0, contacts.length);
+		counter.textContent = this.showContactsAmount(0, contactsResult.length || contacts.length);
 
-		document.body.addEventListener('change', async(e) => {
+		document.body.addEventListener('change', async (e) => {
 			const target = e.target,
-				contacts = await this.getData();
+				contacts = await this.getData(),
+				pagination = contactsBlock.getElementsByClassName('js-pagination')[0];
 
 			/*Изменение чекбоксов в таблице контактов*/
 			if (target.classList.contains('js-contact-check')) {
-				const contactChecked = contactsTableBody.querySelectorAll('.js-contact-check:checked');
+				const contactChecked = contactsTableBody.querySelectorAll('.js-contact-check:checked'),
+					contactsResult = this.filterContacts(contacts, filterInputs);
 
 
-				counter.textContent = this.showContactsAmount(contactChecked.length, contacts.length);
+				counter.textContent = this.showContactsAmount(contactChecked.length, contactsResult.length || contacts.length);
 
-				if (contactChecked.length  > 0) {
+				if (contactChecked.length > 0) {
 					controlsBtn.classList.remove('hidden');
 				} else {
-					this.displayContsctsControlBtns(controlsBtn, contactDelete, contactDeleteOptions);
+					this.displayContactsControlBtns(controlsBtn, contactDelete, contactDeleteOptions);
 				}
 
 				contactsControls.style.width = `${contactsTable.clientWidth}px`;
@@ -249,6 +276,15 @@ class ContactsList extends Component {
 			if (target.classList.contains('js-choose-option')) {
 				this.fixedBlock(filter, filterInputs, filterBtns, filterFindBtn);
 			}
+
+			/*Изменение страницы*/
+			if (target.classList.contains('js-pagination-select')) {
+				contactsTableBody.innerHTML = this.renderTable(contacts, +target.value - 1);
+
+				this.renderPagination(contactsBlock, pagination, contacts, +target.value - 1);
+			}
+
+
 		});
 
 		/*Изменение полей в фильтре*/
@@ -265,13 +301,16 @@ class ContactsList extends Component {
 			this.fixedBlock(contactsTable, contactsInputs, contactsControls, null);
 		});
 
-		window.addEventListener('resize', function() {
+		window.addEventListener('resize', function () {
 			contactsControls.style.width = `${contactsTable.clientWidth}px`;
 		});
 
-		document.body.addEventListener('click', async(e) => {
+		document.body.addEventListener('click', async (e) => {
 			const target = e.target,
-				contacts = await this.getData();
+				contacts = await this.getData(),
+				contactsResult = this.filterContacts(contacts, filterInputs),
+				pagination = contactsBlock.getElementsByClassName('js-pagination')[0],
+				paginationSelect = contactsBlock.getElementsByClassName('js-pagination-select')[0];
 
 			/*Сброс фильтра*/
 			if (target.classList.contains('js-filter-reset')) {
@@ -287,20 +326,31 @@ class ContactsList extends Component {
 				filterHashtags.innerHTML = '';
 				titleWrap.nextElementSibling && titleWrap.nextElementSibling.remove();
 
-				contactsTableBody.innerHTML = this.renderTable(contacts, contactsTableBody, target.dataset.show);
+				contactsTableBody.innerHTML = this.renderTable(contacts, target.dataset.show);
+
+				counter.textContent = this.showContactsAmount(0, contacts.length);
+
+				this.renderPagination(contactsBlock, pagination, contacts);
 			}
 
 			/*Удаление одной опции фильтра*/
 			if (target.classList.contains('js-filter-delete-option')) {
-				const contacts = await this.getData();
-
 				for (const input of filterInputs) {
 					if (input.value === target.innerText || input.dataset.value === target.innerText) {
 						input.value = '';
 						input.checked = false;
 					}
 				}
-				this.setFilterOptions(contacts, contactsTableBody, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap);
+
+				const contactsResult = this.filterContacts(contacts, filterInputs);
+
+				this.showContacts(contacts, contactsTableBody, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap);
+
+				this.fixedBlock(filter, filterInputs, filterBtns, filterFindBtn);
+
+				counter.textContent = this.showContactsAmount(0, contactsResult.length || contacts.length);
+
+				this.renderPagination(contactsBlock, pagination, contactsResult.length ? contactsResult : contacts);
 			}
 
 			/*Удалить контакт*/
@@ -310,20 +360,18 @@ class ContactsList extends Component {
 			}
 
 			/*Удалить контакт Отмена*/
-			if (target.classList.contains('js-delete-cancel')){
+			if (target.classList.contains('js-delete-cancel')) {
 				for (const input of contactsInputs) {
 					input.checked = false;
 				}
 
-				counter.textContent = this.showContactsAmount(0, contacts.length);
+				counter.textContent = this.showContactsAmount(0, contactsResult.length || contacts.length);
 
-				controlsBtn.classList.add('hidden');
-				contactDeleteOptions.classList.add('hidden');
-				contactDelete.classList.remove('hidden');
+				this.displayContactsControlBtns(controlsBtn, contactDelete, contactDeleteOptions);
 			}
 
 			/*Удалить контакт Удалить*/
-			if (target.classList.contains('js-delete-ok')){
+			if (target.classList.contains('js-delete-ok')) {
 				const contactsTable = document.getElementsByClassName('js-table')[0],
 					contactsInputs = contactsTable.getElementsByTagName('input'),
 					contactsIds = [];
@@ -336,37 +384,59 @@ class ContactsList extends Component {
 
 				await this.deleteContacts(contactsIds);
 
-				this.displayContsctsControlBtns(controlsBtn, contactDelete, contactDeleteOptions);
+				this.displayContactsControlBtns(controlsBtn, contactDelete, contactDeleteOptions);
 
 				const contacts = await this.getData();
 
-				counter.textContent = this.showContactsAmount(0, contacts.length);
+				counter.textContent = this.showContactsAmount(0, contactsResult.length || contacts.length);
 
-				contactsTableBody.innerHTML = this.renderTable(contacts, contactsTableBody);
+				contactsTableBody.innerHTML = this.renderTable(contacts);
+
+				this.renderPagination(contactsBlock, pagination, contactsResult.length ? contactsResult : contacts);
 			}
-		});
 
-		/*Изменение отображаемых контактов в таблице*/
-		changeShowItem.addEventListener('click', (e) => {
-			const target = e.target;
+			/*Кнопка поиска контактов*/
 
+			if (target.classList.contains('js-filter-show-btn')) {
+				this.displayContactsControlBtns(controlsBtn, contactDelete, contactDeleteOptions);
+
+				this.showContacts(contacts, contactsTableBody, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap);
+
+				this.renderPagination(contactsBlock, pagination, contactsResult);
+
+				counter.textContent = this.showContactsAmount(0, contactsResult.length);
+			}
+
+			/*Изменение отображаемых контактов в таблице*/
 			if (target.classList.contains('js-show-option')) {
+				const changeShowItem = document.getElementsByClassName('js-show-items')[0];
+
 				localStorage.setItem('showContactsCount', JSON.stringify(target.dataset.show));
 
 				changeShowItem.querySelector('.js-show-option.active').classList.remove('active');
 
 				target.classList.add('active');
 
-				contactsTableBody.innerHTML = this.renderTable(contacts, contactsTableBody, target.dataset.show);
+				contactsTableBody.innerHTML = contactsResult.length ? this.renderTable(contactsResult) : this.renderTable(contacts);
+
+				this.renderPagination(contactsBlock, pagination, contactsResult.length ? contactsResult : contacts);
 			}
-		});
 
-		filterFindBtn.addEventListener('click', async(e) => {
-			e.preventDefault();
+			/*Следующая страница*/
+			if (target.closest('.js-next-page')) {
+				contactsTableBody.innerHTML = this.renderTable(contacts, +paginationSelect.value);
 
-			const contacts = await this.getData();
+				this.renderPagination(contactsBlock, pagination, contacts, +paginationSelect.value);
+			}
 
-			this.setFilterOptions(contacts, contactsTableBody, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap);
+			/*Предыдущая страница*/
+			if (target.closest('.js-prev-page')) {
+				contactsTableBody.innerHTML = this.renderTable(contacts, +paginationSelect.value - 2);
+
+				this.renderPagination(contactsBlock, pagination, contacts, +paginationSelect.value - 2);
+			}
+
+
 		});
 	}
 }

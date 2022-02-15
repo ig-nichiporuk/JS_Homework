@@ -1,6 +1,6 @@
-import '../styles/main';
+import {parseRequestURL} from './helpers/utils';
 
-import {parseRequestURL, showL, hideL} from './helpers/utils';
+import '../styles/main';
 
 
 import Error404 from './views/pages/error404';

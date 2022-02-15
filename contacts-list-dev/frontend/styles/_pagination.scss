@@ -23,6 +23,12 @@
                 fill: $active-color;
             }
         }
+        &.disabled {
+            pointer-events: none;
+            svg {
+                fill: #ccc
+            }
+        }
     }
     &__prev {
         box-shadow: inset -1px 0 0 0 #EDEDED;
@@ -37,7 +43,7 @@
         }
     }
     &__pages {
-        display: flex;
+        /*display: flex;
         align-items: center;
         .page{
             &-num,
@@ -70,6 +76,11 @@
         .page-num + .page-empty,
         .page-empty + .page-num {
             margin: 0 0 0 10px;
+        }*/
+        .select-style {
+            color: #fff;
+            font-size: 18px;
+            background: $active-color url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.6001 9.61533L6.47601 8.80005L11.6001 13.6102L16.7242 8.80005L17.6001 9.61533L11.6001 15.2L5.6001 9.61533Z' fill='%23ffffff'/%3E%3C/svg%3E%0A") calc(100% - 8px) 50% no-repeat;
         }
     }
 }
