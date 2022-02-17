@@ -62,7 +62,7 @@ class ContactsList extends Component {
 	fixedBlock(parent, inputs, fixedBlock, filterFindBtn) {
 		for (const input of inputs) {
 			if ((input.value && input.value != 'on') || input.checked) {
-				if (filterFindBtn) filterFindBtn.classList.remove('disabled');
+				if (filterFindBtn) filterFindBtn.disabled = false;
 
 				if (window.innerHeight + window.pageYOffset < parent.offsetTop + parent.offsetHeight) {
 					fixedBlock.classList.add('fix');
@@ -102,17 +102,17 @@ class ContactsList extends Component {
 		if (options.surname) {
 			const result = contactsResult.length ? contactsResult : contacts;
 
-			contactsResult = result.filter(item => item.surname === options.surname ? item : '');
+			contactsResult = result.filter(item => item.surname.toLowerCase() === options.surname.toLowerCase() ? item : '');
 		}
 		if (options.name) {
 			const result = contactsResult.length ? contactsResult : contacts;
 
-			contactsResult = result.filter(item => item.name === options.name ? item : '');
+			contactsResult = result.filter(item => item.name.toLowerCase() === options.name.toLowerCase() ? item : '');
 		}
 		if (options.patronymic) {
 			const result = contactsResult.length ? contactsResult : contacts;
 
-			contactsResult = result.filter(item => item.patronymic === options.patronymic ? item : '');
+			contactsResult = result.filter(item => item.patronymic.toLowerCase() === options.patronymic.toLowerCase() ? item : '');
 		}
 
 		if (options.birthdateMin && options.birthdateMax) {
@@ -160,31 +160,31 @@ class ContactsList extends Component {
 		if (options.country) {
 			const result = contactsResult.length ? contactsResult : contacts;
 
-			contactsResult = result.filter(item => item.country === options.country ? item : '');
+			contactsResult = result.filter(item => item.country.toLowerCase() === options.country.toLowerCase() ? item : '');
 		}
 
 		if (options.city) {
 			const result = contactsResult.length ? contactsResult : contacts;
 
-			contactsResult = result.filter(item => item.city === options.city ? item : '');
+			contactsResult = result.filter(item => item.city.toLowerCase() === options.city.toLowerCase() ? item : '');
 		}
 
 		if (options.street) {
 			const result = contactsResult.length ? contactsResult : contacts;
 
-			contactsResult = result.filter(item => item.street === options.street ? item : '');
+			contactsResult = result.filter(item => item.street.toLowerCase() === options.street.toLowerCase() ? item : '');
 		}
 
 		if (options.house) {
 			const result = contactsResult.length ? contactsResult : contacts;
 
-			contactsResult = result.filter(item => item.house === options.house ? item : '');
+			contactsResult = result.filter(item => item.house.toLowerCase() === options.house.toLowerCase() ? item : '');
 		}
 
 		if (options.apartment) {
 			const result = contactsResult.length ? contactsResult : contacts;
 
-			contactsResult = result.filter(item => item.apartment === options.apartment ? item : '');
+			contactsResult = result.filter(item => item.apartment.toLowerCase() === options.apartment.toLowerCase() ? item : '');
 		}
 
 		return contactsResult;
@@ -192,13 +192,13 @@ class ContactsList extends Component {
 
 	showContacts(contacts, contactsTableBody, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap) {
 		const contactsResult = this.filterContacts(contacts, filterInputs).length ? this.filterContacts(contacts, filterInputs) : contacts,
-			options = this.listenChangesInFilter(filterInputs),
-			optionsArr = Object.values(options).filter(item => !!item).map(val => {
-				if (val === true) {
-					val = 'Замужем / женат';
-				}
-				return val;
-			});
+			options = this.listenChangesInFilter(filterInputs);
+
+		options.birthdateMin && (options.birthdateMin = `с ${options.birthdateMin}`);
+		options.birthdateMax && (options.birthdateMax = `по ${options.birthdateMax}`);
+		options.family && (options.family = 'Замужем / женат');
+
+		const optionsArr = Object.values(options).filter(item => !!item);
 
 		contactsTableBody.innerHTML = contactsResult.length ? this.renderTable(contactsResult) : this.renderTable(contacts);
 
@@ -248,7 +248,7 @@ class ContactsList extends Component {
 
 		counter.textContent = this.showContactsAmount(0, contactsResult.length || contacts.length);
 
-		document.body.addEventListener('change', async (e) => {
+		document.body.addEventListener('change', async(e) => {
 			const target = e.target,
 				contacts = await this.getData(),
 				pagination = contactsBlock.getElementsByClassName('js-pagination')[0];
@@ -336,6 +336,9 @@ class ContactsList extends Component {
 			/*Удаление одной опции фильтра*/
 			if (target.classList.contains('js-filter-delete-option')) {
 				for (const input of filterInputs) {
+					if (/^((с|по)\s{1})(?<=.)\d{4}/igm.test( target.innerText)) {
+						target.innerText = target.innerText.replace(/(с|по)/igm, '');
+					}
 					if (input.value === target.innerText || input.dataset.value === target.innerText) {
 						input.value = '';
 						input.checked = false;
@@ -395,18 +398,6 @@ class ContactsList extends Component {
 				this.renderPagination(contactsBlock, pagination, contactsResult.length ? contactsResult : contacts);
 			}
 
-			/*Кнопка поиска контактов*/
-
-			if (target.classList.contains('js-filter-show-btn')) {
-				this.displayContactsControlBtns(controlsBtn, contactDelete, contactDeleteOptions);
-
-				this.showContacts(contacts, contactsTableBody, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap);
-
-				this.renderPagination(contactsBlock, pagination, contactsResult);
-
-				counter.textContent = this.showContactsAmount(0, contactsResult.length);
-			}
-
 			/*Изменение отображаемых контактов в таблице*/
 			if (target.classList.contains('js-show-option')) {
 				const changeShowItem = document.getElementsByClassName('js-show-items')[0];
@@ -435,8 +426,22 @@ class ContactsList extends Component {
 
 				this.renderPagination(contactsBlock, pagination, contacts, +paginationSelect.value - 2);
 			}
+		});
 
+		filter.addEventListener('submit', async(e) => {
+			e.preventDefault();
 
+			const contacts = await this.getData(),
+				contactsResult = this.filterContacts(contacts, filterInputs),
+				pagination = contactsBlock.getElementsByClassName('js-pagination')[0];
+
+			this.displayContactsControlBtns(controlsBtn, contactDelete, contactDeleteOptions);
+
+			this.showContacts(contacts, contactsTableBody, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap);
+
+			this.renderPagination(contactsBlock, pagination, contactsResult);
+
+			counter.textContent = this.showContactsAmount(0, contactsResult.length);
 		});
 	}
 }
