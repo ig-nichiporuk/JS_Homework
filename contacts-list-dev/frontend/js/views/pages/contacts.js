@@ -191,7 +191,7 @@ class ContactsList extends Component {
 	}
 
 	showContacts(contacts, contactsTableBody, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap) {
-		const contactsResult = this.filterContacts(contacts, filterInputs).length ? this.filterContacts(contacts, filterInputs) : contacts,
+		const contactsResult = this.filterContacts(contacts, filterInputs),
 			options = this.listenChangesInFilter(filterInputs);
 
 		options.birthdateMin && (options.birthdateMin = `с ${options.birthdateMin}`);
@@ -200,7 +200,13 @@ class ContactsList extends Component {
 
 		const optionsArr = Object.values(options).filter(item => !!item);
 
-		contactsTableBody.innerHTML = contactsResult.length ? this.renderTable(contactsResult) : this.renderTable(contacts);
+		if (contactsResult.length && optionsArr.length) {
+			contactsTableBody.innerHTML = this.renderTable(contactsResult);
+		} else if (optionsArr.length) {
+			contactsTableBody.innerHTML = 'Ничего не найдено';
+		} else {
+			contactsTableBody.innerHTML = this.renderTable(contacts);
+		}
 
 		filterHashtags.innerHTML = optionsArr.length ? filterHashtagsTemplate({optionsArr}) : '';
 
@@ -301,14 +307,15 @@ class ContactsList extends Component {
 			this.fixedBlock(contactsTable, contactsInputs, contactsControls, null);
 		});
 
-		window.addEventListener('resize', function () {
+		window.addEventListener('resize', function() {
 			contactsControls.style.width = `${contactsTable.clientWidth}px`;
 		});
 
-		document.body.addEventListener('click', async (e) => {
+		document.body.addEventListener('click', async(e) => {
 			const target = e.target,
 				contacts = await this.getData(),
 				contactsResult = this.filterContacts(contacts, filterInputs),
+				options = this.listenChangesInFilter(filterInputs),
 				pagination = contactsBlock.getElementsByClassName('js-pagination')[0],
 				paginationSelect = contactsBlock.getElementsByClassName('js-pagination-select')[0];
 
@@ -400,7 +407,8 @@ class ContactsList extends Component {
 
 			/*Изменение отображаемых контактов в таблице*/
 			if (target.classList.contains('js-show-option')) {
-				const changeShowItem = document.getElementsByClassName('js-show-items')[0];
+				const changeShowItem = document.getElementsByClassName('js-show-items')[0],
+					optionsArr = Object.values(options).filter(item => !!item);
 
 				localStorage.setItem('showContactsCount', JSON.stringify(target.dataset.show));
 
@@ -408,7 +416,13 @@ class ContactsList extends Component {
 
 				target.classList.add('active');
 
-				contactsTableBody.innerHTML = contactsResult.length ? this.renderTable(contactsResult) : this.renderTable(contacts);
+				if (contactsResult.length && optionsArr.length) {
+					contactsTableBody.innerHTML = this.renderTable(contactsResult);
+				} else if (optionsArr.length) {
+					return;
+				} else {
+					contactsTableBody.innerHTML = this.renderTable(contacts);
+				}
 
 				this.renderPagination(contactsBlock, pagination, contactsResult.length ? contactsResult : contacts);
 			}
