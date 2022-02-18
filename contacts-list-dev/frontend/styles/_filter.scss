@@ -154,9 +154,9 @@
         }
         &-mob {
             display: none;
-            justify-content: center;
+            justify-content: flex-end;
             align-items: center;
-            margin: 0 0 0 15px;
+            margin: 0 0 20px 0;
             svg {
                 width: 40px;
                 height: 40px;
@@ -180,19 +180,22 @@
     .checked &__btn {
         padding-bottom: 0;
     }
+    &.show {
+        display: block;
+    }
 }
 @media (max-width: 1539px) {
     .filter {
         &__btn {
             &.fix {
-                width: 300px;
+                width: 270px;
             }
         }
     }
 }
 
 
-@media (max-width: 959px) {
+@media (max-width: 1299px) {
     .filter {
         display: none;
         position: fixed;
