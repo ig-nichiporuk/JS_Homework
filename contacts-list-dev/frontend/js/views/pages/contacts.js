@@ -78,20 +78,23 @@ class ContactsList extends Component {
 	}
 
 	listenChangesInFilter(filterInputs) {
-		return {
-			'name': filterInputs.name.value || '',
-			'surname': filterInputs.surname.value || '',
-			'patronymic': filterInputs.patronymic.value || '',
-			'birthdateMin': filterInputs['year-min'].value || '',
-			'birthdateMax': filterInputs['year-max'].value || '',
-			'gender': filterInputs['gender-man'].checked ? filterInputs['gender-man'].dataset.value : filterInputs['gender-woman'].checked ? filterInputs['gender-woman'].dataset.value : '',
-			'family': filterInputs.family.checked ? true : false,
-			'country': filterInputs.country.value || '',
-			'city': filterInputs.city.value || '',
-			'street': filterInputs.street.value || '',
-			'house': filterInputs.house.value || '',
-			'apartment': filterInputs.apartment.value || ''
-		};
+		const options = {};
+
+		filterInputs.name.value && (options.name = filterInputs.name.value);
+		filterInputs.surname.value && (options.surname = filterInputs.surname.value);
+		filterInputs.patronymic.value && (options.patronymic = filterInputs.patronymic.value);
+		filterInputs['year-min'].value && (options.birthdateMin = filterInputs['year-min'].value);
+		filterInputs['year-max'].value && (options.birthdateMax = filterInputs['year-max'].value);
+		filterInputs['gender-man'].checked && (options.gender = filterInputs['gender-man'].dataset.value);
+		filterInputs['gender-woman'].checked && (options.gender = filterInputs['gender-woman'].dataset.value);
+		filterInputs.family.checked && (options.family = true);
+		filterInputs.country.value && (options.country = filterInputs.country.value);
+		filterInputs.city.value && (options.city = filterInputs.city.value);
+		filterInputs.street.value && (options.street = filterInputs.street.value);
+		filterInputs.house.value && (options.house = filterInputs.house.value);
+		filterInputs.apartment.value && (options.apartment = filterInputs.apartment.value);
+
+		return options;
 	}
 
 	filterContacts(contacts, filterInputs) {
@@ -100,19 +103,23 @@ class ContactsList extends Component {
 		let contactsResult = [];
 
 		if (options.surname) {
-			const result = contactsResult.length ? contactsResult : contacts;
+			contactsResult = contacts.filter(item => item.surname.toLowerCase() === options.surname.toLowerCase());
 
-			contactsResult = result.filter(item => item.surname.toLowerCase() === options.surname.toLowerCase() ? item : '');
+			if (!contactsResult.length) return [];
 		}
 		if (options.name) {
 			const result = contactsResult.length ? contactsResult : contacts;
 
-			contactsResult = result.filter(item => item.name.toLowerCase() === options.name.toLowerCase() ? item : '');
+			contactsResult = result.filter(item => item.name.toLowerCase() === options.name.toLowerCase());
+
+			if (!contactsResult.length) return [];
 		}
 		if (options.patronymic) {
 			const result = contactsResult.length ? contactsResult : contacts;
 
-			contactsResult = result.filter(item => item.patronymic.toLowerCase() === options.patronymic.toLowerCase() ? item : '');
+			contactsResult = result.filter(item => item.patronymic.toLowerCase() === options.patronymic.toLowerCase());
+
+			if (!contactsResult.length) return [];
 		}
 
 		if (options.birthdateMin && options.birthdateMax) {
@@ -121,8 +128,10 @@ class ContactsList extends Component {
 			contactsResult = result.filter(item => {
 				const year = item.birthdate.split('.')[2];
 
-				return (year >= options.birthdateMin && year <= options.birthdateMax) ? item : '';
+				return (year >= options.birthdateMin && year <= options.birthdateMax);
 			});
+
+			if (!contactsResult.length) return [];
 		}
 
 		if (options.birthdateMin) {
@@ -131,8 +140,10 @@ class ContactsList extends Component {
 			contactsResult = result.filter(item => {
 				const year = item.birthdate.split('.')[2];
 
-				return year >= options.birthdateMin ? item : '';
+				return year >= options.birthdateMin;
 			});
+
+			if (!contactsResult.length) return [];
 		}
 
 		if (options.birthdateMax) {
@@ -141,50 +152,66 @@ class ContactsList extends Component {
 			contactsResult = result.filter(item => {
 				const year = item.birthdate.split('.')[2];
 
-				return year <= options.birthdateMax ? item : '';
+				return year <= options.birthdateMax;
 			});
+
+			if (!contactsResult.length) return [];
 		}
 
 		if (options.gender) {
 			const result = contactsResult.length ? contactsResult : contacts;
 
-			contactsResult = result.filter(item => item.gender === options.gender ? item : '');
+			contactsResult = result.filter(item => item.gender === options.gender);
+
+			if (!contactsResult.length) return [];
 		}
 
 		if (options.family) {
 			const result = contactsResult.length ? contactsResult : contacts;
 
 			contactsResult = result.filter(item => item.family === options.family ? item : '');
+
+			if (!contactsResult.length) return [];
 		}
 
 		if (options.country) {
 			const result = contactsResult.length ? contactsResult : contacts;
 
-			contactsResult = result.filter(item => item.country.toLowerCase() === options.country.toLowerCase() ? item : '');
+			contactsResult = result.filter(item => item.country.toLowerCase() === options.country.toLowerCase());
+
+			if (!contactsResult.length) return [];
 		}
 
 		if (options.city) {
 			const result = contactsResult.length ? contactsResult : contacts;
 
-			contactsResult = result.filter(item => item.city.toLowerCase() === options.city.toLowerCase() ? item : '');
+			contactsResult = result.filter(item => item.city.toLowerCase() === options.city.toLowerCase());
+
+			if (!contactsResult.length) return [];
 		}
 
 		if (options.street) {
 			const result = contactsResult.length ? contactsResult : contacts;
 
-			contactsResult = result.filter(item => item.street.toLowerCase() === options.street.toLowerCase() ? item : '');
+			contactsResult = result.filter(item => item.street.toLowerCase() === options.street.toLowerCase());
+
+			if (!contactsResult.length) return [];
 		}
 
 		if (options.house) {
 			const result = contactsResult.length ? contactsResult : contacts;
 
-			contactsResult = result.filter(item => item.house.toLowerCase() === options.house.toLowerCase() ? item : '');
+			contactsResult = result.filter(item => item.house.toLowerCase() === options.house.toLowerCase());
+
+			if (!contactsResult.length) return [];
 		}
 
 		if (options.apartment) {
 			const result = contactsResult.length ? contactsResult : contacts;
 
-			contactsResult = result.filter(item => item.apartment.toLowerCase() === options.apartment.toLowerCase() ? item : '');
+			contactsResult = result.filter(item => item.apartment.toLowerCase() === options.apartment.toLowerCase());
+
+			if (!contactsResult.length) return [];
 		}
 
 		return contactsResult;
@@ -198,7 +225,7 @@ class ContactsList extends Component {
 		options.birthdateMax && (options.birthdateMax = `по ${options.birthdateMax}`);
 		options.family && (options.family = 'Замужем / женат');
 
-		const optionsArr = Object.values(options).filter(item => !!item);
+		const optionsArr = Object.values(options);
 
 		if (contactsResult.length && optionsArr.length) {
 			contactsTableBody.innerHTML = this.renderTable(contactsResult);
@@ -352,15 +379,27 @@ class ContactsList extends Component {
 					}
 				}
 
-				const contactsResult = this.filterContacts(contacts, filterInputs);
+				const contactsResult = this.filterContacts(contacts, filterInputs),
+					options = this.listenChangesInFilter(filterInputs),
+					optionsArr = Object.values(options);
 
 				this.showContacts(contacts, contactsTableBody, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap);
 
 				this.fixedBlock(filter, filterInputs, filterBtns, filterFindBtn);
 
-				counter.textContent = this.showContactsAmount(0, contactsResult.length || contacts.length);
+				if (contactsResult.length && optionsArr.length) {
+					counter.textContent = this.showContactsAmount(0, contactsResult.length);
 
-				this.renderPagination(contactsBlock, pagination, contactsResult.length ? contactsResult : contacts);
+					this.renderPagination(contactsBlock, pagination, contactsResult);
+				} else if (optionsArr.length) {
+					counter.textContent = this.showContactsAmount(0, 0);
+
+					contactsBlock.insertAdjacentHTML('beforeend', '');
+				} else {
+					counter.textContent = this.showContactsAmount(0, contacts.length);
+
+					this.renderPagination(contactsBlock, pagination, contacts);
+				}
 			}
 
 			/*Удалить контакт*/
@@ -408,7 +447,7 @@ class ContactsList extends Component {
 			/*Изменение отображаемых контактов в таблице*/
 			if (target.classList.contains('js-show-option')) {
 				const changeShowItem = document.getElementsByClassName('js-show-items')[0],
-					optionsArr = Object.values(options).filter(item => !!item);
+					optionsArr = Object.values(options);
 
 				localStorage.setItem('showContactsCount', JSON.stringify(target.dataset.show));
 
