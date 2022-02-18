@@ -261,8 +261,7 @@ class ContactsList extends Component {
 	}
 
 	async setActions() {
-		const contacts = await this.getData(),
-			contactsBlock = document.getElementsByClassName('js-contacts-block')[0],
+		const contactsBlock = document.getElementsByClassName('js-contacts-block')[0],
 			counter = document.getElementsByClassName('js-contacts-counter')[0],
 			controlsBtn = document.getElementsByClassName('js-contacts-controls')[0],
 			contactsTable = document.getElementsByClassName('js-table')[0],
@@ -279,12 +278,12 @@ class ContactsList extends Component {
 			filterHashtags = document.querySelector('.js-filter-hashtags'),
 			contactsResult = this.filterContacts(contacts, filterInputs);
 
+		let contacts = await this.getData();
+
 		counter.textContent = this.showContactsAmount(0, contactsResult.length || contacts.length);
 
 		document.body.addEventListener('change', async(e) => {
-			const target = e.target,
-				contacts = await this.getData(),
-				pagination = contactsBlock.getElementsByClassName('js-pagination')[0];
+			const target = e.target;
 
 			/*Изменение чекбоксов в таблице контактов*/
 			if (target.classList.contains('js-contact-check')) {
@@ -312,6 +311,8 @@ class ContactsList extends Component {
 
 			/*Изменение страницы*/
 			if (target.classList.contains('js-pagination-select')) {
+				const pagination = contactsBlock.getElementsByClassName('js-pagination')[0];
+
 				contactsTableBody.innerHTML = this.renderTable(contacts, +target.value - 1);
 
 				this.renderPagination(contactsBlock, pagination, contacts, +target.value - 1);
@@ -340,7 +341,6 @@ class ContactsList extends Component {
 
 		document.body.addEventListener('click', async(e) => {
 			const target = e.target,
-				contacts = await this.getData(),
 				contactsResult = this.filterContacts(contacts, filterInputs),
 				options = this.listenChangesInFilter(filterInputs),
 				pagination = contactsBlock.getElementsByClassName('js-pagination')[0],
@@ -348,8 +348,6 @@ class ContactsList extends Component {
 
 			/*Сброс фильтра*/
 			if (target.classList.contains('js-filter-reset')) {
-				const contacts = await this.getData();
-
 				for (const input of filterInputs) {
 					input.value = '';
 					input.checked = false;
@@ -435,7 +433,7 @@ class ContactsList extends Component {
 
 				this.displayContactsControlBtns(controlsBtn, contactDelete, contactDeleteOptions);
 
-				const contacts = await this.getData();
+				contacts = await this.getData();
 
 				counter.textContent = this.showContactsAmount(0, contactsResult.length || contacts.length);
 
@@ -484,8 +482,7 @@ class ContactsList extends Component {
 		filter.addEventListener('submit', async(e) => {
 			e.preventDefault();
 
-			const contacts = await this.getData(),
-				contactsResult = this.filterContacts(contacts, filterInputs),
+			const contactsResult = this.filterContacts(contacts, filterInputs),
 				pagination = contactsBlock.getElementsByClassName('js-pagination')[0];
 
 			this.displayContactsControlBtns(controlsBtn, contactDelete, contactDeleteOptions);
