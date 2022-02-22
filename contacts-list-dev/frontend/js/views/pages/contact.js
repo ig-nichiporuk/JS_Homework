@@ -14,6 +14,100 @@ class Contact extends Component {
 		this.model = new Contacts();
 	}
 
+	checkData(inputs) {
+		let valid = true;
+
+		if (!inputs.surname.value.trim() || !inputs.name.value.trim()) {
+			alert('Введите Имя и Фамилию!');
+
+			valid = false;
+
+			return valid;
+		}
+
+		for (let input of inputs) {
+			switch (input.id) {
+				case 'surname':
+				case 'name':
+				case 'patronymic':
+				case 'company':
+				case 'country':
+				case 'city':
+				case 'street':
+					if (input.value.trim() && !/^[a-zа-я]+[a-zа-я\s-]?[a-zа-я]$/img.test(input.value)){
+						input.classList.add('error');
+
+						valid = false;
+					}
+
+					break;
+				case 'birthday':
+					if (input.value.trim() && (!/^\d+$/img.test(input.value) || input.value < 1 || input.value > 31)){
+						input.classList.add('error');
+
+						valid = false;
+					}
+
+					break;
+				case 'year':
+					if (input.value.trim() && (!/^\d+$/img.test(input.value) || input.value > new Date().getFullYear())){
+						input.classList.add('error');
+
+						valid = false;
+					}
+
+					break;
+
+				case 'apartment':
+				case 'house':
+					if (input.value.trim() && !/^[\d]+[a-zа-яё/]?$/img.test(input.value)){
+						input.classList.add('error');
+
+						valid = false;
+					}
+
+					break;
+				case 'postcode':
+					if (input.value.trim() && !/^\d+$/img.test(input.value)){
+						input.classList.add('error');
+
+						valid = false;
+					}
+
+					break;
+
+				case 'site':
+					if (input.value.trim() && !/^[a-z\d]+([_\-.]?[a-z\d]+)(?<=[a-z\d].+)\.[a-z]{2,10}$/img.test(input.value)){
+						input.classList.add('error');
+
+						valid = false;
+					}
+
+					break;
+
+				case 'email':
+					if (input.value.trim() && !/^[a-z\d]+([_\-.]?[a-z\d]+)(?<=[a-z\d].+)@(?=.{2,20}\.)([a-z\d]+[_\-.]?[a-z\d]+)\.[a-z]{2,10}$/img.test(input.value)){
+						input.classList.add('error');
+
+						valid = false;
+					}
+
+					break;
+
+				case 'phone':
+					if (input.value.trim() && !/^\+\d{12}$/img.test(input.value)){
+						input.classList.add('error');
+
+						valid = false;
+					}
+
+					break;
+			}
+		}
+
+		return valid;
+	}
+
 	async getData() {
 		return this.request.id ? await this.model.getContactItem(this.request.id) : '';
 	}
@@ -35,9 +129,10 @@ class Contact extends Component {
 
 	async setActions() {
 		const editBtn = document.getElementsByClassName('js-contact-edit')[0],
-			saveBtn = document.getElementsByClassName('js-contact-save')[0],
+			contactForm = document.getElementsByClassName('js-contact-form')[0],
 			contactName = document.getElementsByClassName('js-contact-name')[0],
 			contactOptions = document.getElementsByTagName('input'),
+			contactMonth = document.getElementById('month'),
 			changes = {};
 
 		if (editBtn) {
@@ -49,37 +144,112 @@ class Contact extends Component {
 			});
 		}
 
+		document.body.addEventListener('keypress', (e) => {
+			const target = e.target;
 
-		saveBtn.addEventListener('click', async () => {
-			changes.id = generateID();
-			changes.surname = contactOptions.surname.value;
-			changes.name = contactOptions.name.value;
-			changes.patronymic = contactOptions.patronymic.value;
-			changes.birthdate = contactOptions.birthdate.value;
-			changes.company = contactOptions.company.value;
-			changes.country = contactOptions.country.value;
-			changes.city = contactOptions.city.value;
-			changes.street = contactOptions.street.value;
-			changes.house = contactOptions.house.value;
-			changes.apartment = contactOptions.apartment.value;
-			changes.gender = contactOptions.gender.value;
-			changes.family = contactOptions.family.value;
-			changes.site = contactOptions.site.value;
-			changes.postcode = contactOptions.postcode.value;
+			switch (true) {
+				case target.id === 'birthday':
+				case target.id === 'year':
+				case target.id === 'postcode':
+					!/\d/.test(e.key) && e.preventDefault();
 
-			if (this.request.id) {
-				await this.setData(this.request.id, changes);
+					break;
+				case target.id === 'surname':
+				case target.id === 'name':
+				case target.id === 'patronymic':
+				case target.id === 'company':
+				case target.id === 'country':
+				case target.id === 'city':
+				case target.id === 'street':
+					if (!/[a-zA-zа-яА-яЁё\s-]/.test(e.key) || /[\^_]/.test(e.key)) {
+						e.preventDefault();
+					}
 
-				contactName.innerText = `${contactOptions.surname.value} ${contactOptions.name.value}`;
+					break;
+				case target.id === 'house':
+				case target.id === 'apartment':
+					if (!/[a-zA-zа-яА-яЁё\d/]/.test(e.key) || /[\^_]/.test(e.key)) {
+						e.preventDefault();
+					}
 
-				for (const contactOption of contactOptions) {
-					contactOption.setAttribute('readonly', true);
-					contactOption.classList.add('edit');
+					break;
+				case target.id === 'phone':
+					!/\d/.test(e.key) && e.preventDefault();
+
+					!/^\+\d*$/.test(target.value) && (target.value = '+');
+
+					break;
+				case target.id === 'site':
+					if (!/[a-z\d-_.]/.test(e.key) || /[\^]/.test(e.key)) {
+						e.preventDefault();
+					}
+
+					break;
+				case target.id === 'email':
+					if (!/[a-z\d-_.]/.test(e.key) || /[\^]/.test(e.key)) {
+						e.preventDefault();
+					}
+
+					break;
+			}
+		});
+
+		for (let option of contactOptions) {
+			option.onfocus = () => option.classList.remove('error');
+		}
+
+
+		contactForm.addEventListener('submit', async(e) => {
+			e.preventDefault();
+
+			if (this.checkData(contactOptions)) {
+				changes.id = generateID();
+				changes.surname = contactOptions.surname.value;
+				changes.name = contactOptions.name.value;
+				changes.patronymic = contactOptions.patronymic.value || 'Не указано';
+				if (contactOptions.birthday.value && contactOptions.year.value) {
+					changes.birthdate = `${contactOptions.birthday.value}.${contactMonth.value}.${contactOptions.year.value}`;
+				} else {
+					changes.birthdate = 'Не указано';
 				}
-			} else {
-				await this.setData(null, changes);
+				if (contactOptions['gender-man'].checked) {
+					changes.gender = contactOptions['gender-man'].dataset.value;
+				} else if (contactOptions['gender-woman'].checked) {
+					changes.gender = contactOptions['gender-woman'].dataset.value;
+				} else {
+					changes.gender = 'Не указано';
+				}
+				changes.family = contactOptions.family.checked || 'Не указано';
+				changes.company = contactOptions.company.value;
+				changes.country = contactOptions.country.value;
+				changes.city = contactOptions.city.value;
+				changes.street = contactOptions.street.value;
+				changes.house = contactOptions.house.value;
+				changes.apartment = contactOptions.apartment.value;
+				changes.site = contactOptions.site.value;
+				changes.postcode = contactOptions.postcode.value;
 
-				location.hash = '#/';
+				/*await this.setData(null, changes);
+
+				location.hash = '#/';*/
+				console.log(changes);
+
+
+				/*if (this.request.id) {
+					await this.setData(this.request.id, changes);
+
+					contactName.innerText = `${contactOptions.surname.value} ${contactOptions.name.value}`;
+
+					for (const contactOption of contactOptions) {
+						contactOption.setAttribute('readonly', true);
+						contactOption.classList.add('edit');
+					}
+				} else {
+					await this.setData(null, changes);
+
+					location.hash = '#/';
+				}*/
+
 			}
 		});
 	}
