@@ -3,6 +3,8 @@ import {generateID} from '../../helpers/utils';
 import Component from '../../views/component';
 
 import contactTemplate from '../../../templates/pages/contact.hbs';
+import contactPhoneFields from '../../../templates/pages/contactPhoneFields.hbs';
+import contactDataForm from '../../../templates/pages/contactData.hbs';
 import Contacts from '../../models/contacts';
 
 
@@ -119,11 +121,10 @@ class Contact extends Component {
 
 	async render(data) {
 		const contact = data;
-		return contactTemplate({contact});
+		return contactTemplate({contact, type : this.request.id ? 1: 0});
 	}
 
 	async afterRender() {
-		super.afterRender();
 		await this.setActions();
 	}
 
@@ -136,12 +137,15 @@ class Contact extends Component {
 			changes = {};
 
 		if (editBtn) {
-			editBtn.addEventListener('click', () => {
-				for (const contactOption of contactOptions) {
-					contactOption.removeAttribute('readonly');
-					contactOption.classList.remove('edit');
-				}
+			editBtn.addEventListener('click', async() => {
+				const contact = await this.getData();
+
+				contactForm.innerHTML = contactDataForm({contact, type : 0});
 			});
+		}
+
+		for (let option of contactOptions) {
+			option.onfocus = () => option.classList.remove('error');
 		}
 
 		document.body.addEventListener('keypress', (e) => {
@@ -176,7 +180,7 @@ class Contact extends Component {
 				case target.id === 'phone':
 					!/\d/.test(e.key) && e.preventDefault();
 
-					!/^\+\d*$/.test(target.value) && (target.value = '+');
+					!/^\+\d+$/.test(target.value) && (target.value = '+');
 
 					break;
 				case target.id === 'site':
@@ -194,13 +198,29 @@ class Contact extends Component {
 			}
 		});
 
-		for (let option of contactOptions) {
-			option.onfocus = () => option.classList.remove('error');
-		}
+		document.body.addEventListener('keyup', (e) => {
+			const target = e.target;
+
+			if (target.id === 'phone') {
+				const phoneDesc = target.parentElement.nextElementSibling.getElementsByTagName('textarea')[0];
+
+				phoneDesc.disabled = !/^\+\d{12}$/img.test(target.value);
+			}
+		});
+
+		document.body.addEventListener('click', (e) => {
+			const target = e.target;
+
+			if (target.closest('.js-add-phone')) {
+				target.closest('.js-add-phone').insertAdjacentHTML('beforebegin', contactPhoneFields());
+			}
+		});
 
 
 		contactForm.addEventListener('submit', async(e) => {
 			e.preventDefault();
+
+			const contactPhones = document.getElementsByClassName('js-contact-phone');
 
 			if (this.checkData(contactOptions)) {
 				changes.id = generateID();
@@ -220,20 +240,36 @@ class Contact extends Component {
 					changes.gender = 'Не указано';
 				}
 				changes.family = contactOptions.family.checked || 'Не указано';
-				changes.company = contactOptions.company.value;
-				changes.country = contactOptions.country.value;
-				changes.city = contactOptions.city.value;
-				changes.street = contactOptions.street.value;
-				changes.house = contactOptions.house.value;
-				changes.apartment = contactOptions.apartment.value;
-				changes.site = contactOptions.site.value;
-				changes.postcode = contactOptions.postcode.value;
+				changes.company = contactOptions.company.value || 'Не указано';
+				changes.country = contactOptions.country.value || 'Не указано';
+				changes.city = contactOptions.city.value || 'Не указано';
+				changes.street = contactOptions.street.value || 'Не указано';
+				changes.house = contactOptions.house.value || 'Не указано';
+				changes.apartment = contactOptions.apartment.value || 'Не указано';
+				changes.site = contactOptions.site.value || 'Не указано';
+				changes.postcode = contactOptions.postcode.value || 'Не указано';
+				changes.email = contactOptions.email.value || 'Не указано';
+				changes.phones = [];
 
-				/*await this.setData(null, changes);
+				for (let phone of contactPhones) {
+					const phoneInfo = {},
+						phoneType = phone.getElementsByTagName('select')[0].value,
+						phoneNumber = phone.getElementsByTagName('input')[0].value,
+						phonedesc = phone.getElementsByTagName('textarea')[0].value.trim();
 
-				location.hash = '#/';*/
-				console.log(changes);
+					if (phoneNumber) {
+						phoneInfo.type = phoneType;
+						phoneInfo.number = phoneNumber;
+						phoneInfo.desc = phonedesc || 'Не указано';
+					}
 
+					if (Object.keys(phoneInfo).length) changes.phones.push(phoneInfo);
+
+				}
+
+				await this.setData(null, changes);
+
+				location.hash = '#/';
 
 				/*if (this.request.id) {
 					await this.setData(this.request.id, changes);

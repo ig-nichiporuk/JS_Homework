@@ -25,6 +25,7 @@
     }
 
     &__label {
+        margin: 0 0 2px 0;
         font-weight: 500;
     }
 
@@ -40,11 +41,18 @@
             font-weight: normal;
             padding: 0 40px 0 8px
         }
+        .input-style{
+            &.edit {
+                padding: 0;
+                border: none;
+                cursor: default;
+            }
+        }
     }
     &__gender {
         display: flex;
         .radio + .radio {
-            margin: 0 0 0 16px;
+            margin: 0 0 0 15px;
         }
     }
     &__date,
@@ -115,7 +123,7 @@
                 position: relative;
                 font-size: 14px;
                 line-height: 17px;
-                padding: 0 0 0 22px;
+                padding: 0 0 0 20px;
                 svg {
                     position: absolute;
                     top: 50%;
@@ -124,6 +132,15 @@
                     width: 14px;
                     height: 14px;
                     fill: $main-color
+                }
+            }
+            &:hover {
+                cursor: pointer;
+                & > span {
+                    color: $active-color;
+                    svg {
+                        fill: $active-color;
+                    }
                 }
             }
 
