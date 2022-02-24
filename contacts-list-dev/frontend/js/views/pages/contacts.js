@@ -138,9 +138,9 @@ class ContactsList extends Component {
 			const result = contactsResult.length ? contactsResult : contacts;
 
 			contactsResult = result.filter(item => {
-				const year = item.birthdate.split('.')[2];
+				const year = item.birthdate.year;
 
-				return year >= options.birthdateMin;
+				if (year && year >= options.birthdateMin) return year;
 			});
 
 			if (!contactsResult.length) return [];
@@ -150,9 +150,9 @@ class ContactsList extends Component {
 			const result = contactsResult.length ? contactsResult : contacts;
 
 			contactsResult = result.filter(item => {
-				const year = item.birthdate.split('.')[2];
+				const year = item.birthdate.year;
 
-				return year <= options.birthdateMax;
+				if (year && year <= options.birthdateMax) return year;
 			});
 
 			if (!contactsResult.length) return [];

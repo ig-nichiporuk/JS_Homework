@@ -236,6 +236,10 @@ input[type=number] {
     &.error {
         border: 1px solid #e2001a;
     }
+    &[disabled] {
+        cursor: default;
+        background-color: #f5f5f5;
+    }
 }
 
 .select-style {

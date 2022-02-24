@@ -16,6 +16,7 @@
     }
     &__label,
     &__sublabel{
+        display: block;
         font-size: 14px;
         line-height: 17px;
         letter-spacing: -0.2px;
@@ -25,11 +26,12 @@
     }
 
     &__label {
-        margin: 0 0 2px 0;
+        margin: 0 0 5px 0;
         font-weight: 500;
     }
 
     &__sublabel {
+        margin: 0 0 2px 0;
         font-weight: 300;
     }
     &__item {
@@ -48,6 +50,36 @@
                 cursor: default;
             }
         }
+        li {
+            display: flex;
+            align-items: baseline;
+            span {
+                font-size: 14px;
+                line-height: 20px;
+            }
+            & > div {
+                margin: 0 0 0 5px;
+            }
+            p {
+                font-size: 15px;
+                line-height: 20px;
+                & + p {
+                    font-size: 14px;
+                    line-height: 17px;
+                    font-weight: 300;
+                    margin: 5px 0 0 0;
+                }
+                a {
+                    color: $active-color;
+                }
+            }
+            & + li {
+                margin: 15px 0 0 0;
+            }
+        }
+    }
+    &__item + &__item {
+        margin: 20px 0 0 0;
     }
     &__gender {
         display: flex;

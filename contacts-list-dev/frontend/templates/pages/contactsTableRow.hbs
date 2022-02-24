@@ -9,13 +9,21 @@
 			</span>
 		</span>
 		<span class="table__cell">
-			<span>{{this.surname}} {{this.name}} {{this.patronymic}}</span>
+			<span>{{this.surname}} {{this.name}}{{#if this.patronymic}} {{this.patronymic}}{{/if}}</span>
 		</span>
 		<span class="table__cell">
-			<span>{{this.birthdate}}</span>
+			{{#if this.birthdate.day}}
+				<span>{{this.birthdate.day}}.{{this.birthdate.month}}{{#if this.birthdate.year}}.{{this.birthdate.year}}{{else}}.----{{/if}}</span>
+			{{else}}
+				{{#if this.birthdate.year}}
+					<span>{{#if this.birthdate.day}}{{this.birthdate.day}}.{{else}}--.{{/if}}{{this.birthdate.month}}.{{this.birthdate.year}}</span>
+				{{else}}
+					<span>Не указана</span>
+				{{/if}}
+			{{/if}}
 		</span>
 		<span class="table__cell">
-			<span>{{this.city}}, {{this.street}} {{this.house}}-{{this.apartment}}</span>
+			<span>{{#if this.city}}г. {{this.city}}{{/if}}{{#if this.street}}, ул. {{this.street}} {{/if}}{{#if this.house}}д. {{this.house}}{{/if}}{{#if this.apartment}}-{{this.apartment}}{{/if}}</span>
 		</span>
 		<span class="table__cell">
 			<span>{{this.company}}</span>

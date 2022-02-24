@@ -36,7 +36,7 @@ class Contact extends Component {
 				case 'country':
 				case 'city':
 				case 'street':
-					if (input.value.trim() && !/^[a-zа-я]+[a-zа-я\s-]?[a-zа-я]$/img.test(input.value)){
+					if (input.value.trim() && !/^[a-zа-я]+[a-zа-я\s-]?[a-zа-я]+$/img.test(input.value)){
 						input.classList.add('error');
 
 						valid = false;
@@ -52,7 +52,7 @@ class Contact extends Component {
 
 					break;
 				case 'year':
-					if (input.value.trim() && (!/^\d+$/img.test(input.value) || input.value > new Date().getFullYear())){
+					if (input.value.trim() && (!/^\d+$/img.test(input.value) || input.value > new Date().getFullYear() || input.value < 1900)){
 						input.classList.add('error');
 
 						valid = false;
@@ -110,6 +110,16 @@ class Contact extends Component {
 		return valid;
 	}
 
+	formatData(str) {
+		let updateStr = '';
+
+		for (let word of str.split(/(\s|-|\.)+/)) {
+			word && (updateStr += (word[0].toUpperCase() + word.slice(1)));
+		}
+
+		return updateStr;
+	}
+
 	async getData() {
 		return this.request.id ? await this.model.getContactItem(this.request.id) : '';
 	}
@@ -129,20 +139,10 @@ class Contact extends Component {
 	}
 
 	async setActions() {
-		const editBtn = document.getElementsByClassName('js-contact-edit')[0],
-			contactForm = document.getElementsByClassName('js-contact-form')[0],
+		const contactForm = document.getElementsByClassName('js-contact-form')[0],
 			contactName = document.getElementsByClassName('js-contact-name')[0],
 			contactOptions = document.getElementsByTagName('input'),
-			contactMonth = document.getElementById('month'),
 			changes = {};
-
-		if (editBtn) {
-			editBtn.addEventListener('click', async() => {
-				const contact = await this.getData();
-
-				contactForm.innerHTML = contactDataForm({contact, type : 0});
-			});
-		}
 
 		for (let option of contactOptions) {
 			option.onfocus = () => option.classList.remove('error');
@@ -190,7 +190,7 @@ class Contact extends Component {
 
 					break;
 				case target.id === 'email':
-					if (!/[a-z\d-_.]/.test(e.key) || /[\^]/.test(e.key)) {
+					if (!/[a-z\d-_.@]/.test(e.key) || /[\^]/.test(e.key)) {
 						e.preventDefault();
 					}
 
@@ -206,13 +206,51 @@ class Contact extends Component {
 
 				phoneDesc.disabled = !/^\+\d{12}$/img.test(target.value);
 			}
+
+			if (target.id === 'street') {
+				const houseInput = target.parentElement.nextElementSibling.getElementsByTagName('input')[0],
+					apartmentInput = target.parentElement.nextElementSibling.nextElementSibling.getElementsByTagName('input')[0];
+
+				if (!target.value) {
+					houseInput.value = apartmentInput.value = '';
+
+					apartmentInput.disabled = houseInput.disabled  = true;
+				}
+
+				houseInput.disabled = !houseInput.value;
+			}
+
+			if (target.id === 'house') {
+				const apartmentInput = target.parentElement.nextElementSibling.getElementsByTagName('input')[0];
+
+				if (!target.value) {
+					apartmentInput.value = '';
+
+					apartmentInput.disabled = true;
+				}
+
+				apartmentInput.disabled = !/^[\d]+$/img.test(target.value) && !apartmentInput.value;
+			}
 		});
 
-		document.body.addEventListener('click', (e) => {
+		document.body.addEventListener('click', async(e) => {
 			const target = e.target;
 
 			if (target.closest('.js-add-phone')) {
+
+				console.log(target);
 				target.closest('.js-add-phone').insertAdjacentHTML('beforebegin', contactPhoneFields());
+			}
+
+			if (target.classList.contains('js-contact-edit')) {
+				const contact = await this.getData(),
+					contactOptions = document.getElementsByTagName('input');
+
+				contactForm.innerHTML = contactDataForm({contact, type : 0});
+
+				for (let option of contactOptions) {
+					option.onfocus = () => option.classList.remove('error');
+				}
 			}
 		});
 
@@ -220,35 +258,57 @@ class Contact extends Component {
 		contactForm.addEventListener('submit', async(e) => {
 			e.preventDefault();
 
-			const contactPhones = document.getElementsByClassName('js-contact-phone');
+			const contactPhones = document.getElementsByClassName('js-contact-phone'),
+				contactMonth = document.getElementById('month');
 
 			if (this.checkData(contactOptions)) {
 				changes.id = generateID();
-				changes.surname = contactOptions.surname.value;
-				changes.name = contactOptions.name.value;
-				changes.patronymic = contactOptions.patronymic.value || 'Не указано';
+				changes.surname = this.formatData(contactOptions.surname.value);
+				changes.name = this.formatData(contactOptions.name.value);
+				changes.patronymic = this.formatData(contactOptions.patronymic.value);
+
 				if (contactOptions.birthday.value && contactOptions.year.value) {
-					changes.birthdate = `${contactOptions.birthday.value}.${contactMonth.value}.${contactOptions.year.value}`;
+					changes.birthdate = {
+						day : contactOptions.birthday.value,
+						month : contactMonth.value,
+						year : contactOptions.year.value
+					};
+				} else if (contactOptions.birthday.value) {
+					changes.birthdate = {
+						day : contactOptions.birthday.value,
+						month : contactMonth.value,
+						year : ''
+					};
+				} else if (contactOptions.year.value) {
+					changes.birthdate = {
+						day: '',
+						month: contactMonth.value,
+						year: contactOptions.year.value
+					};
 				} else {
-					changes.birthdate = 'Не указано';
+					changes.birthdate = {
+						day: '',
+						month: '',
+						year: ''
+					};
 				}
+
 				if (contactOptions['gender-man'].checked) {
 					changes.gender = contactOptions['gender-man'].dataset.value;
 				} else if (contactOptions['gender-woman'].checked) {
 					changes.gender = contactOptions['gender-woman'].dataset.value;
-				} else {
-					changes.gender = 'Не указано';
 				}
-				changes.family = contactOptions.family.checked || 'Не указано';
-				changes.company = contactOptions.company.value || 'Не указано';
-				changes.country = contactOptions.country.value || 'Не указано';
-				changes.city = contactOptions.city.value || 'Не указано';
-				changes.street = contactOptions.street.value || 'Не указано';
-				changes.house = contactOptions.house.value || 'Не указано';
-				changes.apartment = contactOptions.apartment.value || 'Не указано';
-				changes.site = contactOptions.site.value || 'Не указано';
-				changes.postcode = contactOptions.postcode.value || 'Не указано';
-				changes.email = contactOptions.email.value || 'Не указано';
+
+				changes.family = contactOptions.family.checked;
+				changes.company = contactOptions.company.value;
+				changes.country = this.formatData(contactOptions.country.value);
+				changes.city = this.formatData(contactOptions.city.value);
+				changes.street = this.formatData(contactOptions.street.value);
+				changes.house = contactOptions.house.value;
+				changes.apartment = contactOptions.apartment.value;
+				changes.site = contactOptions.site.value;
+				changes.postcode = contactOptions.postcode.value;
+				changes.email = contactOptions.email.value;
 				changes.phones = [];
 
 				for (let phone of contactPhones) {
@@ -267,24 +327,21 @@ class Contact extends Component {
 
 				}
 
-				await this.setData(null, changes);
 
-				location.hash = '#/';
+				if (this.request.id) {
 
-				/*if (this.request.id) {
 					await this.setData(this.request.id, changes);
+
+					const contact = await this.model.getContactItem(this.request.id);
 
 					contactName.innerText = `${contactOptions.surname.value} ${contactOptions.name.value}`;
 
-					for (const contactOption of contactOptions) {
-						contactOption.setAttribute('readonly', true);
-						contactOption.classList.add('edit');
-					}
+					contactForm.innerHTML = contactDataForm({contact, type : 1});
 				} else {
 					await this.setData(null, changes);
 
 					location.hash = '#/';
-				}*/
+				}
 
 			}
 		});

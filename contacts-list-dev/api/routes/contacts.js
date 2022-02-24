@@ -31,13 +31,17 @@ router.delete('/api/contact/delete', (req, res) => {
 router.put('/api/contact/changes',  (req, res) => {
 	const {id, data} = req.body,
 		contacts = getContactsFromDB();
+
+	console.log(data);
 	if(id) {
 		updateContacts = contacts.map(contact => {
 			if(contact.id == id) {
 				contact.name = data.name;
 				contact.surname = data.surname;
 				contact.patronymic = data.patronymic;
-				contact.birthdate = data.birthdate;
+				contact.birthdate.day = data.birthdate.day;
+				contact.birthdate.month = data.birthdate.month;
+				contact.birthdate.year = data.birthdate.year;
 				contact.gender = data.gender;
 				contact.family = data.family;
 				contact.site = data.site;
@@ -48,6 +52,8 @@ router.put('/api/contact/changes',  (req, res) => {
 				contact.house = data.house;
 				contact.apartment = data.apartment;
 				contact.postcode = data.postcode;
+				contact.email = data.email;
+				contact.phones = data.phones;
 			}
 
 			return contact;
