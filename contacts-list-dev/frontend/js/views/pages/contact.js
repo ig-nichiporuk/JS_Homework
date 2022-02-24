@@ -131,24 +131,27 @@ class Contact extends Component {
 
 	async render(data) {
 		const contact = data;
+
 		return contactTemplate({contact, type : this.request.id ? 1: 0});
 	}
 
-	async afterRender() {
-		await this.setActions();
+	async afterRender(data) {
+		await this.setActions(data);
 	}
 
-	async setActions() {
+	async setActions(data) {
 		const contactForm = document.getElementsByClassName('js-contact-form')[0],
 			contactName = document.getElementsByClassName('js-contact-name')[0],
-			contactOptions = document.getElementsByTagName('input'),
+			contactOptions = contactForm.getElementsByTagName('input'),
 			changes = {};
+
+		let contact = data;
 
 		for (let option of contactOptions) {
 			option.onfocus = () => option.classList.remove('error');
 		}
 
-		document.body.addEventListener('keypress', (e) => {
+		contactForm.addEventListener('keypress', (e) => {
 			const target = e.target;
 
 			switch (true) {
@@ -198,11 +201,17 @@ class Contact extends Component {
 			}
 		});
 
-		document.body.addEventListener('keyup', (e) => {
+		contactForm.addEventListener('keyup', (e) => {
 			const target = e.target;
 
 			if (target.id === 'phone') {
 				const phoneDesc = target.parentElement.nextElementSibling.getElementsByTagName('textarea')[0];
+
+				if (!target.value) {
+					phoneDesc.innerHTML = '';
+
+					phoneDesc.disabled = true;
+				}
 
 				phoneDesc.disabled = !/^\+\d{12}$/img.test(target.value);
 			}
@@ -233,19 +242,14 @@ class Contact extends Component {
 			}
 		});
 
-		document.body.addEventListener('click', async(e) => {
+		contactForm.addEventListener('click', async(e) => {
 			const target = e.target;
 
 			if (target.closest('.js-add-phone')) {
-
-				console.log(target);
 				target.closest('.js-add-phone').insertAdjacentHTML('beforebegin', contactPhoneFields());
 			}
 
 			if (target.classList.contains('js-contact-edit')) {
-				const contact = await this.getData(),
-					contactOptions = document.getElementsByTagName('input');
-
 				contactForm.innerHTML = contactDataForm({contact, type : 0});
 
 				for (let option of contactOptions) {
@@ -253,7 +257,6 @@ class Contact extends Component {
 				}
 			}
 		});
-
 
 		contactForm.addEventListener('submit', async(e) => {
 			e.preventDefault();
@@ -320,7 +323,7 @@ class Contact extends Component {
 					if (phoneNumber) {
 						phoneInfo.type = phoneType;
 						phoneInfo.number = phoneNumber;
-						phoneInfo.desc = phonedesc || 'Не указано';
+						phoneInfo.desc = phonedesc;
 					}
 
 					if (Object.keys(phoneInfo).length) changes.phones.push(phoneInfo);
@@ -332,7 +335,7 @@ class Contact extends Component {
 
 					await this.setData(this.request.id, changes);
 
-					const contact = await this.model.getContactItem(this.request.id);
+					contact = await this.model.getContactItem(this.request.id);
 
 					contactName.innerText = `${contactOptions.surname.value} ${contactOptions.name.value}`;
 

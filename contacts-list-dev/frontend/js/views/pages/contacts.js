@@ -61,7 +61,7 @@ class ContactsList extends Component {
 
 	fixedBlock(parent, inputs, fixedBlock, filterFindBtn) {
 		for (const input of inputs) {
-			if ((input.value && input.value != 'on') || input.checked) {
+			if ((input.value && input.value !== 'on') || input.checked) {
 				if (filterFindBtn) filterFindBtn.disabled = false;
 
 				if (window.innerHeight + window.pageYOffset < parent.offsetTop + parent.offsetHeight) {
@@ -256,11 +256,11 @@ class ContactsList extends Component {
 		return contactsTemplate({indexPage, contactsDivide, contactsDivideLength, showContacts, showContactsCount});
 	}
 
-	afterRender() {
-		this.setActions();
+	async afterRender(data) {
+		await this.setActions(data);
 	}
 
-	async setActions() {
+	async setActions(data) {
 		const contactsBlock = document.getElementsByClassName('js-contacts-block')[0],
 			counter = document.getElementsByClassName('js-contacts-counter')[0],
 			controlsBtn = document.getElementsByClassName('js-contacts-controls')[0],
@@ -278,57 +278,15 @@ class ContactsList extends Component {
 			filterHashtags = document.querySelector('.js-filter-hashtags'),
 			contactsResult = this.filterContacts(contacts, filterInputs);
 
-		let contacts = await this.getData();
+		let contacts = data;
 
 		counter.textContent = this.showContactsAmount(0, contactsResult.length || contacts.length);
 
-		document.body.addEventListener('change', async(e) => {
-			const target = e.target;
-
-			/*Изменение чекбоксов в таблице контактов*/
-			if (target.classList.contains('js-contact-check')) {
-				const contactChecked = contactsTableBody.querySelectorAll('.js-contact-check:checked'),
-					contactsResult = this.filterContacts(contacts, filterInputs);
 
 
-				counter.textContent = this.showContactsAmount(contactChecked.length, contactsResult.length || contacts.length);
-
-				if (contactChecked.length > 0) {
-					controlsBtn.classList.remove('hidden');
-				} else {
-					this.displayContactsControlBtns(controlsBtn, contactDelete, contactDeleteOptions);
-				}
-
-				contactsControls.style.width = `${contactsTable.clientWidth}px`;
-
-				this.fixedBlock(contactsTable, contactsInputs, contactsControls, null);
-			}
-
-			/*Изменение чекбоксов в фильтре контактов*/
-			if (target.classList.contains('js-choose-option')) {
-				this.fixedBlock(filter, filterInputs, filterBtns, filterFindBtn);
-			}
-
-			/*Изменение страницы*/
-			if (target.classList.contains('js-pagination-select')) {
-				const pagination = contactsBlock.getElementsByClassName('js-pagination')[0];
-
-				contactsTableBody.innerHTML = this.renderTable(contacts, +target.value - 1);
-
-				this.renderPagination(contactsBlock, pagination, contacts, +target.value - 1);
-			}
 
 
-		});
 
-		/*Изменение полей в фильтре*/
-		document.body.addEventListener('keyup', (e) => {
-			const target = e.target;
-
-			if (target.closest('.js-filter')) {
-				this.fixedBlock(filter, filterInputs, filterBtns, filterFindBtn);
-			}
-		});
 
 		window.addEventListener('scroll', () => {
 			this.fixedBlock(filter, filterInputs, filterBtns, filterFindBtn);
@@ -339,7 +297,7 @@ class ContactsList extends Component {
 			contactsControls.style.width = `${contactsTable.clientWidth}px`;
 		});
 
-		document.body.addEventListener('click', async(e) => {
+		contactsBlock.addEventListener('click', async(e) => {
 			const target = e.target,
 				contactsResult = this.filterContacts(contacts, filterInputs),
 				options = this.listenChangesInFilter(filterInputs),
@@ -368,7 +326,7 @@ class ContactsList extends Component {
 			/*Удаление одной опции фильтра*/
 			if (target.classList.contains('js-filter-delete-option')) {
 				for (const input of filterInputs) {
-					if (/^((с|по)\s{1})(?<=.)\d{4}/igm.test( target.innerText)) {
+					if (/^((с|по)\s?)(?<=.)\d{4}/igm.test( target.innerText)) {
 						target.innerText = target.innerText.replace(/(с|по)/igm, '');
 					}
 					if (input.value === target.innerText || input.dataset.value === target.innerText) {
@@ -476,6 +434,55 @@ class ContactsList extends Component {
 				contactsTableBody.innerHTML = this.renderTable(contacts, +paginationSelect.value - 2);
 
 				this.renderPagination(contactsBlock, pagination, contacts, +paginationSelect.value - 2);
+			}
+		});
+
+		contactsBlock.addEventListener('change', async(e) => {
+			const target = e.target;
+
+			/*Изменение чекбоксов в таблице контактов*/
+			if (target.classList.contains('js-contact-check')) {
+				const contactChecked = contactsTableBody.querySelectorAll('.js-contact-check:checked'),
+					contactsResult = this.filterContacts(contacts, filterInputs);
+
+
+				counter.textContent = this.showContactsAmount(contactChecked.length, contactsResult.length || contacts.length);
+
+				if (contactChecked.length > 0) {
+					controlsBtn.classList.remove('hidden');
+				} else {
+					this.displayContactsControlBtns(controlsBtn, contactDelete, contactDeleteOptions);
+				}
+
+				contactsControls.style.width = `${contactsTable.clientWidth}px`;
+
+				this.fixedBlock(contactsTable, contactsInputs, contactsControls, null);
+			}
+
+			/*Изменение страницы*/
+			if (target.classList.contains('js-pagination-select')) {
+				const pagination = contactsBlock.getElementsByClassName('js-pagination')[0];
+
+				contactsTableBody.innerHTML = this.renderTable(contacts, +target.value - 1);
+
+				this.renderPagination(contactsBlock, pagination, contacts, +target.value - 1);
+			}
+		});
+
+		filter.addEventListener('keyup', (e) => {
+			const target = e.target;
+
+			if (target.closest('.js-filter')) {
+				this.fixedBlock(filter, filterInputs, filterBtns, filterFindBtn);
+			}
+		});
+
+		filter.addEventListener('change', async(e) => {
+			const target = e.target;
+
+			/*Изменение чекбоксов в фильтре контактов*/
+			if (target.classList.contains('js-choose-option')) {
+				this.fixedBlock(filter, filterInputs, filterBtns, filterFindBtn);
 			}
 		});
 

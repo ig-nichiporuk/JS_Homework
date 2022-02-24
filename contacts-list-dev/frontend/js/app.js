@@ -30,13 +30,13 @@ async function router() {
 		page = Routes[parsedURL] ? new Routes[parsedURL]() : new Error404();
 
 
-	const data = await page.getData(),
-		html = await page.render(data);
+	const data = await page.getData();
 
-	contentContainer.innerHTML = html;
+	contentContainer.innerHTML = await page.render(data);
 
-	page.afterRender();
+	page.afterRender(data);
 }
 
 module.hot ? module.hot.accept(router()) : window.addEventListener('load', router);
+
 window.addEventListener('hashchange', router);

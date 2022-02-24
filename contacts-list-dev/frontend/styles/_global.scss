@@ -1,4 +1,5 @@
 @import "variables";
+
 body {
     height: 2000px; // DELETE!!!!!
     margin: 0;
@@ -7,7 +8,6 @@ body {
     -ms-text-size-adjust: 100%;
     -moz-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
-    -o-text-size-adjust: 100%;
     min-width: 320px;
     color: $main-color;
     background: #F0F0F0;
@@ -55,7 +55,6 @@ select {
     padding: 0;
     margin: 0;
     background: none;
-    box-shadow: none;
     color: inherit;
 }
 
@@ -64,9 +63,6 @@ select {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
-    -ms-tap-highlight-color: transparent;
-    -moz-tap-highlight-color: transparent;
-    -o-tap-highlight-color: transparent;
 }
 
 input::-webkit-input-placeholder,
@@ -268,13 +264,11 @@ input[type=number] {
         display: block;
         font-size: 15px;
         line-height: 20px;
-        color: #000000;
         position: relative;
         padding-left: 30px;
         color: $main-color;
         -webkit-touch-callout: none;
         -webkit-user-select: none;
-        -khtml-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
