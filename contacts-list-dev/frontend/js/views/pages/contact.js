@@ -168,14 +168,14 @@ class Contact extends Component {
 				case target.id === 'country':
 				case target.id === 'city':
 				case target.id === 'street':
-					if (!/[a-zA-zа-яА-яЁё\s-]/.test(e.key) || /[\^_]/.test(e.key)) {
+					if (!/[a-zа-яё\s-]/i.test(e.key) || /[\^_]/.test(e.key)) {
 						e.preventDefault();
 					}
 
 					break;
 				case target.id === 'house':
 				case target.id === 'apartment':
-					if (!/[a-zA-zа-яА-яЁё\d/]/.test(e.key) || /[\^_]/.test(e.key)) {
+					if (!/[a-zа-яё\d/]/i.test(e.key) || /[\^_]/.test(e.key)) {
 						e.preventDefault();
 					}
 
@@ -318,12 +318,12 @@ class Contact extends Component {
 					const phoneInfo = {},
 						phoneType = phone.getElementsByTagName('select')[0].value,
 						phoneNumber = phone.getElementsByTagName('input')[0].value,
-						phonedesc = phone.getElementsByTagName('textarea')[0].value.trim();
+						phoneDesc = phone.getElementsByTagName('textarea')[0].value.trim();
 
 					if (phoneNumber) {
 						phoneInfo.type = phoneType;
 						phoneInfo.number = phoneNumber;
-						phoneInfo.desc = phonedesc;
+						phoneInfo.desc = phoneDesc;
 					}
 
 					if (Object.keys(phoneInfo).length) changes.phones.push(phoneInfo);

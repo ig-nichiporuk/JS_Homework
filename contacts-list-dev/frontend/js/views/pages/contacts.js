@@ -304,7 +304,6 @@ class ContactsList extends Component {
 				pagination = contactsBlock.getElementsByClassName('js-pagination')[0],
 				paginationSelect = contactsBlock.getElementsByClassName('js-pagination-select')[0];
 
-			/*Сброс фильтра*/
 			if (target.classList.contains('js-filter-reset')) {
 				for (const input of filterInputs) {
 					input.value = '';
@@ -323,7 +322,6 @@ class ContactsList extends Component {
 				this.renderPagination(contactsBlock, pagination, contacts);
 			}
 
-			/*Удаление одной опции фильтра*/
 			if (target.classList.contains('js-filter-delete-option')) {
 				for (const input of filterInputs) {
 					if (/^((с|по)\s?)(?<=.)\d{4}/igm.test( target.innerText)) {
@@ -358,13 +356,11 @@ class ContactsList extends Component {
 				}
 			}
 
-			/*Удалить контакт*/
 			if (target.closest('.js-delete-contact')) {
 				target.classList.add('hidden');
 				contactDeleteOptions.classList.remove('hidden');
 			}
 
-			/*Удалить контакт Отмена*/
 			if (target.classList.contains('js-delete-cancel')) {
 				for (const input of contactsInputs) {
 					input.checked = false;
@@ -375,7 +371,6 @@ class ContactsList extends Component {
 				this.displayContactsControlBtns(controlsBtn, contactDelete, contactDeleteOptions);
 			}
 
-			/*Удалить контакт Удалить*/
 			if (target.classList.contains('js-delete-ok')) {
 				const contactsTable = document.getElementsByClassName('js-table')[0],
 					contactsInputs = contactsTable.getElementsByTagName('input'),
@@ -400,7 +395,6 @@ class ContactsList extends Component {
 				this.renderPagination(contactsBlock, pagination, contactsResult.length ? contactsResult : contacts);
 			}
 
-			/*Изменение отображаемых контактов в таблице*/
 			if (target.classList.contains('js-show-option')) {
 				const changeShowItem = document.getElementsByClassName('js-show-items')[0],
 					optionsArr = Object.values(options);
@@ -422,14 +416,12 @@ class ContactsList extends Component {
 				this.renderPagination(contactsBlock, pagination, contactsResult.length ? contactsResult : contacts);
 			}
 
-			/*Следующая страница*/
 			if (target.closest('.js-next-page')) {
 				contactsTableBody.innerHTML = this.renderTable(contacts, +paginationSelect.value);
 
 				this.renderPagination(contactsBlock, pagination, contacts, +paginationSelect.value);
 			}
 
-			/*Предыдущая страница*/
 			if (target.closest('.js-prev-page')) {
 				contactsTableBody.innerHTML = this.renderTable(contacts, +paginationSelect.value - 2);
 
@@ -440,7 +432,6 @@ class ContactsList extends Component {
 		contactsBlock.addEventListener('change', async(e) => {
 			const target = e.target;
 
-			/*Изменение чекбоксов в таблице контактов*/
 			if (target.classList.contains('js-contact-check')) {
 				const contactChecked = contactsTableBody.querySelectorAll('.js-contact-check:checked'),
 					contactsResult = this.filterContacts(contacts, filterInputs);
@@ -459,7 +450,6 @@ class ContactsList extends Component {
 				this.fixedBlock(contactsTable, contactsInputs, contactsControls, null);
 			}
 
-			/*Изменение страницы*/
 			if (target.classList.contains('js-pagination-select')) {
 				const pagination = contactsBlock.getElementsByClassName('js-pagination')[0];
 
@@ -480,7 +470,6 @@ class ContactsList extends Component {
 		filter.addEventListener('change', async(e) => {
 			const target = e.target;
 
-			/*Изменение чекбоксов в фильтре контактов*/
 			if (target.classList.contains('js-choose-option')) {
 				this.fixedBlock(filter, filterInputs, filterBtns, filterFindBtn);
 			}
