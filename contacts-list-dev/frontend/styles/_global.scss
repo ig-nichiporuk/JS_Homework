@@ -1,7 +1,6 @@
 @import "variables";
 
 body {
-    height: 2000px; // DELETE!!!!!
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
@@ -142,7 +141,7 @@ input[type=number] {
     display: none;
     width: 100%;
     height: 100%;
-    background: rgba(23, 35, 69, .9);
+    background: rgba(23, 35, 69, .55);
 }
 
 .overlay-open .overlay{

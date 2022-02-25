@@ -1,11 +1,4 @@
 import ModalAlertTemplate from '../../templates/pages/modals/modalAlert.hbs';
-import ModalRemoveActTemplate from '../../templates/pages/modals/modalRemoveAct.hbs';
-import ModalRemoveTaskTemplate from '../../templates/pages/modals/modalRemoveTask.hbs';
-import ModalSaveChangesTemplate from '../../templates/pages/modals/modalSaveChanges.hbs';
-import ModalEditDataTemplate from '../../templates/pages/modals/modalEditData.hbs';
-import ModalTasksWithPriceTemplate from '../../templates/pages/modals/modalServicesWithPrice.hbs';
-import ModalTasksTemplate from '../../templates/pages/modals/modalServicesTitle.hbs';
-
 
 import Preloader from '../../templates/pages/preloader/preloader.hbs';
 
@@ -44,7 +37,7 @@ export const openModal = (id) => {
 		winHeight = document.documentElement.clientHeight,
 		docHeight = document.documentElement.scrollHeight;
 
-	body.insertAdjacentHTML('afterbegin', '<div class="overlay overlayJs"></div>');
+	body.insertAdjacentHTML('afterbegin', '<div class="overlay js-overlay"></div>');
 
 	modal.classList.add('open');
 
@@ -64,8 +57,8 @@ export const openModal = (id) => {
 };
 
 export const closeModal = () => {
-	const modal = body.querySelectorAll('.modalJs.open'),
-		overlay = body.getElementsByClassName('overlayJs')[0];
+	const modal = body.querySelectorAll('.js-modal.open'),
+		overlay = body.getElementsByClassName('js-overlay')[0];
 
 	if (overlay) overlay.remove();
 
@@ -81,30 +74,6 @@ export const showInfoModal = (id, type, content) => {
 	switch (type) {
 		case 'alert':
 			modal.innerHTML = ModalAlertTemplate(content);
-			break;
-
-		case 'remove-act':
-			modal.innerHTML = ModalRemoveActTemplate(content);
-			break;
-
-		case 'remove-task':
-			modal.innerHTML = ModalRemoveTaskTemplate(content);
-			break;
-
-		case 'change-service':
-			modal.innerHTML = ModalSaveChangesTemplate(content);
-			break;
-
-		case 'edit-data':
-			modal.innerHTML = ModalEditDataTemplate(content);
-			break;
-
-		case 'services-prices':
-			modal.innerHTML = ModalTasksWithPriceTemplate(content);
-			break;
-
-		case 'services-list':
-			modal.innerHTML = ModalTasksTemplate(content);
 			break;
 	}
 

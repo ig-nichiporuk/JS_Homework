@@ -4,6 +4,13 @@
 	position: relative;
 	display: table;
 	width: 100%;
+    & > p {
+        display: block;
+        text-align: center;
+        font-size: 22px;
+        line-height: 32px;
+        font-weight: 500;
+    }
 	&__row {
 		display: table-row;
         &-group {

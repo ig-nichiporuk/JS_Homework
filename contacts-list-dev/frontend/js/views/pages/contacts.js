@@ -1,9 +1,11 @@
+import {hideL, showInfoModal} from '../../helpers/utils';
+
 import Component from '../../views/component';
 
 import contactsTemplate from '../../../templates/pages/contacts.hbs';
-import contactsTableRow from '../../../templates/pages/contactsTableRow.hbs';
-import filterHashtagsTemplate from '../../../templates/pages/filterHashtags.hbs';
-import paginationTemplate from '../../../templates/pages/pagination.hbs';
+import contactsTableRow from '../../../templates/pages/contacts/contactsTableRow.hbs';
+import filterHashtagsTemplate from '../../../templates/pages/filter/filterHashtags.hbs';
+import paginationTemplate from '../../../templates/pages/pagination/pagination.hbs';
 
 import Contacts from '../../models/contacts';
 
@@ -46,7 +48,17 @@ class ContactsList extends Component {
 	}
 
 	async deleteContacts(id) {
-		return await this.model.deleteContacts(id);
+		try {
+			return await this.model.deleteContacts(id);
+
+		} catch {
+			hideL();
+
+			showInfoModal('alert-modal', 'alert', {
+				title : 'Ошибка!',
+				message : 'Не удалось удалить котакты'
+			});
+		}
 	}
 
 	showContactsAmount(checked, total) {
@@ -217,7 +229,7 @@ class ContactsList extends Component {
 		return contactsResult;
 	}
 
-	showContacts(contacts, contactsTableBody, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap) {
+	showContacts(contacts, table, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap) {
 		const contactsResult = this.filterContacts(contacts, filterInputs),
 			options = this.listenChangesInFilter(filterInputs);
 
@@ -228,11 +240,11 @@ class ContactsList extends Component {
 		const optionsArr = Object.values(options);
 
 		if (contactsResult.length && optionsArr.length) {
-			contactsTableBody.innerHTML = this.renderTable(contactsResult);
+			table.innerHTML = this.renderTable(contactsResult);
 		} else if (optionsArr.length) {
-			contactsTableBody.innerHTML = 'Ничего не найдено';
+			table.innerHTML = '<p>Ничего не найдено</p>';
 		} else {
-			contactsTableBody.innerHTML = this.renderTable(contacts);
+			table.innerHTML = this.renderTable(contacts);
 		}
 
 		filterHashtags.innerHTML = optionsArr.length ? filterHashtagsTemplate({optionsArr}) : '';
@@ -243,7 +255,17 @@ class ContactsList extends Component {
 	}
 
 	async getData() {
-		return await this.model.getContactsList();
+		try {
+			return await this.model.getContactsList();
+
+		} catch {
+			hideL();
+
+			showInfoModal('alert-modal', 'alert', {
+				title : 'Ошибка!',
+				message : 'Не удалось получить список контактов'
+			});
+		}
 	}
 
 	async render(data) {
@@ -265,7 +287,6 @@ class ContactsList extends Component {
 			counter = document.getElementsByClassName('js-contacts-counter')[0],
 			controlsBtn = document.getElementsByClassName('js-contacts-controls')[0],
 			contactsTable = document.getElementsByClassName('js-table')[0],
-			contactsTableBody = contactsTable.getElementsByClassName('js-table-body')[0],
 			contactsInputs = contactsTable.getElementsByTagName('input'),
 			contactsControls = document.getElementsByClassName('js-contacts-control')[0],
 			contactDelete = contactsControls.getElementsByClassName('js-delete-contact')[0],
@@ -315,7 +336,7 @@ class ContactsList extends Component {
 				filterHashtags.innerHTML = '';
 				titleWrap.nextElementSibling && titleWrap.nextElementSibling.remove();
 
-				contactsTableBody.innerHTML = this.renderTable(contacts, target.dataset.show);
+				contactsTable.innerHTML = this.renderTable(contacts, target.dataset.show);
 
 				counter.textContent = this.showContactsAmount(0, contacts.length);
 
@@ -337,7 +358,7 @@ class ContactsList extends Component {
 					options = this.listenChangesInFilter(filterInputs),
 					optionsArr = Object.values(options);
 
-				this.showContacts(contacts, contactsTableBody, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap);
+				this.showContacts(contacts, contactsTable, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap);
 
 				this.fixedBlock(filter, filterInputs, filterBtns, filterFindBtn);
 
@@ -390,7 +411,7 @@ class ContactsList extends Component {
 
 				counter.textContent = this.showContactsAmount(0, contactsResult.length || contacts.length);
 
-				contactsTableBody.innerHTML = this.renderTable(contacts);
+				contactsTable.innerHTML = this.renderTable(contacts);
 
 				this.renderPagination(contactsBlock, pagination, contactsResult.length ? contactsResult : contacts);
 			}
@@ -406,24 +427,24 @@ class ContactsList extends Component {
 				target.classList.add('active');
 
 				if (contactsResult.length && optionsArr.length) {
-					contactsTableBody.innerHTML = this.renderTable(contactsResult);
+					contactsTable.innerHTML = this.renderTable(contactsResult);
 				} else if (optionsArr.length) {
 					return;
 				} else {
-					contactsTableBody.innerHTML = this.renderTable(contacts);
+					contactsTable.innerHTML = this.renderTable(contacts);
 				}
 
 				this.renderPagination(contactsBlock, pagination, contactsResult.length ? contactsResult : contacts);
 			}
 
 			if (target.closest('.js-next-page')) {
-				contactsTableBody.innerHTML = this.renderTable(contacts, +paginationSelect.value);
+				contactsTable.innerHTML = this.renderTable(contacts, +paginationSelect.value);
 
 				this.renderPagination(contactsBlock, pagination, contacts, +paginationSelect.value);
 			}
 
 			if (target.closest('.js-prev-page')) {
-				contactsTableBody.innerHTML = this.renderTable(contacts, +paginationSelect.value - 2);
+				contactsTable.innerHTML = this.renderTable(contacts, +paginationSelect.value - 2);
 
 				this.renderPagination(contactsBlock, pagination, contacts, +paginationSelect.value - 2);
 			}
@@ -433,7 +454,7 @@ class ContactsList extends Component {
 			const target = e.target;
 
 			if (target.classList.contains('js-contact-check')) {
-				const contactChecked = contactsTableBody.querySelectorAll('.js-contact-check:checked'),
+				const contactChecked = contactsTable.querySelectorAll('.js-contact-check:checked'),
 					contactsResult = this.filterContacts(contacts, filterInputs);
 
 
@@ -453,7 +474,7 @@ class ContactsList extends Component {
 			if (target.classList.contains('js-pagination-select')) {
 				const pagination = contactsBlock.getElementsByClassName('js-pagination')[0];
 
-				contactsTableBody.innerHTML = this.renderTable(contacts, +target.value - 1);
+				contactsTable.innerHTML = this.renderTable(contacts, +target.value - 1);
 
 				this.renderPagination(contactsBlock, pagination, contacts, +target.value - 1);
 			}
@@ -483,7 +504,7 @@ class ContactsList extends Component {
 
 			this.displayContactsControlBtns(controlsBtn, contactDelete, contactDeleteOptions);
 
-			this.showContacts(contacts, contactsTableBody, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap);
+			this.showContacts(contacts, contactsTable, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap);
 
 			this.renderPagination(contactsBlock, pagination, contactsResult);
 

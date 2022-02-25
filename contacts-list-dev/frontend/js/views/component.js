@@ -22,7 +22,7 @@ class Component {
 				openModal(href);
 			}
 
-			if (target.classList.contains('modalCloseJs') || target.classList.contains('overlayJs')) {
+			if (target.classList.contains('js-modal-close') || target.classList.contains('js-overlay')) {
 				closeModal();
 			}
 		};

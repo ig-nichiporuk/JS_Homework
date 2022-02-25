@@ -1,4 +1,4 @@
-import {parseRequestURL} from './helpers/utils';
+import {parseRequestURL, showL, hideL} from './helpers/utils';
 
 import '../styles/main';
 
@@ -14,17 +14,20 @@ const Routes = {
 };
 
 async function router() {
-	const contentContainer = document.getElementsByClassName('contacts')[0],
+	const contentContainer = document.getElementById('contacts-app'),
 		request = parseRequestURL(),
 		parsedURL = `/${request.resource || ''}${request.id ? '/:id' : ''}${request.action ? `/${request.action}` : ''}`,
 		page = Routes[parsedURL] ? new Routes[parsedURL]() : new Error404();
 
+	showL();
 
 	const data = await page.getData();
 
 	contentContainer.innerHTML = await page.render(data);
 
 	page.afterRender(data);
+
+	hideL();
 }
 
 module.hot ? module.hot.accept(router()) : window.addEventListener('load', router);

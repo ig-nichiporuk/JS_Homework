@@ -1,7 +1,7 @@
 <div class="container">
 		<div class="contacts__wrap">
 			<div class="contacts__filter">
-				{{> filter }}
+				{{> filter/filter }}
 			</div>
 			<div class="contacts__block js-contacts-block">
 				<div class="contacts__block-title">
@@ -25,16 +25,10 @@
 						<span>Фильтр</span>
 					</div>
 					<div class="hashtags js-filter-hashtags"></div>
-					{{> contactsTable }}
+					{{> contacts/contactsTable }}
 					<div class="contacts__controls js-contacts-control">
 						<span class="contacts__controls-total js-contacts-counter">Выбрано: 0 / 0</span>
 						<div class="contacts__controls-btns js-contacts-controls hidden">
-							<!--<span class="edit">
-								<svg>
-								    <use xlink:href="#edit"></use>
-								</svg>
-								Редактировать
-							</span>-->
 							<span class="delete js-delete-contact">
 								<svg>
 								    <use xlink:href="#trash-can"></use>
@@ -59,7 +53,7 @@
 					</div>
 
 				</div>
-				{{> pagination }}
+				{{> pagination/pagination }}
 			</div>
 		</div>
 	</div>

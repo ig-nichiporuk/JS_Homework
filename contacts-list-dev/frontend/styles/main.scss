@@ -6,10 +6,13 @@
 @import "filter-hashtags";
 @import "contacts-table";
 @import "contact-data";
+@import "404";
+@import "modal";
+@import "preloader";
 
 .contacts{
-	padding: 40px 0;
 	&__wrap {
+        padding: 40px 0;
 		display: flex;
 		& > * {
 			width: 100%;

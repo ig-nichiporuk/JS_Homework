@@ -1,10 +1,11 @@
-import {generateID} from '../../helpers/utils';
+import {generateID, hideL, showInfoModal} from '../../helpers/utils';
 
 import Component from '../../views/component';
 
 import contactTemplate from '../../../templates/pages/contact.hbs';
-import contactPhoneFields from '../../../templates/pages/contactPhoneFields.hbs';
-import contactDataForm from '../../../templates/pages/contactData.hbs';
+import contactPhoneFields from '../../../templates/pages/contact/contactPhoneFields.hbs';
+import contactDataForm from '../../../templates/pages/contact/contactData.hbs';
+import Error404Template from '../../../templates/pages/error404.hbs';
 
 import Contacts from '../../models/contacts';
 
@@ -20,9 +21,12 @@ class Contact extends Component {
 		let valid = true;
 
 		if (!inputs.surname.value.trim() || !inputs.name.value.trim()) {
-			alert('Введите Имя и Фамилию!');
-
 			valid = false;
+
+			showInfoModal('alert-modal', 'alert', {
+				title : 'Ошибка!',
+				message : 'Введите имя и фамилию'
+			});
 
 			return valid;
 		}
@@ -121,21 +125,47 @@ class Contact extends Component {
 	}
 
 	async getData() {
-		return this.request.id ? await this.model.getContactItem(this.request.id) : '';
+		try {
+			return this.request.id ? await this.model.getContactItem(this.request.id) : '';
+
+		} catch {
+			hideL();
+
+			showInfoModal('alert-modal', 'alert', {
+				title : 'Ошибка!',
+				message : 'Не удалось получить данные контакта'
+			});
+		}
 	}
 
 	async setData(id, data) {
-		return await this.model.setContactData(id, data);
+		try {
+			return await this.model.setContactData(id, data);
+
+		} catch {
+			hideL();
+
+			showInfoModal('alert-modal', 'alert', {
+				title : 'Ошибка!',
+				message : 'Не удалось записать контакт'
+			});
+		}
 	}
 
 	async render(data) {
-		const contact = data;
+		if (this.request.resource === 'contact-add' || Object.keys(data).length) {
+			const contact = data;
 
-		return contactTemplate({contact, type : this.request.id ? 1: 0});
+			return contactTemplate({contact, type : this.request.id ? 1: 0});
+		} else {
+			return Error404Template();
+		}
 	}
 
 	async afterRender(data) {
-		await this.setActions(data);
+		super.afterRender();
+
+		(this.request.resource === 'contact-add' || Object.keys(data).length) && await this.setActions(data);
 	}
 
 	async setActions(data) {
@@ -332,15 +362,45 @@ class Contact extends Component {
 
 				if (this.request.id) {
 
-					await this.setData(this.request.id, changes);
+					try {
+						await this.setData(this.request.id, changes);
 
-					contact = await this.model.getContactItem(this.request.id);
+					} catch {
+						hideL();
+
+						showInfoModal('alert-modal', 'alert', {
+							title : 'Ошибка!',
+							message : 'Не удалось записать контакт'
+						});
+					}
+
+					try {
+						contact = await this.model.getContactItem(this.request.id);
+
+					} catch {
+						hideL();
+
+						showInfoModal('alert-modal', 'alert', {
+							title : 'Ошибка!',
+							message : 'Не удалось получить данные контакта'
+						});
+					}
 
 					contactName.innerText = `${contactOptions.surname.value} ${contactOptions.name.value}`;
 
 					contactForm.innerHTML = contactDataForm({contact, type : 1});
 				} else {
-					await this.setData(null, changes);
+					try {
+						await this.setData(null, changes);
+
+					} catch {
+						hideL();
+
+						showInfoModal('alert-modal', 'alert', {
+							title : 'Ошибка!',
+							message : 'Не удалось записать контакт'
+						});
+					}
 
 					location.hash = '#/';
 				}
