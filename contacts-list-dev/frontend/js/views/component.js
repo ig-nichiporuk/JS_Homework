@@ -1,4 +1,4 @@
-import {parseRequestURL, openDropdown, closeDropdown, openModal, closeModal} from '../helpers/utils';
+import {parseRequestURL, openModal, closeModal} from '../helpers/utils';
 
 class Component {
     constructor() {
@@ -11,20 +11,7 @@ class Component {
 
 	afterRender() {
 		document.body.onclick = () => {
-			const target = event.target,
-				dropdownBtn = target.closest('.dropdownBtnJs'),
-				activeDropdownBtns = document.querySelectorAll('.dropdownBtnJs.open');
-
-			if (dropdownBtn) {
-				if (!dropdownBtn.classList.contains('open')) {
-					closeDropdown(activeDropdownBtns, 300);
-					openDropdown(dropdownBtn, 300);
-				} else {
-					closeDropdown(activeDropdownBtns, 300);
-				}
-			} else if (activeDropdownBtns.length && !target.closest('.dropdownWrapJs')) {
-				closeDropdown(activeDropdownBtns, 300);
-			}
+			const target = event.target;
 
 			if (target.closest('.modalOpenJs')) {
 				event.preventDefault();
@@ -39,12 +26,6 @@ class Component {
 				closeModal();
 			}
 		};
-
-		window.addEventListener('unload', () => {
-			localStorage.removeItem('orderUnp');
-			localStorage.removeItem('orderNum');
-			localStorage.removeItem('orderSort');
-		});
 	}
 }
 

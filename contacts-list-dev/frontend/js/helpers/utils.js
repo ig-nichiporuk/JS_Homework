@@ -38,27 +38,6 @@ export const hideL = () => {
 	pleloader.remove();
 };
 
-export const openDropdown = (elem, duration) => {
-	const dropdownBody = elem.nextElementSibling;
-
-	elem.classList.add('open');
-	dropdownBody.classList.add('open');
-	dropdownBody.style.height = 'auto';
-
-	let originHeight = `${dropdownBody.clientHeight}px`;
-
-	dropdownBody.style.cssText = `height : 0px; transition-duration : ${duration / 1000}s`;
-	setTimeout( () => dropdownBody.style.height = originHeight, 0);
-};
-
-export const closeDropdown = (elem, duration) => {
-	elem.forEach((activeDropdownBtn) => {
-		activeDropdownBtn.classList.remove('open');
-		activeDropdownBtn.nextElementSibling.style.height = '0';
-		setTimeout( () => activeDropdownBtn.nextElementSibling.classList.remove('open'), duration);
-	});
-};
-
 export const openModal = (id) => {
 	const modal = document.getElementById(id),
 		winScrollTop = window.scrollY,
@@ -92,8 +71,6 @@ export const closeModal = () => {
 
 	modal.forEach((activeModal) => activeModal.classList.remove('open'));
 	body.classList.remove('modal-open',  'overlay-open',  'js-scroll-lock');
-
-	resetAllInput();
 };
 
 export const showInfoModal = (id, type, content) => {
@@ -132,43 +109,4 @@ export const showInfoModal = (id, type, content) => {
 	}
 
 	openModal(id);
-};
-
-
-export const formatOrders = (data) => {
-	return data.map(order => {
-		let {id, code_1c, type, code, fio, car, reg_number, sum, status_id, login, unp, created_at, closed_at} = order,
-			surname = fio.split(' ')[0][0].toUpperCase() + fio.split(' ')[0].slice(1),
-			name = fio.split(' ')[1] ? `${fio.split(' ')[1][0].toUpperCase()}.` : '',
-			patronymic = fio.split(' ')[2] ? `${fio.split(' ')[2][0].toUpperCase()}.` : '';
-
-		fio = [surname, `${name}${patronymic}`].join(' ');
-
-		status_id = status_id == 1 ? 'Новый' : status_id == 2 ? 'Отменен' : 'Выполнен';
-
-		created_at = created_at.split(' ')[0].split('-').reverse().join('.');
-
-		closed_at = closed_at ? closed_at.split(' ')[0].split('-').reverse().join('.') : '—';
-
-		const formatOrder = {id, code_1c, type, code, fio, car, reg_number, sum, status_id, login, unp, created_at, closed_at};
-
-		return formatOrder;
-	});
-};
-
-export const checkUser = () => {
-	const userInLS = localStorage.getItem('user'),
-		userInSS = sessionStorage.getItem('user');
-	if (userInLS || userInSS) {
-		return JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user'));
-	}
-};
-
-
-const resetAllInput = () => {
-	const inputsChecked = body.querySelectorAll('input:checked');
-
-	for (let input of inputsChecked) {
-		input.checked = false;
-	}
 };

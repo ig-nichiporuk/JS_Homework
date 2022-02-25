@@ -5,8 +5,8 @@ import Component from '../../views/component';
 import contactTemplate from '../../../templates/pages/contact.hbs';
 import contactPhoneFields from '../../../templates/pages/contactPhoneFields.hbs';
 import contactDataForm from '../../../templates/pages/contactData.hbs';
-import Contacts from '../../models/contacts';
 
+import Contacts from '../../models/contacts';
 
 
 class Contact extends Component {
@@ -127,7 +127,6 @@ class Contact extends Component {
 	async setData(id, data) {
 		return await this.model.setContactData(id, data);
 	}
-
 
 	async render(data) {
 		const contact = data;

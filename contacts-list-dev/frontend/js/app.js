@@ -4,20 +4,10 @@ import '../styles/main';
 
 
 import Error404 from './views/pages/error404';
-
-
-import Orders from './views/pages/orders';
-import Order from './views/pages/order';
-import Acts from './views/pages/acts';
 import Contacts from './views/pages/contacts';
 import Contact from './views/pages/contact';
 
 const Routes = {
-    // '/': About,
-    /* '/': Authorization,*/
-    '/orders': Orders,
-    '/order/:id': Order,
-    '/acts': Acts,
     '/': Contacts,
 	'/contact/:id': Contact,
 	'/contact-add': Contact

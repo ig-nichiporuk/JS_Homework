@@ -126,7 +126,7 @@ class ContactsList extends Component {
 			const result = contactsResult.length ? contactsResult : contacts;
 
 			contactsResult = result.filter(item => {
-				const year = item.birthdate.split('.')[2];
+				const year = item.birthdate.year;
 
 				return (year >= options.birthdateMin && year <= options.birthdateMax);
 			});
