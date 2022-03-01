@@ -4,6 +4,9 @@
     position: relative;
     padding: 12px 0 0;
     background-color: #fff;
+    &.open {
+        display: block;
+    }
     &__wrap {
         position: relative;
         padding: 0 0 85px 0;
@@ -157,7 +160,7 @@
             display: none;
             justify-content: flex-end;
             align-items: center;
-            margin: 0 0 20px 0;
+            margin: 0 0 15px 0;
             svg {
                 width: 40px;
                 height: 40px;
@@ -199,6 +202,7 @@
 @media (max-width: 1299px) {
     .filter {
         display: none;
+        min-width: 320px;
         position: fixed;
         z-index: 14;
         top: 0;

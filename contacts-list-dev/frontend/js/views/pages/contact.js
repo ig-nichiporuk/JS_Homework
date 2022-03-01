@@ -9,7 +9,6 @@ import Error404Template from '../../../templates/pages/error404.hbs';
 
 import Contacts from '../../models/contacts';
 
-
 class Contact extends Component {
 	constructor() {
 		super();
@@ -169,6 +168,8 @@ class Contact extends Component {
 	}
 
 	async setActions(data) {
+		window.scrollTo(0, 0);
+
 		const contactForm = document.getElementsByClassName('js-contact-form')[0],
 			contactName = document.getElementsByClassName('js-contact-name')[0],
 			contactOptions = contactForm.getElementsByTagName('input'),

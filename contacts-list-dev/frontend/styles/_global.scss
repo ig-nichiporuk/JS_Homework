@@ -10,6 +10,11 @@ body {
     min-width: 320px;
     color: $main-color;
     background: #F0F0F0;
+    &.filter-open {
+        position: fixed;
+        width: 100%;
+        overflow: hidden;
+    }
 }
 
 

@@ -65,18 +65,18 @@ class ContactsList extends Component {
 		return `Выбрано: ${checked} / ${total}`;
 	}
 
-	displayContactsControlBtns(btnWrap, deleteBtn, deleteoptions) {
+	displayContactsControlBtns(btnWrap, deleteBtn, deleteOptions) {
 		btnWrap.classList.add('hidden');
-		deleteoptions.classList.add('hidden');
+		deleteOptions.classList.add('hidden');
 		deleteBtn.classList.remove('hidden');
 	}
 
-	fixedBlock(parent, inputs, fixedBlock, filterFindBtn) {
+	fixedBlock(parent, inputs, fixedBlock, filterFindBtn, scrollBlock = null) {
 		for (const input of inputs) {
 			if ((input.value && input.value !== 'on') || input.checked) {
 				if (filterFindBtn) filterFindBtn.disabled = false;
 
-				if (window.innerHeight + window.pageYOffset < parent.offsetTop + parent.offsetHeight) {
+				if (window.innerHeight + (scrollBlock ? scrollBlock.scrollTop : window.pageYOffset) < parent.offsetTop + parent.offsetHeight) {
 					fixedBlock.classList.add('fix');
 				} else {
 					fixedBlock.classList.remove('fix');
@@ -293,6 +293,9 @@ class ContactsList extends Component {
 			contactDeleteOptions = contactsControls.getElementsByClassName('js-controls-options')[0],
 			titleWrap = document.getElementsByClassName('js-title-wrap')[0],
 			filter = document.querySelector('.js-filter'),
+			filterWrap = document.querySelector('.js-filter-wrap'),
+			filterBtnShow = document.querySelector('.js-filter-mob-btn'),
+			filterBtnClose = document.querySelector('.js-filter-mob-close'),
 			filterInputs = filter.getElementsByTagName('input'),
 			filterBtns = filter.querySelector('.js-filter-btns'),
 			filterFindBtn = filterBtns.querySelector('.js-filter-show-btn'),
@@ -303,19 +306,17 @@ class ContactsList extends Component {
 
 		counter.textContent = this.showContactsAmount(0, contactsResult.length || contacts.length);
 
-
-
-
-
-
-
 		window.addEventListener('scroll', () => {
 			this.fixedBlock(filter, filterInputs, filterBtns, filterFindBtn);
-			this.fixedBlock(contactsTable, contactsInputs, contactsControls, null);
+			this.fixedBlock(contactsTable.parentElement, contactsInputs, contactsControls, null);
 		});
 
 		window.addEventListener('resize', function() {
 			contactsControls.style.width = `${contactsTable.clientWidth}px`;
+
+			if (document.body.clientWidth > 1299 && document.body.classList.contains('filter-open')) {
+				document.body.classList.remove('filter-open');
+			}
 		});
 
 		contactsBlock.addEventListener('click', async(e) => {
@@ -414,6 +415,8 @@ class ContactsList extends Component {
 				contactsTable.innerHTML = this.renderTable(contacts);
 
 				this.renderPagination(contactsBlock, pagination, contactsResult.length ? contactsResult : contacts);
+
+				contactsControls.classList.remove('fix');
 			}
 
 			if (target.classList.contains('js-show-option')) {
@@ -468,7 +471,7 @@ class ContactsList extends Component {
 
 				contactsControls.style.width = `${contactsTable.clientWidth}px`;
 
-				this.fixedBlock(contactsTable, contactsInputs, contactsControls, null);
+				this.fixedBlock(contactsTable.parentElement, contactsInputs, contactsControls, null);
 			}
 
 			if (target.classList.contains('js-pagination-select')) {
@@ -492,12 +495,24 @@ class ContactsList extends Component {
 			const target = e.target;
 
 			if (target.classList.contains('js-choose-option')) {
-				this.fixedBlock(filter, filterInputs, filterBtns, filterFindBtn);
+				if (document.body.classList.contains('filter-open')) {
+					this.fixedBlock(filterWrap, filterInputs, filterBtns, filterFindBtn, filter);
+				} else {
+					this.fixedBlock(filter, filterInputs, filterBtns, filterFindBtn);
+				}
 			}
 		});
 
 		filter.addEventListener('submit', async(e) => {
 			e.preventDefault();
+
+			if (document.body.classList.contains('filter-open')) {
+				filter.scrollTop  = 0;
+
+				filter.classList.remove('open');
+
+				document.body.classList.remove('filter-open');
+			}
 
 			const contactsResult = this.filterContacts(contacts, filterInputs),
 				pagination = contactsBlock.getElementsByClassName('js-pagination')[0];
@@ -509,6 +524,20 @@ class ContactsList extends Component {
 			this.renderPagination(contactsBlock, pagination, contactsResult);
 
 			counter.textContent = this.showContactsAmount(0, contactsResult.length);
+		});
+
+		filter.addEventListener('scroll', () => {
+			this.fixedBlock(filterWrap, filterInputs, filterBtns, filterFindBtn, filter);
+		});
+
+		filterBtnShow.addEventListener('click', () => {
+			filter.classList.add('open');
+			document.body.classList.add('filter-open');
+		});
+
+		filterBtnClose.addEventListener('click', () => {
+			filter.classList.remove('open');
+			document.body.classList.remove('filter-open');
 		});
 	}
 }

@@ -25,19 +25,21 @@
 						<span>Фильтр</span>
 					</div>
 					<div class="hashtags js-filter-hashtags"></div>
-					{{> contacts/contactsTable }}
-					<div class="contacts__controls js-contacts-control">
-						<span class="contacts__controls-total js-contacts-counter">Выбрано: 0 / 0</span>
-						<div class="contacts__controls-btns js-contacts-controls hidden">
+					<div class="contacts__table">
+						{{> contacts/contactsTable }}
+						<div class="contacts__controls js-contacts-control">
+							<span class="contacts__controls-total js-contacts-counter">Выбрано: 0 / 0</span>
+							<div class="contacts__controls-btns js-contacts-controls hidden">
 							<span class="delete js-delete-contact">
 								<svg>
 								    <use xlink:href="#trash-can"></use>
 								</svg>
 								Удалить
 							</span>
-							<div class="options hidden js-controls-options">
-								<span class="btn-style btn-style_blue js-delete-ok">Удалить</span>
-								<span class="btn-style btn-style_white js-delete-cancel">Отменить</span>
+								<div class="options hidden js-controls-options">
+									<span class="btn-style btn-style_blue js-delete-ok">Удалить</span>
+									<span class="btn-style btn-style_white js-delete-cancel">Отменить</span>
+								</div>
 							</div>
 						</div>
 					</div>
