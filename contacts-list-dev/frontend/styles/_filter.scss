@@ -84,6 +84,9 @@
             line-height: 20px;
             color: inherit;
         }
+        &.error {
+            box-shadow: inset 0 0 0 1px #e2001a;
+        }
     }
     &__checkbox + &__checkbox {
         margin: 0 0 0 16px;
@@ -120,6 +123,9 @@
             border: 1px solid #EDEDED;
             border-radius: $bdrs-6;
             color: $main-color;
+            &.error {
+                border: 1px solid #e2001a;
+            }
         }
         span {
             margin: 0 5px;

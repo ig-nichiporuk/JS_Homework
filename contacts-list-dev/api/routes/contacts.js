@@ -32,7 +32,6 @@ router.put('/api/contact/changes',  (req, res) => {
 	const {id, data} = req.body,
 		contacts = getContactsFromDB();
 
-	console.log(data);
 	if(id) {
 		updateContacts = contacts.map(contact => {
 			if(contact.id == id) {

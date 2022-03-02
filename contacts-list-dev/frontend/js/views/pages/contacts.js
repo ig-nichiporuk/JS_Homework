@@ -1,4 +1,4 @@
-import {hideL, showInfoModal} from '../../helpers/utils';
+import {btnsValidation, hideL, showInfoModal} from '../../helpers/utils';
 
 import Component from '../../views/component';
 
@@ -71,9 +71,9 @@ class ContactsList extends Component {
 		deleteBtn.classList.remove('hidden');
 	}
 
-	fixedBlock(parent, inputs, fixedBlock, filterFindBtn, scrollBlock = null) {
+	fixedBlock(parent, inputs, fixedBlock, filterFindBtn, scrollBlock) {
 		for (const input of inputs) {
-			if ((input.value && input.value !== 'on') || input.checked) {
+			if ((input.value.trim() && input.value !== 'on') || input.checked) {
 				if (filterFindBtn) filterFindBtn.disabled = false;
 
 				if (window.innerHeight + (scrollBlock ? scrollBlock.scrollTop : window.pageYOffset) < parent.offsetTop + parent.offsetHeight) {
@@ -229,6 +229,51 @@ class ContactsList extends Component {
 		return contactsResult;
 	}
 
+	checkYearsRange(yearMin, yearMax) {
+		let valid = false;
+
+		if (yearMin.value.trim() ) {
+			if (yearMin.value  < 1900 || yearMin.value > new Date().getFullYear()) {
+				yearMin.classList.add('error');
+
+				showInfoModal('alert-modal', 'alert', {
+					title : 'Ошибка!',
+					message : 'Укажите год не меньше 1900 и не больше текущего'
+				});
+
+				valid = true;
+			}
+		}
+
+		if (yearMax.value.trim()) {
+			if (yearMax.value < 1900 || yearMax.value > new Date().getFullYear()) {
+				yearMax.classList.add('error');
+
+				showInfoModal('alert-modal', 'alert', {
+					title : 'Ошибка!',
+					message : 'Укажите год не меньше 1900 и не больше текущего'
+				});
+
+				valid = true;
+			}
+		}
+
+		if (yearMin.value.trim() && yearMax.value.trim()) {
+			if (yearMin.value > yearMax.value) {
+				yearMin.classList.add('error');
+
+				showInfoModal('alert-modal', 'alert', {
+					title : 'Ошибка!',
+					message : 'Некорректный диапазон'
+				});
+
+				valid = true;
+			}
+		}
+
+		return valid;
+	}
+
 	showContacts(contacts, table, filterHashtags, filter, filterInputs, filterBtns, filterFindBtn, titleWrap) {
 		const contactsResult = this.filterContacts(contacts, filterInputs),
 			options = this.listenChangesInFilter(filterInputs);
@@ -279,6 +324,8 @@ class ContactsList extends Component {
 	}
 
 	async afterRender(data) {
+		super.afterRender();
+
 		await this.setActions(data);
 	}
 
@@ -303,6 +350,10 @@ class ContactsList extends Component {
 			contactsResult = this.filterContacts(contacts, filterInputs);
 
 		let contacts = data;
+
+		for (let option of filterInputs) {
+			option.onfocus = () => option.classList.remove('error');
+		}
 
 		counter.textContent = this.showContactsAmount(0, contactsResult.length || contacts.length);
 
@@ -349,7 +400,7 @@ class ContactsList extends Component {
 					if (/^((с|по)\s?)(?<=.)\d{4}/igm.test( target.innerText)) {
 						target.innerText = target.innerText.replace(/(с|по)/igm, '');
 					}
-					if (input.value === target.innerText || input.dataset.value === target.innerText) {
+					if (input.value.trim().replace(/[\s-.,]+/igm, '') === target.innerText.replace(/[\s-.,]+/igm, '') || input.dataset.value === target.innerText) {
 						input.value = '';
 						input.checked = false;
 					}
@@ -491,6 +542,10 @@ class ContactsList extends Component {
 			}
 		});
 
+		filter.addEventListener('keypress', (e) => {
+			btnsValidation(e);
+		});
+
 		filter.addEventListener('change', async(e) => {
 			const target = e.target;
 
@@ -516,6 +571,12 @@ class ContactsList extends Component {
 
 			const contactsResult = this.filterContacts(contacts, filterInputs),
 				pagination = contactsBlock.getElementsByClassName('js-pagination')[0];
+
+			if (this.checkYearsRange(filterInputs['year-min'], filterInputs['year-max'])) return;
+
+			for (let option of filterInputs) {
+				option.classList.remove('error');
+			}
 
 			this.displayContactsControlBtns(controlsBtn, contactDelete, contactDeleteOptions);
 

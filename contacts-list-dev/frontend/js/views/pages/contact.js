@@ -1,4 +1,4 @@
-import {generateID, hideL, showInfoModal} from '../../helpers/utils';
+import {btnsValidation, generateID, hideL, showInfoModal} from '../../helpers/utils';
 
 import Component from '../../views/component';
 
@@ -27,6 +27,9 @@ class Contact extends Component {
 				message : 'Введите имя и фамилию'
 			});
 
+			!inputs.surname.value.trim() && (inputs.surname.value = '');
+			!inputs.name.value.trim() && (inputs.name.value = '');
+
 			return valid;
 		}
 
@@ -46,6 +49,7 @@ class Contact extends Component {
 					}
 
 					break;
+
 				case 'birthday':
 					if (input.value.trim() && (!/^\d+$/img.test(input.value) || input.value < 1 || input.value > 31)){
 						input.classList.add('error');
@@ -54,8 +58,9 @@ class Contact extends Component {
 					}
 
 					break;
+
 				case 'year':
-					if (input.value.trim() && (!/^\d+$/img.test(input.value) || input.value > new Date().getFullYear() || input.value < 1900)){
+					if (input.value.trim() && (!/^\d{4}$/img.test(input.value) || input.value > new Date().getFullYear() || input.value < 1900)){
 						input.classList.add('error');
 
 						valid = false;
@@ -72,6 +77,7 @@ class Contact extends Component {
 					}
 
 					break;
+
 				case 'postcode':
 					if (input.value.trim() && !/^\d+$/img.test(input.value)){
 						input.classList.add('error');
@@ -82,7 +88,7 @@ class Contact extends Component {
 					break;
 
 				case 'site':
-					if (input.value.trim() && !/^[a-z\d]+([_\-.]?[a-z\d]+)(?<=[a-z\d].+)\.[a-z]{2,10}$/img.test(input.value)){
+					if (input.value.trim() && !/^[a-z\d]+(([_\-.]?[a-z\d]+)+)(?<=[a-z\d].+)\.[a-z]{2,10}$/img.test(input.value)){
 						input.classList.add('error');
 
 						valid = false;
@@ -91,7 +97,7 @@ class Contact extends Component {
 					break;
 
 				case 'email':
-					if (input.value.trim() && !/^[a-z\d]+([_\-.]?[a-z\d]+)(?<=[a-z\d].+)@(?=.{2,20}\.)([a-z\d]+[_\-.]?[a-z\d]+)\.[a-z]{2,10}$/img.test(input.value)){
+					if (input.value.trim() && !/^[a-z\d]+(([_\-.]?[a-z\d]+)+)(?<=[a-z\d].+)@(?=.{2,20}\.)([a-z\d]+[_\-.]?[a-z\d]+)\.[a-z]{2,10}$/img.test(input.value)){
 						input.classList.add('error');
 
 						valid = false;
@@ -184,51 +190,9 @@ class Contact extends Component {
 		contactForm.addEventListener('keypress', (e) => {
 			const target = e.target;
 
-			switch (true) {
-				case target.id === 'birthday':
-				case target.id === 'year':
-				case target.id === 'postcode':
-					!/\d/.test(e.key) && e.preventDefault();
+			btnsValidation(e);
 
-					break;
-				case target.id === 'surname':
-				case target.id === 'name':
-				case target.id === 'patronymic':
-				case target.id === 'company':
-				case target.id === 'country':
-				case target.id === 'city':
-				case target.id === 'street':
-					if (!/[a-zа-яё\s-]/i.test(e.key) || /[\^_]/.test(e.key)) {
-						e.preventDefault();
-					}
-
-					break;
-				case target.id === 'house':
-				case target.id === 'apartment':
-					if (!/[a-zа-яё\d/]/i.test(e.key) || /[\^_]/.test(e.key)) {
-						e.preventDefault();
-					}
-
-					break;
-				case target.id === 'phone':
-					!/\d/.test(e.key) && e.preventDefault();
-
-					!/^\+\d+$/.test(target.value) && (target.value = '+');
-
-					break;
-				case target.id === 'site':
-					if (!/[a-z\d-_.]/.test(e.key) || /[\^]/.test(e.key)) {
-						e.preventDefault();
-					}
-
-					break;
-				case target.id === 'email':
-					if (!/[a-z\d-_.@]/.test(e.key) || /[\^]/.test(e.key)) {
-						e.preventDefault();
-					}
-
-					break;
-			}
+			target.classList.remove('error');
 		});
 
 		contactForm.addEventListener('keyup', (e) => {
@@ -238,6 +202,8 @@ class Contact extends Component {
 				const phoneDesc = target.parentElement.nextElementSibling.getElementsByTagName('textarea')[0];
 
 				if (!target.value) {
+					target.classList.remove('error');
+
 					phoneDesc.innerHTML = '';
 
 					phoneDesc.disabled = true;
@@ -281,10 +247,6 @@ class Contact extends Component {
 
 			if (target.classList.contains('js-contact-edit')) {
 				contactForm.innerHTML = contactDataForm({contact, type : 0});
-
-				for (let option of contactOptions) {
-					option.onfocus = () => option.classList.remove('error');
-				}
 			}
 		});
 
@@ -302,13 +264,13 @@ class Contact extends Component {
 
 				if (contactOptions.birthday.value && contactOptions.year.value) {
 					changes.birthdate = {
-						day : contactOptions.birthday.value,
+						day : contactOptions.birthday.value.length < 2 ? `0${contactOptions.birthday.value}` : contactOptions.birthday.value,
 						month : contactMonth.value,
 						year : contactOptions.year.value
 					};
 				} else if (contactOptions.birthday.value) {
 					changes.birthdate = {
-						day : contactOptions.birthday.value,
+						day : contactOptions.birthday.value.length < 2 ? `0${contactOptions.birthday.value}` : contactOptions.birthday.value,
 						month : contactMonth.value,
 						year : ''
 					};

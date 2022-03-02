@@ -79,3 +79,55 @@ export const showInfoModal = (id, type, content) => {
 
 	openModal(id);
 };
+
+export const btnsValidation = (e) => {
+	const target = e.target;
+
+	switch (target.id) {
+		case 'birthday':
+		case 'year':
+		case 'postcode':
+		case 'year-min':
+		case 'year-max':
+			(!/\d/.test(e.key) && e.keyCode !== 13) && e.preventDefault();
+
+			break;
+		case 'surname':
+		case 'name':
+		case 'patronymic':
+		case 'company':
+		case 'country':
+		case 'city':
+		case 'street':
+			if (!/[a-zа-яё\s-]/i.test(e.key) || /[\^_]/.test(e.key)) {
+				e.preventDefault();
+			}
+
+			break;
+		case 'house':
+		case 'apartment':
+			if (!/[a-zа-яё\d/]/i.test(e.key) || /[\^_]/.test(e.key)) {
+				e.preventDefault();
+			}
+
+			break;
+		case 'phone':
+			(!/\d/.test(e.key) && e.keyCode !== 13) && e.preventDefault();
+
+			!/^\+\d+$/.test(target.value) && (target.value = '+');
+
+			break;
+		case 'site':
+			if (!/[a-z\d-_.]/.test(e.key) || /[\^]/.test(e.key)) {
+				e.preventDefault();
+			}
+
+			break;
+		case 'email':
+			if (!/[a-z\d-_.@]/.test(e.key) || /[\^]/.test(e.key)) {
+				e.preventDefault();
+			}
+
+			break;
+	}
+};
