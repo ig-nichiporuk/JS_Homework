@@ -119,6 +119,7 @@ class ContactsList extends Component {
 
 			if (!contactsResult.length) return [];
 		}
+
 		if (options.name) {
 			const result = contactsResult.length ? contactsResult : contacts;
 
@@ -126,6 +127,7 @@ class ContactsList extends Component {
 
 			if (!contactsResult.length) return [];
 		}
+
 		if (options.patronymic) {
 			const result = contactsResult.length ? contactsResult : contacts;
 
@@ -284,6 +286,9 @@ class ContactsList extends Component {
 
 		const optionsArr = Object.values(options);
 
+		localStorage.setItem('filterInputs', JSON.stringify(options));
+		localStorage.setItem('optionsArr', JSON.stringify(optionsArr));
+
 		if (contactsResult.length && optionsArr.length) {
 			table.innerHTML = this.renderTable(contactsResult);
 		} else if (optionsArr.length) {
@@ -317,8 +322,8 @@ class ContactsList extends Component {
 		const showContactsCount = JSON.parse(localStorage.getItem('showContactsCount')),
 			contactsDivide = this.divideContactsArr(data),
 			contactsDivideLength = contactsDivide.length,
-			showContacts = contactsDivide[0],
-			indexPage = 0;
+			showContacts = contactsDivide[JSON.parse(localStorage.getItem('currentPage')) || 0],
+			indexPage = JSON.parse(localStorage.getItem('currentPage')) || 0;
 
 		return contactsTemplate({indexPage, contactsDivide, contactsDivideLength, showContacts, showContactsCount});
 	}
@@ -529,6 +534,8 @@ class ContactsList extends Component {
 				const pagination = contactsBlock.getElementsByClassName('js-pagination')[0];
 
 				contactsTable.innerHTML = this.renderTable(contacts, +target.value - 1);
+
+				localStorage.setItem('currentPage', JSON.stringify(+target.value - 1));
 
 				this.renderPagination(contactsBlock, pagination, contacts, +target.value - 1);
 			}

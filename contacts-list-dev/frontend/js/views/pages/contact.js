@@ -222,7 +222,7 @@ class Contact extends Component {
 					apartmentInput.disabled = houseInput.disabled  = true;
 				}
 
-				houseInput.disabled = !houseInput.value;
+				houseInput.disabled = !target.value && !houseInput.value;
 			}
 
 			if (target.id === 'house') {
