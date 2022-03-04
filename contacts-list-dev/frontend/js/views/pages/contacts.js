@@ -286,9 +286,6 @@ class ContactsList extends Component {
 
 		const optionsArr = Object.values(options);
 
-		localStorage.setItem('filterInputs', JSON.stringify(options));
-		localStorage.setItem('optionsArr', JSON.stringify(optionsArr));
-
 		if (contactsResult.length && optionsArr.length) {
 			table.innerHTML = this.renderTable(contactsResult);
 		} else if (optionsArr.length) {
