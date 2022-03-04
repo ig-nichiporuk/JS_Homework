@@ -24,7 +24,24 @@
 						</svg>
 						<span>Фильтр</span>
 					</div>
-					<div class="hashtags js-filter-hashtags"></div>
+					<div class="hashtags js-filter-hashtags">
+						{{#if optionsLSArr}}
+							<div class="hashtags__wrap">
+								{{#each optionsLSArr}}
+									<div class="hashtags__item">
+									<span class="btn-style btn-style_blue js-filter-delete-option">
+										{{this}}
+									</span>
+									</div>
+								{{/each}}
+								<div class="hashtags__cleaner js-filter-reset">
+								<span class="btn-style btn-style_gray js-filter-reset">
+									Очистить
+								</span>
+								</div>
+							</div>
+						{{/if}}
+					</div>
 					<div class="contacts__table">
 						{{> contacts/contactsTable }}
 						<div class="contacts__controls js-contacts-control">

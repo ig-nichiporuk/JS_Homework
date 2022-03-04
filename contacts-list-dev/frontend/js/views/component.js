@@ -26,6 +26,13 @@ class Component {
 				closeModal();
 			}
 		};
+
+		window.addEventListener('unload', () => {
+			localStorage.removeItem('showContactsCount');
+			localStorage.removeItem('options');
+			localStorage.removeItem('optionsArr');
+			localStorage.removeItem('currentPage');
+		});
 	}
 }
 

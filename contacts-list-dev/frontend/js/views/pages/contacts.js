@@ -1,4 +1,4 @@
-import {btnsValidation, hideL, showInfoModal} from '../../helpers/utils';
+import {btnsValidation, hideL, showInfoModal, formatData} from '../../helpers/utils';
 
 import Component from '../../views/component';
 
@@ -90,23 +90,31 @@ class ContactsList extends Component {
 	}
 
 	listenChangesInFilter(filterInputs) {
-		const options = {};
+		const optionsLS = JSON.parse(localStorage.getItem('options'));
 
-		filterInputs.name.value && (options.name = filterInputs.name.value);
-		filterInputs.surname.value && (options.surname = filterInputs.surname.value);
-		filterInputs.patronymic.value && (options.patronymic = filterInputs.patronymic.value);
-		filterInputs['year-min'].value && (options.birthdateMin = filterInputs['year-min'].value);
-		filterInputs['year-max'].value && (options.birthdateMax = filterInputs['year-max'].value);
-		filterInputs['gender-man'].checked && (options.gender = filterInputs['gender-man'].dataset.value);
-		filterInputs['gender-woman'].checked && (options.gender = filterInputs['gender-woman'].dataset.value);
-		filterInputs.family.checked && (options.family = true);
-		filterInputs.country.value && (options.country = filterInputs.country.value);
-		filterInputs.city.value && (options.city = filterInputs.city.value);
-		filterInputs.street.value && (options.street = filterInputs.street.value);
-		filterInputs.house.value && (options.house = filterInputs.house.value);
-		filterInputs.apartment.value && (options.apartment = filterInputs.apartment.value);
+		if (optionsLS) {
+			return optionsLS;
+		} else {
+			const options = {};
 
-		return options;
+			filterInputs.name.value && (options.name = filterInputs.name.value);
+			filterInputs.surname.value && (options.surname = filterInputs.surname.value);
+			filterInputs.patronymic.value && (options.patronymic = filterInputs.patronymic.value);
+			filterInputs['year-min'].value && (options.birthdateMin = filterInputs['year-min'].value);
+			filterInputs['year-max'].value && (options.birthdateMax = filterInputs['year-max'].value);
+			filterInputs['gender-man'].checked && (options.gender = filterInputs['gender-man'].dataset.value);
+			filterInputs['gender-woman'].checked && (options.gender = filterInputs['gender-woman'].dataset.value);
+			filterInputs.family.checked && (options.family = true);
+			filterInputs.country.value && (options.country = filterInputs.country.value);
+			filterInputs.city.value && (options.city = filterInputs.city.value);
+			filterInputs.street.value && (options.street = filterInputs.street.value);
+			filterInputs.house.value && (options.house = filterInputs.house.value);
+			filterInputs.apartment.value && (options.apartment = filterInputs.apartment.value);
+
+			Object.keys(options).length && localStorage.setItem('options', JSON.stringify(options));
+
+			return options;
+		}
 	}
 
 	filterContacts(contacts, filterInputs) {
@@ -284,7 +292,10 @@ class ContactsList extends Component {
 		options.birthdateMax && (options.birthdateMax = `по ${options.birthdateMax}`);
 		options.family && (options.family = 'Замужем / женат');
 
-		const optionsArr = Object.values(options);
+		const optionsArr = Object.values(options),
+			optionsArrFix = optionsArr.map(item => formatData(item));
+
+		optionsArr.length && localStorage.setItem('optionsArr', JSON.stringify(optionsArrFix));
 
 		if (contactsResult.length && optionsArr.length) {
 			table.innerHTML = this.renderTable(contactsResult);
@@ -294,7 +305,7 @@ class ContactsList extends Component {
 			table.innerHTML = this.renderTable(contacts);
 		}
 
-		filterHashtags.innerHTML = optionsArr.length ? filterHashtagsTemplate({optionsArr}) : '';
+		filterHashtags.innerHTML = optionsArr.length ? filterHashtagsTemplate({optionsArrFix}) : '';
 
 		titleWrap.nextElementSibling && titleWrap.nextElementSibling.remove();
 
@@ -317,12 +328,18 @@ class ContactsList extends Component {
 
 	async render(data) {
 		const showContactsCount = JSON.parse(localStorage.getItem('showContactsCount')),
-			contactsDivide = this.divideContactsArr(data),
+			optionsLS = JSON.parse(localStorage.getItem('options')),
+			optionsLSArr = JSON.parse(localStorage.getItem('optionsArr')),
+			contactsDivide = this.divideContactsArr(optionsLS ? this.filterContacts(data, optionsLS) : data),
 			contactsDivideLength = contactsDivide.length,
 			showContacts = contactsDivide[JSON.parse(localStorage.getItem('currentPage')) || 0],
 			indexPage = JSON.parse(localStorage.getItem('currentPage')) || 0;
 
-		return contactsTemplate({indexPage, contactsDivide, contactsDivideLength, showContacts, showContactsCount});
+		if (optionsLS) {
+			return contactsTemplate({indexPage, contactsDivide, contactsDivideLength, showContacts, showContactsCount, optionsLS, optionsLSArr});
+		} else {
+			return contactsTemplate({indexPage, contactsDivide, contactsDivideLength, showContacts, showContactsCount});
+		}
 	}
 
 	async afterRender(data) {
@@ -332,7 +349,8 @@ class ContactsList extends Component {
 	}
 
 	async setActions(data) {
-		const contactsBlock = document.getElementsByClassName('js-contacts-block')[0],
+		const optionsLS = JSON.parse(localStorage.getItem('options')),
+			contactsBlock = document.getElementsByClassName('js-contacts-block')[0],
 			counter = document.getElementsByClassName('js-contacts-counter')[0],
 			controlsBtn = document.getElementsByClassName('js-contacts-controls')[0],
 			contactsTable = document.getElementsByClassName('js-table')[0],
@@ -349,7 +367,7 @@ class ContactsList extends Component {
 			filterBtns = filter.querySelector('.js-filter-btns'),
 			filterFindBtn = filterBtns.querySelector('.js-filter-show-btn'),
 			filterHashtags = document.querySelector('.js-filter-hashtags'),
-			contactsResult = this.filterContacts(contacts, filterInputs);
+			contactsResult = optionsLS ? this.filterContacts(data, optionsLS) : this.filterContacts(data, filterInputs);
 
 		let contacts = data;
 
@@ -373,17 +391,18 @@ class ContactsList extends Component {
 		});
 
 		contactsBlock.addEventListener('click', async(e) => {
-			const target = e.target,
-				contactsResult = this.filterContacts(contacts, filterInputs),
-				options = this.listenChangesInFilter(filterInputs),
-				pagination = contactsBlock.getElementsByClassName('js-pagination')[0],
-				paginationSelect = contactsBlock.getElementsByClassName('js-pagination-select')[0];
+			const target = e.target;
 
 			if (target.classList.contains('js-filter-reset')) {
+				const pagination = contactsBlock.getElementsByClassName('js-pagination')[0];
+
 				for (const input of filterInputs) {
 					input.value = '';
 					input.checked = false;
 				}
+
+				localStorage.removeItem('options');
+				localStorage.removeItem('optionsArr');
 
 				this.fixedBlock(filter, filterInputs, filterBtns, filterFindBtn);
 
@@ -402,13 +421,21 @@ class ContactsList extends Component {
 					if (/^((с|по)\s?)(?<=.)\d{4}/igm.test( target.innerText)) {
 						target.innerText = target.innerText.replace(/(с|по)/igm, '');
 					}
-					if (input.value.trim().replace(/[\s-.,]+/igm, '') === target.innerText.replace(/[\s-.,]+/igm, '') || input.dataset.value === target.innerText) {
+
+					if (
+						(input.value.trim().toLowerCase().replace(/[\s-.,]+/igm, '') === target.innerText.toLowerCase().replace(/[\s-.,]+/igm, '')) ||
+						(input.dataset.value && input.dataset.value.toLowerCase() === target.innerText.toLowerCase())
+					) {
 						input.value = '';
 						input.checked = false;
 					}
 				}
 
+				localStorage.removeItem('options');
+				localStorage.removeItem('optionsArr');
+
 				const contactsResult = this.filterContacts(contacts, filterInputs),
+					pagination = contactsBlock.getElementsByClassName('js-pagination')[0],
 					options = this.listenChangesInFilter(filterInputs),
 					optionsArr = Object.values(options);
 
@@ -437,6 +464,8 @@ class ContactsList extends Component {
 			}
 
 			if (target.classList.contains('js-delete-cancel')) {
+				const contactsResult = this.filterContacts(contacts, filterInputs);
+
 				for (const input of contactsInputs) {
 					input.checked = false;
 				}
@@ -449,6 +478,7 @@ class ContactsList extends Component {
 			if (target.classList.contains('js-delete-ok')) {
 				const contactsTable = document.getElementsByClassName('js-table')[0],
 					contactsInputs = contactsTable.getElementsByTagName('input'),
+					pagination = contactsBlock.getElementsByClassName('js-pagination')[0],
 					contactsIds = [];
 
 				for (const input of contactsInputs) {
@@ -463,9 +493,11 @@ class ContactsList extends Component {
 
 				contacts = await this.getData();
 
+				const contactsResult = optionsLS ? this.filterContacts(contacts, optionsLS) : this.filterContacts(contacts, filterInputs);
+
 				counter.textContent = this.showContactsAmount(0, contactsResult.length || contacts.length);
 
-				contactsTable.innerHTML = this.renderTable(contacts);
+				contactsTable.innerHTML = this.renderTable(contactsResult.length ? contactsResult : contacts);
 
 				this.renderPagination(contactsBlock, pagination, contactsResult.length ? contactsResult : contacts);
 
@@ -473,10 +505,15 @@ class ContactsList extends Component {
 			}
 
 			if (target.classList.contains('js-show-option')) {
-				const changeShowItem = document.getElementsByClassName('js-show-items')[0],
+				const contactsResult = this.filterContacts(contacts, filterInputs),
+					options = this.listenChangesInFilter(filterInputs),
+					pagination = contactsBlock.getElementsByClassName('js-pagination')[0],
+					changeShowItem = document.getElementsByClassName('js-show-items')[0],
 					optionsArr = Object.values(options);
 
 				localStorage.setItem('showContactsCount', JSON.stringify(target.dataset.show));
+
+				localStorage.removeItem('currentPage');
 
 				changeShowItem.querySelector('.js-show-option.active').classList.remove('active');
 
@@ -494,12 +531,18 @@ class ContactsList extends Component {
 			}
 
 			if (target.closest('.js-next-page')) {
+				const pagination = contactsBlock.getElementsByClassName('js-pagination')[0],
+					paginationSelect = contactsBlock.getElementsByClassName('js-pagination-select')[0];
+
 				contactsTable.innerHTML = this.renderTable(contacts, +paginationSelect.value);
 
 				this.renderPagination(contactsBlock, pagination, contacts, +paginationSelect.value);
 			}
 
 			if (target.closest('.js-prev-page')) {
+				const pagination = contactsBlock.getElementsByClassName('js-pagination')[0],
+					paginationSelect = contactsBlock.getElementsByClassName('js-pagination-select')[0];
+
 				contactsTable.innerHTML = this.renderTable(contacts, +paginationSelect.value - 2);
 
 				this.renderPagination(contactsBlock, pagination, contacts, +paginationSelect.value - 2);
@@ -564,6 +607,10 @@ class ContactsList extends Component {
 
 		filter.addEventListener('submit', async(e) => {
 			e.preventDefault();
+
+			localStorage.removeItem('options');
+			localStorage.removeItem('optionsArr');
+			localStorage.removeItem('currentPage');
 
 			if (document.body.classList.contains('filter-open')) {
 				filter.scrollTop  = 0;

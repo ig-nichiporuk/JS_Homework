@@ -1,4 +1,4 @@
-import {btnsValidation, generateID, hideL, showInfoModal} from '../../helpers/utils';
+import {btnsValidation, generateID, hideL, showInfoModal, formatData} from '../../helpers/utils';
 
 import Component from '../../views/component';
 
@@ -117,16 +117,6 @@ class Contact extends Component {
 		}
 
 		return valid;
-	}
-
-	formatData(str) {
-		let updateStr = '';
-
-		for (let word of str.split(/(\s|-|\.)+/)) {
-			word && (updateStr += (word[0].toUpperCase() + word.slice(1)));
-		}
-
-		return updateStr;
 	}
 
 	async getData() {
@@ -258,9 +248,9 @@ class Contact extends Component {
 
 			if (this.checkData(contactOptions)) {
 				changes.id = generateID();
-				changes.surname = this.formatData(contactOptions.surname.value);
-				changes.name = this.formatData(contactOptions.name.value);
-				changes.patronymic = this.formatData(contactOptions.patronymic.value);
+				changes.surname = formatData(contactOptions.surname.value);
+				changes.name = formatData(contactOptions.name.value);
+				changes.patronymic = formatData(contactOptions.patronymic.value);
 
 				if (contactOptions.birthday.value && contactOptions.year.value) {
 					changes.birthdate = {
@@ -296,9 +286,9 @@ class Contact extends Component {
 
 				changes.family = contactOptions.family.checked;
 				changes.company = contactOptions.company.value;
-				changes.country = this.formatData(contactOptions.country.value);
-				changes.city = this.formatData(contactOptions.city.value);
-				changes.street = this.formatData(contactOptions.street.value);
+				changes.country = formatData(contactOptions.country.value);
+				changes.city = formatData(contactOptions.city.value);
+				changes.street = formatData(contactOptions.street.value);
 				changes.house = contactOptions.house.value;
 				changes.apartment = contactOptions.apartment.value;
 				changes.site = contactOptions.site.value;

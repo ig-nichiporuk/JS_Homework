@@ -131,3 +131,13 @@ export const btnsValidation = (e) => {
 			break;
 	}
 };
+
+export const formatData = (str) => {
+	let updateStr = '';
+
+	for (let word of str.split(/(\s|-|\.)+/)) {
+		word && (updateStr += (word[0].toUpperCase() + word.slice(1)));
+	}
+
+	return updateStr;
+};
