@@ -79,7 +79,6 @@
 								maxlength="2"
 								placeholder="22"
 								value="{{contact.birthdate.day}}">
-
 					</div>
 					<div class="contact__date-item">
 						<label class="contact__sublabel">Месяц</label>
@@ -274,15 +273,16 @@
 					id="site"
 					placeholder="onliner.by"
 					value="{{#if contact.site}}{{contact.site}}{{else}}Не указан{{/if}}"
-					readonly
+					readonly>
 		{{else}}
 		<input
 				type="text"
 				class="input-style js-contact-input"
 				id="site"
 				value="{{contact.site}}"
-				placeholder="onliner.by"
-		{{/if}}>
+				placeholder="onliner.by">
+		<p class="error-msg">Используй: a-z, 0-9, '.', '-'</p>
+		{{/if}}
 	</div>
 	<div class="contact__item">
 		<label class="contact__label">E-mail:</label>
@@ -301,6 +301,7 @@
 				id="email"
 				value="{{contact.email}}"
 				placeholder="igor_nichiporuk@gmail.com">
+		<p class="error-msg">Используй: a-z, 0-9, '_', '-', '.', '@'</p>
 		{{/if}}
 	</div>
 

@@ -390,6 +390,18 @@ class ContactsList extends Component {
 
 			if (document.body.clientWidth > 1299 && document.body.classList.contains('filter-open')) {
 				document.body.classList.remove('filter-open');
+
+				for (const input of filterInputs) {
+					input.value = '';
+					input.checked = false;
+				}
+
+				filter.classList.remove('open');
+
+				if (filterBtns) {
+					filterBtns.classList.remove('fix');
+					filterFindBtn.disabled = false;
+				}
 			}
 		});
 

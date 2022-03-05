@@ -51,6 +51,16 @@
                 border: none;
                 cursor: default;
             }
+            & + .error-msg {
+                display: none;
+            }
+            &.error + .error-msg {
+                display: block;
+                margin: 5px 0 0;
+                font-size: 12px;
+                line-height: 12px;
+                color: #e2001a;
+            }
         }
         li {
             display: flex;
