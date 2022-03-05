@@ -19,8 +19,8 @@
     width: 100%;
     height: 100%;
     position: fixed;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     z-index: 99;
     display: block;
     &__bg {
@@ -42,7 +42,7 @@
         margin-top: -27px;
         margin-left: -27px;
         border-radius: 50%;
-        box-shadow: inset 0px 0px 0px 5px #ababab;
+        box-shadow: inset 0 0 0 5px #ababab;
         animation: rotate 1s linear infinite;
     }
     &__wrap {
@@ -57,12 +57,12 @@
     }
     &__item {
         position: absolute;
-        top: 0px;
-        left: 0px;
+        top: 0;
+        left: 0;
         display: block;
         width: 50px;
         height: 50px;
         border-radius: 50%;
-        box-shadow: inset 0px 0px 0px 1px #fff;
+        box-shadow: inset 0 0 0 1px #fff;
     }
 }
