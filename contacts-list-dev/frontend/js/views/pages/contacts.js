@@ -333,12 +333,13 @@ class ContactsList extends Component {
 			contactsDivide = this.divideContactsArr(optionsLS ? this.filterContacts(data, optionsLS) : data),
 			contactsDivideLength = contactsDivide.length,
 			showContacts = contactsDivide[JSON.parse(localStorage.getItem('currentPage')) || 0],
-			indexPage = JSON.parse(localStorage.getItem('currentPage')) || 0;
+			indexPage = JSON.parse(localStorage.getItem('currentPage')) || 0,
+			indexPageNumber = indexPage + 1;
 
 		if (optionsLS) {
-			return contactsTemplate({indexPage, contactsDivide, contactsDivideLength, showContacts, showContactsCount, optionsLS, optionsLSArr});
+			return contactsTemplate({indexPage, indexPageNumber, contactsDivide, contactsDivideLength, showContacts, showContactsCount, optionsLS, optionsLSArr});
 		} else {
-			return contactsTemplate({indexPage, contactsDivide, contactsDivideLength, showContacts, showContactsCount});
+			return contactsTemplate({indexPage, indexPageNumber, contactsDivide, contactsDivideLength, showContacts, showContactsCount});
 		}
 	}
 
@@ -349,6 +350,8 @@ class ContactsList extends Component {
 	}
 
 	async setActions(data) {
+		window.scrollTo(0, 0);
+
 		const optionsLS = JSON.parse(localStorage.getItem('options')),
 			contactsBlock = document.getElementsByClassName('js-contacts-block')[0],
 			counter = document.getElementsByClassName('js-contacts-counter')[0],
@@ -536,6 +539,8 @@ class ContactsList extends Component {
 
 				contactsTable.innerHTML = this.renderTable(contacts, +paginationSelect.value);
 
+				localStorage.setItem('currentPage', JSON.stringify(+paginationSelect.value));
+
 				this.renderPagination(contactsBlock, pagination, contacts, +paginationSelect.value);
 			}
 
@@ -544,6 +549,8 @@ class ContactsList extends Component {
 					paginationSelect = contactsBlock.getElementsByClassName('js-pagination-select')[0];
 
 				contactsTable.innerHTML = this.renderTable(contacts, +paginationSelect.value - 2);
+
+				localStorage.setItem('currentPage', JSON.stringify(+paginationSelect.value - 2));
 
 				this.renderPagination(contactsBlock, pagination, contacts, +paginationSelect.value - 2);
 			}

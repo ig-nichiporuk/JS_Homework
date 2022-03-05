@@ -243,6 +243,10 @@ class Contact extends Component {
 		contactForm.addEventListener('submit', async(e) => {
 			e.preventDefault();
 
+			localStorage.removeItem('options');
+			localStorage.removeItem('optionsArr');
+			localStorage.removeItem('currentPage');
+
 			const contactPhones = document.getElementsByClassName('js-contact-phone'),
 				contactMonth = document.getElementById('month');
 
