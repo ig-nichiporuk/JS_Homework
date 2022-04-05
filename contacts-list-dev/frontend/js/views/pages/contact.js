@@ -3,8 +3,8 @@ import {btnsValidation, generateID, hideL, showInfoModal, formatData} from '../.
 import Component from '../../views/component';
 
 import contactTemplate from '../../../templates/pages/contact.hbs';
-import contactPhoneFields from '../../../templates/pages/contact/contactPhoneFields.hbs';
-import contactDataForm from '../../../templates/pages/contact/contactData.hbs';
+import contactPhoneFields from '../../../templates/pages/contactInfo/contactPhoneFields.hbs';
+import contactDataForm from '../../../templates/pages/contactInfo/contactData.hbs';
 import Error404Template from '../../../templates/pages/error404.hbs';
 
 import Contacts from '../../models/contacts';

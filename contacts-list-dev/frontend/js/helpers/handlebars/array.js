@@ -1,3 +1,3 @@
-module.exports = (value) => {
+module.exports = value => {
 	return parseInt(value) + 1;
 };

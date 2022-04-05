@@ -33,7 +33,7 @@ router.put('/api/contact/changes',  (req, res) => {
 		contacts = getContactsFromDB();
 
 	if(id) {
-		updateContacts = contacts.map(contact => {
+		const updateContacts = contacts.map(contact => {
 			if(contact.id == id) {
 				contact.name = data.name;
 				contact.surname = data.surname;

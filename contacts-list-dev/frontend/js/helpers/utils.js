@@ -31,7 +31,7 @@ export const hideL = () => {
 	pleloader.remove();
 };
 
-export const openModal = (id) => {
+export const openModal = id => {
 	const modal = document.getElementById(id),
 		winScrollTop = window.scrollY,
 		winHeight = document.documentElement.clientHeight,
@@ -62,7 +62,7 @@ export const closeModal = () => {
 
 	if (overlay) overlay.remove();
 
-	modal.forEach((activeModal) => activeModal.classList.remove('open'));
+	modal.forEach(activeModal => activeModal.classList.remove('open'));
 	body.classList.remove('modal-open',  'overlay-open',  'js-scroll-lock');
 };
 
@@ -80,7 +80,7 @@ export const showInfoModal = (id, type, content) => {
 	openModal(id);
 };
 
-export const btnsValidation = (e) => {
+export const btnsValidation = e => {
 	const target = e.target;
 
 	switch (target.id) {
@@ -132,7 +132,7 @@ export const btnsValidation = (e) => {
 	}
 };
 
-export const formatData = (str) => {
+export const formatData = str => {
 	let updateStr = '';
 
 	for (let word of str.split(/(\s|-|\.)+/)) {

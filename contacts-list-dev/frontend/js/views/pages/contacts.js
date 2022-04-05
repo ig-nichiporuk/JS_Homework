@@ -3,7 +3,7 @@ import {btnsValidation, hideL, showInfoModal, formatData} from '../../helpers/ut
 import Component from '../../views/component';
 
 import contactsTemplate from '../../../templates/pages/contacts.hbs';
-import contactsTableRow from '../../../templates/pages/contacts/contactsTableRow.hbs';
+import contactsTableRow from '../../../templates/pages/contactsInfo/contactsTableRow.hbs';
 import filterHashtagsTemplate from '../../../templates/pages/filter/filterHashtags.hbs';
 import paginationTemplate from '../../../templates/pages/pagination/pagination.hbs';
 
@@ -118,120 +118,38 @@ class ContactsList extends Component {
 	}
 
 	filterContacts(contacts, filterInputs) {
-		const options = this.listenChangesInFilter(filterInputs);
+		const options = this.listenChangesInFilter(filterInputs),
+			optionsKeys = Object.keys(options);
 
 		let contactsResult = [];
 
-		if (options.surname) {
-			contactsResult = contacts.filter(item => item.surname.toLowerCase() === options.surname.toLowerCase());
-
-			if (!contactsResult.length) return [];
-		}
-
-		if (options.name) {
-			const result = contactsResult.length ? contactsResult : contacts;
-
-			contactsResult = result.filter(item => item.name.toLowerCase() === options.name.toLowerCase());
-
-			if (!contactsResult.length) return [];
-		}
-
-		if (options.patronymic) {
-			const result = contactsResult.length ? contactsResult : contacts;
-
-			contactsResult = result.filter(item => item.patronymic.toLowerCase() === options.patronymic.toLowerCase());
-
-			if (!contactsResult.length) return [];
-		}
-
-		if (options.birthdateMin && options.birthdateMax) {
+		for (let key of optionsKeys) {
 			const result = contactsResult.length ? contactsResult : contacts;
 
 			contactsResult = result.filter(item => {
-				const year = item.birthdate.year;
+				switch (key) {
+					case 'birthdateMin':
 
-				return (year >= options.birthdateMin && year <= options.birthdateMax);
+						if (item.birthdate.year && item.birthdate.year >= options[key]) return item;
+
+						break;
+
+					case 'birthdateMax':
+
+						if (item.birthdate.year && item.birthdate.year <= options[key]) return item;
+
+						break;
+
+					case 'family':
+
+						if (item.family === options.family) return item;
+
+						break;
+
+					default:
+						if (item[key].toLowerCase() === options[key].toLowerCase()) return item;
+				}
 			});
-
-			if (!contactsResult.length) return [];
-		}
-
-		if (options.birthdateMin) {
-			const result = contactsResult.length ? contactsResult : contacts;
-
-			contactsResult = result.filter(item => {
-				const year = item.birthdate.year;
-
-				if (year && year >= options.birthdateMin) return year;
-			});
-
-			if (!contactsResult.length) return [];
-		}
-
-		if (options.birthdateMax) {
-			const result = contactsResult.length ? contactsResult : contacts;
-
-			contactsResult = result.filter(item => {
-				const year = item.birthdate.year;
-
-				if (year && year <= options.birthdateMax) return year;
-			});
-
-			if (!contactsResult.length) return [];
-		}
-
-		if (options.gender) {
-			const result = contactsResult.length ? contactsResult : contacts;
-
-			contactsResult = result.filter(item => item.gender === options.gender);
-
-			if (!contactsResult.length) return [];
-		}
-
-		if (options.family) {
-			const result = contactsResult.length ? contactsResult : contacts;
-
-			contactsResult = result.filter(item => item.family === options.family ? item : '');
-
-			if (!contactsResult.length) return [];
-		}
-
-		if (options.country) {
-			const result = contactsResult.length ? contactsResult : contacts;
-
-			contactsResult = result.filter(item => item.country.toLowerCase() === options.country.toLowerCase());
-
-			if (!contactsResult.length) return [];
-		}
-
-		if (options.city) {
-			const result = contactsResult.length ? contactsResult : contacts;
-
-			contactsResult = result.filter(item => item.city.toLowerCase() === options.city.toLowerCase());
-
-			if (!contactsResult.length) return [];
-		}
-
-		if (options.street) {
-			const result = contactsResult.length ? contactsResult : contacts;
-
-			contactsResult = result.filter(item => item.street.toLowerCase() === options.street.toLowerCase());
-
-			if (!contactsResult.length) return [];
-		}
-
-		if (options.house) {
-			const result = contactsResult.length ? contactsResult : contacts;
-
-			contactsResult = result.filter(item => item.house.toLowerCase() === options.house.toLowerCase());
-
-			if (!contactsResult.length) return [];
-		}
-
-		if (options.apartment) {
-			const result = contactsResult.length ? contactsResult : contacts;
-
-			contactsResult = result.filter(item => item.apartment.toLowerCase() === options.apartment.toLowerCase());
 
 			if (!contactsResult.length) return [];
 		}
